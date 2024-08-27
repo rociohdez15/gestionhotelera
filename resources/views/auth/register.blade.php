@@ -20,6 +20,19 @@
             </div>
 
             <div class="mt-4">
+                <x-label for="apellidos" value="{{ __('Apellidos') }}" />
+                <x-input id="apellidos" class="block mt-1 w-full" type="text" name="apellidos" :value="old('apellidos')" required />
+            </div>
+
+            <div class="mt-4">
+                <x-label for="rolID" value="{{ __('Rol') }}" />
+                <select id="rolID" name="rolID" class="block mt-1 w-full">
+                    <option value="1" {{ old('rolID') == '1' ? 'selected' : '' }}>Administrador</option>
+                    <option value="2" {{ old('rolID') == '2' ? 'selected' : '' }}>Recepcionista</option>
+                </select>
+            </div>
+
+            <div class="mt-4">
                 <x-label for="password" value="{{ __('Password') }}" />
                 <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
             </div>
@@ -58,3 +71,4 @@
         </form>
     </x-authentication-card>
 </x-guest-layout>
+
