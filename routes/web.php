@@ -1,10 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\InicioControlador;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('inicio');
 });
+
+Route::get('/buscarUbicaciones', [InicioControlador::class, 'buscarUbicaciones']);
+Route::get('/', [InicioControlador::class, 'contarHoteles']);
+
 
 Route::middleware([
     'auth:sanctum',
