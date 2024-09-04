@@ -24,12 +24,6 @@ header {
     
 }
 
-.btn-secondary:hover{
-    background-color: transparent;
-    border-color: transparent;
-    color: black;
-}
-
 .icono-user{
     position: absolute;
     right: 1rem; 
@@ -43,6 +37,11 @@ header {
     outline: none !important;
 }
 
+.btn-secondary:hover{
+    background-color: transparent;
+    border-color: transparent;
+    color: black;
+}
 
 .icono-menu,.dropdown, .dropdown-toggle {
     position: absolute;
@@ -174,6 +173,51 @@ footer {
 .form-control2.error + .invalid-feedback {
     display: block;
 }
+.contenedor-alojamientos {
+    position: relative;
+    width: 100%; 
+    text-align: center;
+}
+
+.mostrar-alojamientos {
+    margin-left: auto;
+    margin-right: auto;
+    border: 3px solid #3c3c3c;
+    max-width: 800px;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 15px;
+}
+
+.hotel-imagen {
+    flex-shrink: 0; /* Para evitar que la imagen se reduzca en tamaño */
+}
+
+.imagen-portada-alojamiento {
+    width: 150px;
+    height: auto; /* Mantener la proporción de la imagen */
+    border: 3px solid #3c3c3c;
+    border-radius: 5px;
+}
+
+.hotel-info {
+    flex: 1; /* Ocupa el espacio restante */
+}
+
+.hotel-info h5 {
+    margin-top: 30px;
+}
+
+
+.imagen-portada-alojamiento {
+    float: left;      
+    margin-right: 15px; 
+    width: 150px;    
+    margin-top: 33px;
+    margin-left: 15px;
+    border: 3px solid #3c3c3c;
+    border-radius: 5px;
+}
 
 .invalid-feedback {
     display: none;
@@ -183,3 +227,10 @@ footer {
 .invalid-feedback.show {
     display: block;
 }
+
+.reservar{
+    margin-left: 450px;
+    margin-top: -80px;
+    margin-top: -20px;
+}
+
