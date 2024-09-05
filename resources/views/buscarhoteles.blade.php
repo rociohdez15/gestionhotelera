@@ -133,17 +133,17 @@
 
         @if ($datos && count($datos) > 0)
             @foreach ($datos as $hotel)
-            <div class="mostrar-alojamientos">
-                <div class="hotel-item d-flex align-items-start mb-3">
+            <div class="container">
+                <div class="row align-items-start mb-3 mostrar-alojamientos">
                     <!-- Imagen del hotel -->
-                    <div class="hotel-imagen me-3">
+                    <div class="col-12 col-md-4 hotel-imagen mb-3 mb-md-0">
                         @if ($hotel->imagen_url)
-                            <img src="{{ $hotel->imagen_url }}" alt="{{ $hotel->nombre }}" class="imagen-portada-alojamiento">
+                            <img src="{{ $hotel->imagen_url }}" alt="{{ $hotel->nombre }}" class="img-fluid rounded imagen-portada-alojamiento">
                         @endif
                     </div>
 
                     <!-- Información del hotel -->
-                    <div class="hotel-info">
+                    <div class="col-12 col-md-8 hotel-info">
                         <h5>{{ $hotel->nombre }}</h5>
                         <p>{{ $hotel->descripcion }}</p>
                         <p>{{ $hotel->direccion }}</p>
@@ -157,7 +157,9 @@
                                         <li>Habitación {{ $index + 1 }}: Capacidad: {{ $habitacion->tipohabitacion }} personas - Precio: {{ number_format($habitacion->precio, 2) }}€</li>
                                     @endforeach
                                 </ul>
-                                <button type="submit" class="btn btn-primary reservar">Reservar</button>
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary reservar mt-3">Reservar</button>
+                                </div>
                             </div>
                         @else
                             <p>No hay habitaciones disponibles que cumplan con los requisitos.</p>
@@ -165,9 +167,10 @@
                     </div>
                 </div>
             </div>
-            <br>
             @endforeach
         @endif
+
+
 
         <br>
         <!-- Paginación -->

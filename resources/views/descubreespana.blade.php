@@ -1,21 +1,23 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlojaDirecto | Inicio</title>
+    <title>{{ $tituloventana }}</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- CSS -->
-    <link rel="stylesheet" href="../../css/inicio/styles.css">
+    <link rel="stylesheet" href="../../css/descubre-espana/styles.css">
 </head>
-
 <body>
     <header>
         <!-- Logo -->
-        <img src="../../images/inicio/logo.png" alt="Logo de Aloja Directo" class="logo-cabecera">
+        <a href="{{ route('inicio') }}">
+            <img src="../../images/inicio/logo.png" alt="Logo de Aloja Directo" class="logo-cabecera">
+        </a>
         
         @guest
         <!-- Botón de usuario para iniciar sesión -->
@@ -56,9 +58,8 @@
             <i class="fa-solid fa-right-from-bracket"></i>
         </a>   
         @endauth
-       
     </header>
-    
+
     <main>
         <!-- Cabecera -->
         <div class="contenedor-titulos">
@@ -94,20 +95,20 @@
                 </div>
                 
                 <div class="row">
-                <div class="col-md-4 mb-3">
-                    <label for="adultos">Adultos</label>
-                    <input type="number" id="adultos" name="adultos" value="2" min="1" class="form-control">
-                    <div class="invalid-feedback" id="adultos-error">
-                        Por favor, introduzca al menos un adulto.
+                    <div class="col-md-4 mb-3">
+                        <label for="adultos">Adultos</label>
+                        <input type="number" id="adultos" name="adultos" value="2" min="1" class="form-control">
+                        <div class="invalid-feedback" id="adultos-error">
+                            Por favor, introduzca al menos un adulto.
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="ninos">Niños</label>
-                    <input type="number" id="ninos" name="ninos" value="0" min="0" class="form-control">
-                    <div class="invalid-feedback" id="ninos-error">
-                        Por favor, introduzca al menos un niño si no hay adultos.
+                    <div class="col-md-4 mb-3">
+                        <label for="ninos">Niños</label>
+                        <input type="number" id="ninos" name="ninos" value="0" min="0" class="form-control">
+                        <div class="invalid-feedback" id="ninos-error">
+                            Por favor, introduzca al menos un niño si no hay adultos.
+                        </div>
                     </div>
-                </div>
                     <div class="col-md-4 mb-3">
                         <label for="habitaciones">Habitaciones</label>
                         <input type="number" id="habitaciones" name="habitaciones" value="1" min="1" class="form-control">
@@ -120,75 +121,64 @@
             </div>
         </form>
 
-        <!-- Sección descubre España -->
-        <div class="seccion-descubre">
-            <h2 class="text-center">Descubre España</h2>
-            <br>
-            <div class="row text-center">
-                <div class="col-md-3 mb-3">
-                    <div class="ciudad">
-                        <a href="{{ route('descubreEspana', ['ciudad' => 'Valencia']) }}">
-                            <img src="../../images/inicio/valencia.jpg" alt="Valencia" class="img-fluid img-ciudades">
-                        </a>
-                        <a href="{{ route('descubreEspana', ['ciudad' => 'Valencia']) }}">
-                            <p class="txt-ciudades"><strong>Valencia</strong></p>
-                        </a>
-                        <p>{{ $totalHotelesValencia }} alojamientos</p>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="ciudad">
-                        <a href="{{ route('descubreEspana', ['ciudad' => 'Madrid']) }}">
-                            <img src="../../images/inicio/madrid.jpg" alt="Madrid" class="img-fluid img-ciudades">
-                        </a>
-                        <a href="{{ route('descubreEspana', ['ciudad' => 'Madrid']) }}">
-                            <p class="txt-ciudades"><strong>Madrid</strong></p>
-                        </a>
-                        <p>{{ $totalHotelesMadrid }} alojamiento</p>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="ciudad">
-                        <a href="{{ route('descubreEspana', ['ciudad' => 'Menorca']) }}">
-                            <img src="../../images/inicio/menorca.jpg" alt="Menorca" class="img-fluid img-ciudades">
-                        </a>
-                        <a href="{{ route('descubreEspana', ['ciudad' => 'Menorca']) }}">
-                            <p class="txt-ciudades"><strong>Menorca</strong></p>
-                        </a>
-                        <p>{{ $totalHotelesMenorca }} alojamientos</p>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="ciudad">
-                        <a href="{{ route('descubreEspana', ['ciudad' => 'Sevilla']) }}">
-                            <img src="../../images/inicio/sevilla.jpg" alt="Sevilla" class="img-fluid img-ciudades">
-                        </a>
-                        <a href="{{ route('descubreEspana', ['ciudad' => 'Sevilla']) }}">
-                            <p class="txt-ciudades"><strong>Sevilla</strong></p>
-                        </a>
-                        <p>{{ $totalHotelesSevilla }} alojamientos</p>
-                    </div>
-                </div>
+        @if ($totalAlojamientos > 0)
+            <div class="contenedor-alojamientos">
+                <p><strong>{{ $ubicacion }}: {{ $totalAlojamientos }} alojamientos encontrados</strong></p>
             </div>
+        @else
+            <div class="contenedor-alojamientos">
+                <p><strong>No se encontraron alojamientos en el destino introducido.</strong></p>
+            </div>
+        @endif
+
+        @if ($datos && count($datos) > 0)
+            @foreach ($datos as $hotel)
+            <div class="container">
+                <div class="row align-items-start mb-3 mostrar-alojamientos">
+                    <!-- Imagen del hotel -->
+                    <div class="col-12 col-md-4 hotel-imagen mb-3 mb-md-0">
+                        @if ($hotel->imagen_url)
+                            <img src="{{ asset($hotel->imagen_url) }}" alt="{{ $hotel->nombre }}" class="img-fluid rounded imagen-portada-alojamiento">
+                        @endif
+                    </div>
+
+                    <!-- Información del hotel -->
+                    <div class="col-12 col-md-8 hotel-info">
+                        <h5>{{ $hotel->nombre }}</h5>
+                        <p>{{ $hotel->descripcion }}</p>
+                        <p>{{ $hotel->direccion }}</p>
+                    </div>
+                </div>
+                
+            </div>
+            @endforeach
+            <div class="contenedor-alojamientos">
+                    <p><strong>Para realizar la reserva de alguno de estos alojamientos deberá rellenar el formulario de busqueda.</strong></p>
+            </div>
+        @endif
+
+
+
+        <br>
+        <!-- Paginación -->
+        <div class="container text-center">
+            <p>
+                Página {{ $pagina_actual }} de {{ $total_paginas }} | Mostrar {{ $registros_por_pagina }} registros por página | Ir a página:
+                @for ($i = 1; $i <= $total_paginas; $i++)
+                <a href="{{ route('buscarHoteles', array_merge(request()->except('pagina'), ['pagina' => $i])) }}">{{ $i }}</a>
+                @endfor
+            </p>
         </div>
+
     </main>
-    <!-- Footer -->
+
     <footer>
         <a href="#">Términos y Condiciones</a> | 
         <a href="#">Sobre AlojaDirecto.com</a>
         <p>Copyright © 2024 AlojaDirecto.com<br>Todos los derechos reservados</p>
     </footer>
 </body>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/inicio/js.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../js/descubre-espana/js.js"></script>
 </html>
-
-
-
-
-
-
-
-
-
