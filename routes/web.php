@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InicioControlador;
 use App\Http\Controllers\BuscarHotelesControlador;
 use App\Http\Controllers\DescubreEspanaControlador;
+use App\Http\Controllers\LoginControlador;
 
 Route::get('/', function () {
     return view('inicio');

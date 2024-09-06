@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- CSS -->
     <link rel="stylesheet" href="../../css/buscar-hoteles/styles.css">
+    <!-- Favicon -->
+    <link rel="icon" href="../../images/inicio/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <header>
@@ -39,13 +41,13 @@
                 </li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="{{ route('login') }}">
                     <i class="fas fa-headset"></i> Iniciar sesión como Recepcionista
                     </a>
                 </li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="{{ route('login') }}">
                         <i class="fas fa-user-shield"></i> Iniciar sesión como Administrador
                     </a>
                 </li>

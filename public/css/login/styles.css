@@ -5,17 +5,19 @@ html, body {
     overflow-x: hidden; /* Esto oculta el desbordamiento horizontal */
     display: flex;
     flex-direction: column;
+
 }
 
 body {
-    flex: 1; /* Hace que el body ocupe el espacio restante disponible */
+    flex: 1; 
     min-height: 100vh;
 }
 
 main {
-    flex: 1; /* El main se expande para ocupar todo el espacio restante disponible */
+    flex: 1; 
+    background-color: #3c3c3c;
+    color: white;
 }
-
 
 header {
     background: url('../../images/inicio/fondo-logo.jfif') no-repeat center center, #D4AF37;
@@ -82,11 +84,12 @@ header {
 
 .contenedor-titulos {
     position: relative;
-    background: url('../../images/inicio/fondo-body.jpg') no-repeat center center, #D4AF37;
     background-size: cover;
     width: 100%; 
-    padding: 100px 0; 
+    padding: 80px 0; 
     text-align: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
 }
 
 .titulo {
@@ -149,7 +152,6 @@ footer {
     width: 100%;
     margin-top: auto;
 }
-
 
 .campo-edad{
     margin-top: 10px;
@@ -246,3 +248,8 @@ footer {
     max-width: 100%;
 }
 
+.alert,.alert-danger,.alert-success{
+    max-width: 400px; 
+    margin: 0 auto;
+    text-align: center;
+}

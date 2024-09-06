@@ -3,6 +3,18 @@ html, body {
     padding: 0;
     width: 100%;
     overflow-x: hidden; /* Esto oculta el desbordamiento horizontal */
+    display: flex;
+    flex-direction: column;
+
+}
+
+body {
+    flex: 1; /* Hace que el body ocupe el espacio restante disponible */
+    min-height: 100vh;
+}
+
+main {
+    flex: 1; /* El main se expande para ocupar todo el espacio restante disponible */
 }
 
 header {
@@ -127,16 +139,15 @@ header {
 }
 
 footer {
-    margin-top: 50px;
+    flex-shrink: 0;
     padding: 20px;
     text-align: center;
     background: url('../../images/inicio/fondo-logo.jfif') no-repeat center center, #D4AF37;
     background-size: cover;
-    height: 120px; 
-    align-items: center;
-    justify-content: center; 
+    height: 160px; 
     position: relative;
     width: 100%;
+    margin-top: auto;
 }
 
 .campo-edad{
@@ -187,6 +198,7 @@ footer {
     border-radius: 5px;
     background-color: #fff;
     padding: 15px;
+    padding-bottom: 40px;
 }
 
 .hotel-imagen {
@@ -232,4 +244,3 @@ footer {
     margin-left: 400px;
     max-width: 100%;
 }
-
