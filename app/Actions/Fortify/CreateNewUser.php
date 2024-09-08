@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
+use App\Models\Cliente;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -24,9 +25,23 @@ class CreateNewUser implements CreatesNewUsers
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'apellidos' => ['required', 'string', 'max:255'],
             'rolID' => ['required', 'integer', 'exists:roles,rolID'],
+            'direccion' => ['required', 'string', 'max:255'], 
+            'telefono' => ['required', 'regex:/^6[0-9]{8}$/'],
+            'dni' => ['required', 'regex:/^[0-9]{8}[A-Z]{1}$/'], 
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
+
+        // Crear el cliente asociado
+        Cliente::create([
+            'nombre' => $input['name'],
+            'apellidos' => $input['apellidos'],
+            'direccion' => $input['direccion'],
+            'telefono' => $input['telefono'],
+            'dni' => $input['dni'],
+            'email' => $input['email'],
+            'password' => Hash::make($input['password']),
+        ]);
 
         return User::create([
             'name' => $input['name'],
