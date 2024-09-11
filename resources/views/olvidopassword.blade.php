@@ -79,8 +79,8 @@
                     </div>
                 @endif
 
-                <h2 class="text-center">Iniciar sesión</h2>
-                <form action="{{ route('login') }}" method="post" class="needs-validation" novalidate style="max-width: 400px; margin: 0 auto;">
+                <h2 class="text-center">Restablecer contraseña</h2>
+                <form action="{{ route('olvidoPassword') }}" method="post" class="needs-validation" novalidate style="max-width: 400px; margin: 0 auto;">
                     @csrf
                     <div class="form-group">
                         <label for="email" class="form-label text-start d-block">Correo electrónico:</label>
@@ -89,18 +89,13 @@
                     </div>
                     <br>
                     <div class="form-group">
-                        <label for="password" class="form-label text-start d-block">Contraseña:</label>
+                        <label for="password" class="form-label text-start d-block">Nueva contraseña:</label>
                         <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password">
-                        <div class="invalid-feedback">Por favor ingresa tu contraseña.</div>
-                    </div>
-                    <br>
-                    <div>
-                        <a href="{{ route('olvidoPassword') }}">¿Has olvidado tu contraseña?</a>
+                        <div class="invalid-feedback">Por favor ingresa tu nueva contraseña.</div>
                     </div>
                     <br>
                     <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary w-30 me-5">Entrar</button>
-                        <a href="{{ route('register') }}" class="btn btn-primary w-30">Registrarse</a>
+                        <button type="submit" class="btn btn-primary">Restablecer</button>
                     </div>
                 </form>
             </div>

@@ -156,11 +156,15 @@
                                 <ul>
                                     <strong>Número de habitaciones: {{ count($hotel->habitaciones) }}</strong>
                                     @foreach ($hotel->habitaciones as $index => $habitacion)
-                                        <li>Habitación {{ $index + 1 }}: Capacidad: {{ $habitacion->tipohabitacion }} personas - Precio: {{ number_format($habitacion->precio, 2) }}€</li>
+                                        <li>Habitación {{ $index + 1 }}: Capacidad: {{ $habitacion->tipohabitacion }} personas - Precio: {{ number_format($habitacion->precio, 2) }}€/Noche</li>
                                     @endforeach
                                 </ul>
                                 <div class="d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary reservar mt-3">Reservar</button>
+                                    <form action="{{ route('reservar') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="redirect_url" value="{{ url()->current() }}">
+                                        <button type="submit" class="btn btn-primary reservar mt-3">Reservar</button>
+                                    </form>
                                 </div>
                             </div>
                         @else

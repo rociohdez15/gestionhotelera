@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class BuscarHotelesControlador extends Controller
 {
@@ -167,5 +168,19 @@ class BuscarHotelesControlador extends Controller
                 break;
             }
         }
+    }
+
+    public function reserve(Request $request)
+    {
+        // Verifica si el usuario está autenticado
+        if (Auth::check()) {
+            // El usuario está autenticado, redirige a la página de reservas
+            return redirect()->route('reservas');
+        }
+
+        // El usuario no está autenticado, guarda la URL actual y redirige al login
+        $request->session()->put('url.intended', $request->input('redirect_url', url()->previous()));
+
+        return redirect()->route('login');
     }
 }
