@@ -1,0 +1,255 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden; /* Esto oculta el desbordamiento horizontal */
+    display: flex;
+    flex-direction: column;
+
+}
+
+body {
+    flex: 1; 
+    min-height: 100vh;
+}
+
+main {
+    flex: 1; 
+    background-color: #3c3c3c;
+    color: white;
+}
+
+header {
+    background: url('../../images/inicio/fondo-logo.jfif') no-repeat center center, #D4AF37;
+    background-size: cover;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 0 1rem;
+    width: 100%;
+}
+
+
+.logo-cabecera {
+    width: 200px;
+    height: 100px; 
+    
+}
+
+.icono-user{
+    position: absolute;
+    right: 1rem; 
+    display: flex;
+    gap: 1.5rem;
+    font-size: 1.5rem;
+    background-color: transparent;
+    border-color: transparent;
+    color: black;
+    box-shadow: none !important; 
+    outline: none !important;
+}
+
+.btn-secondary:hover{
+    background-color: transparent;
+    border-color: transparent;
+    color: black;
+}
+
+.icono-menu,.dropdown, .dropdown-toggle {
+    position: absolute;
+    left: 1rem;
+    display: flex;
+    gap: 1.5rem;
+    font-size: 1.5rem;
+    background-color: transparent;
+    border-color: transparent;
+    color: black;
+    bottom: 20px;
+}
+
+.dropdown-toggle:hover,.dropdown-toggle:active, .dropdown-toggle:focus, .dropdown-toggle:enabled{
+    background-color: transparent; 
+    border-color: transparent;
+    color: black;
+}
+
+#dropdownMenuButton:active, #dropdownMenuButton:focus {
+    background-color: transparent; /* No cambia de color al pasar el ratón */
+    border-color: transparent;
+    color: black;
+}
+
+
+.contenedor-titulos {
+    position: relative;
+    background-size: cover;
+    width: 100%; 
+    padding: 80px 0; 
+    text-align: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.titulo {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.eslogan {
+    margin-top: 10px;
+    font-size: 1.25rem;
+}
+
+.contenedor-busqueda {
+    margin: 20px auto;
+    border: 3px solid #3c3c3c;
+    padding: 20px;
+    max-width: 800px;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.form-control {
+    border-color: #3c3c3c;
+    border: 3px solid #ccc;
+}
+
+.seccion-descubre {
+    margin-top: 50px;
+}
+
+.contenedor-ciudades .ciudad img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    background-color: #ccc;
+}
+.img-ciudades {
+    width: 200px; 
+    height: 150px; 
+    object-fit: cover; 
+    border-radius: 15px; 
+    display: block; 
+    margin: 0 auto;
+}
+.img-ciudades:hover {
+    border: 3px solid black !important;
+}
+.txt-ciudades {
+    font-size: 1.2rem;
+}
+
+footer {
+    flex-shrink: 0;
+    padding: 20px;
+    text-align: center;
+    background: url('../../images/inicio/fondo-logo.jfif') no-repeat center center, #D4AF37;
+    background-size: cover;
+    height: 160px; 
+    position: relative;
+    width: 100%;
+    margin-top: auto;
+}
+
+.campo-edad{
+    margin-top: 10px;
+}
+
+.campo-edad .form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    margin-bottom: .5rem;
+}
+
+.mundo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+.texto-mundo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-control2.is-invalid {
+    border-color: #dc3545;
+}
+.invalid-feedback {
+    display: none;
+    color: #dc3545;
+}
+.form-control2.error + .invalid-feedback {
+    display: block;
+}
+.contenedor-alojamientos {
+    position: relative;
+    width: 100%; 
+    text-align: center;
+}
+
+.mostrar-alojamientos {
+    margin-left: auto;
+    margin-right: auto;
+    border: 3px solid #3c3c3c;
+    max-width: 800px;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 15px;
+    padding-bottom: 40px;
+}
+
+.hotel-imagen {
+    flex-shrink: 0; /* Para evitar que la imagen se reduzca en tamaño */
+}
+
+.imagen-portada-alojamiento {
+    width: 150px;
+    height: auto; /* Mantener la proporción de la imagen */
+    border: 3px solid #3c3c3c;
+    border-radius: 5px;
+}
+
+.hotel-info {
+    flex: 1; /* Ocupa el espacio restante */
+}
+
+.hotel-info h5 {
+    margin-top: 30px;
+}
+
+
+.imagen-portada-alojamiento {
+    float: left;      
+    margin-right: 15px; 
+    width: 150px;    
+    margin-top: 33px;
+    margin-left: 15px;
+    border: 3px solid #3c3c3c;
+    border-radius: 5px;
+}
+
+.invalid-feedback {
+    display: none;
+    color: #dc3545;
+}
+
+.invalid-feedback.show {
+    display: block;
+}
+
+.reservar{
+    margin-left: 400px;
+    max-width: 100%;
+}
+
+.alert,.alert-danger,.alert-success{
+    max-width: 400px; 
+    margin: 0 auto;
+    text-align: center;
+}

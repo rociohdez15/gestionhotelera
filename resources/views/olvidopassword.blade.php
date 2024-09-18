@@ -10,7 +10,7 @@
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- CSS -->
-    <link rel="stylesheet" href="{{ asset('../../css/login/styles.css') }}">
+    <link rel="stylesheet" href="{{ asset('../../css/olvido-contraseña/styles.css') }}">
     <!-- Favicon -->
     <link rel="icon" href="../../images/inicio/favicon.ico" type="image/x-icon">
 </head>
@@ -109,5 +109,5 @@
     </body>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/login/js.js"></script>
+    <script src="../../js/olvido-contraseña/js.js"></script>
 </html>

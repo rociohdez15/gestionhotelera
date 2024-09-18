@@ -150,7 +150,7 @@
                         <p>{{ $hotel->descripcion }}</p>
                         <p>{{ $hotel->direccion }}</p>
                         
-                        <!-- Mostrar habitaciones disponibles que cumplen con la capacidad -->
+                        <!-- Mostrar habitaciones disponibles -->
                         @if ($hotel->habitaciones && count($hotel->habitaciones) > 0)
                             <div class="habitaciones-disponibles">
                                 <ul>
@@ -160,9 +160,20 @@
                                     @endforeach
                                 </ul>
                                 <div class="d-flex justify-content-end">
-                                    <form action="{{ route('reservar') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="redirect_url" value="{{ url()->current() }}">
+                                    <form action="{{ route('reservar') }}" method="GET">
+                                        <input type="hidden" name="hotelID" value="{{ $hotel->hotelID }}">
+                                        <input type="hidden" name="fechaEntrada" value="{{ $fechaEntrada }}">
+                                        <input type="hidden" name="fechaSalida" value="{{ $fechaSalida }}">
+                                        <input type="hidden" name="adultos" value="{{ $num_adultos }}">
+                                        <input type="hidden" name="ninos" value="{{ $num_ninos }}">
+                                        <input type="hidden" name="clienteID" value="{{ Auth::id() }}">
+                                        @foreach($hotel->habitaciones as $habitacion)
+                                        <input type="hidden" name="habitacionID[]" value="{{ $habitacion->habitacionID }}">
+                                        @endforeach
+                                        <input type="hidden" name="precioHabitacion" value="{{ $habitacion->precio }}">
+                                        @foreach(range(1, $num_ninos) as $index)
+                                            <input type="hidden" name="edadesNinos[]" value="{{ request()->input('edad-nino-' . $index) }}">
+                                        @endforeach
                                         <button type="submit" class="btn btn-primary reservar mt-3">Reservar</button>
                                     </form>
                                 </div>
