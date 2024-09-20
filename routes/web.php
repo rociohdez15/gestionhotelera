@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InicioControlador;
 use App\Http\Controllers\BuscarHotelesControlador;
 use App\Http\Controllers\DescubreEspanaControlador;
+use App\Http\Controllers\InformacionUsuarioControlador;
 use App\Http\Controllers\OlvidoPasswordControlador;
 use App\Http\Controllers\RealizarReservaControlador;
 
@@ -35,4 +36,5 @@ Route::middleware([
     Route::get('/reservar', [BuscarHotelesControlador::class, 'reserve'])->name('reservar');
     Route::post('/guardarreserva', [RealizarReservaControlador::class, 'guardarreserva'])->name('guardarreserva');
     Route::get('/exitoreserva', [RealizarReservaControlador::class, 'mostrarexito'])->name('exitoreserva');
+    Route::get('/informacionusuario', [InformacionUsuarioControlador::class, 'mostrarinformacion'])->name('informacionusuario');
 });

@@ -363,3 +363,154 @@ footer {
     font-size: 20px;
 }
 
+/* Estilo del enlace de cerrar sesión */
+.btn-secondary.icono-user {
+    background-color: transparent; /* Elimina el color de fondo */
+    border: none; /* Elimina el borde */
+    color: inherit; /* Mantiene el color del texto según el tema */
+    outline: none; /* Elimina el contorno de enfoque */
+    text-decoration: none; /* Elimina el subrayado si aplica */
+}
+
+/* Estilo del icono dentro del enlace */
+.btn-secondary.icono-user i {
+    color: inherit; /* Mantiene el color original del icono */
+}
+
+/* Estado activo (cuando se hace clic) */
+.btn-secondary.icono-user:active {
+    background-color: transparent; /* Asegura que el fondo se mantenga transparente */
+    color: inherit; /* Asegura que el color del texto no cambie */
+}
+
+/* Estado de enfoque (cuando se enfoca con el teclado) */
+.btn-secondary.icono-user:focus {
+    background-color: transparent; /* Asegura que el fondo se mantenga transparente */
+    box-shadow: none; /* Elimina cualquier sombra que pueda aparecer */
+    color: inherit; /* Asegura que el color del texto no cambie */
+}
+
+/* Estado hover (cuando el ratón está sobre el enlace) */
+.btn-secondary.icono-user:hover {
+    background-color: transparent; /* Asegura que el fondo se mantenga transparente */
+    color: inherit; /* Asegura que el color del texto no cambie */
+}
+
+/* Estado activo del icono (cuando se hace clic) */
+.btn-secondary.icono-user:active i {
+    color: inherit; /* Mantiene el color original del icono */
+}
+
+@media (max-width: 768px) {
+    .user-name {
+        margin-left: 100px;
+    }
+
+    .enlace-resena{
+        margin-top: 0px;
+        margin-right: 0px;
+    }
+    
+    .fa-right-from-bracket {
+        font-size: 14px; /* Ajusta el tamaño del ícono */
+    }
+    
+    .icono-user {
+        padding: 5px 10px; /* Ajusta el padding para pantallas pequeñas */
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+    margin-left: 20px;
+    margin-right: 20px;
+    }
+}
+
+@media (max-width: 992px) {
+    .user-name {
+        margin-left: 100px;
+    }
+
+    .enlace-resena{
+        margin-top: 0px;
+        margin-right: 0px;
+    }
+    
+    .fa-right-from-bracket {
+        font-size: 14px; /* Ajusta el tamaño del ícono */
+    }
+    
+    .icono-user {
+        padding: 5px 10px; /* Ajusta el padding para pantallas pequeñas */
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+    margin-left: 10px;
+    margin-right: 10px;
+    }
+}
+
+@media (max-width: 1200px){
+    .user-name {
+        margin-left: 100px;
+    }
+
+    .enlace-resena{
+        margin-top: 0px;
+        margin-right: 0px;
+    }
+    
+    .fa-right-from-bracket {
+        font-size: 14px; /* Ajusta el tamaño del ícono */
+    }
+    
+    .icono-user {
+        padding: 5px 10px; /* Ajusta el padding para pantallas pequeñas */
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+    margin-left: 10px;
+    margin-right: 10px;
+    }
+}
+
+/* Estilos personalizados para hacer el carrusel responsive */
+
+/* Para pantallas pequeñas */
+@media (max-width: 576px) {
+    .cuadro-resena {
+        width: 100%; /* La reseña ocupa todo el ancho */
+        padding: 10px;
+    }
+}
+
+/* Para pantallas medianas */
+@media (min-width: 577px) and (max-width: 768px) {
+    .cuadro-resena {
+        width: 100%; /* Las reseñas siguen ocupando todo el ancho */
+        padding: 15px;
+    }
+}
+
+/* Para pantallas grandes */
+@media (min-width: 769px) and (max-width: 992px) {
+    .cuadro-resena {
+        width: 45%; /* Mostrar dos reseñas por slide */
+        margin: 0 10px; /* Añadir espacio entre las reseñas */
+    }
+}
+
+/* Para pantallas extra grandes */
+@media (min-width: 993px) {
+    .cuadro-resena {
+        width: 30%; /* Mostrar tres reseñas por slide */
+        margin: 0 10px;
+    }
+
+    .reseñas-carousel-control-prev {
+        margin-left: -120px;
+    }
+    
+}

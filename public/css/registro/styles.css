@@ -249,3 +249,21 @@ footer {
     text-align: center;
 }
 
+@media (max-width: 768px) {
+    .user-name {
+        margin-left: 100px;
+    }
+
+    .enlace-resena{
+        margin-top: 0px;
+        margin-right: 0px;
+    }
+    
+    .fa-right-from-bracket {
+        font-size: 14px; /* Ajusta el tamaño del ícono */
+    }
+    
+    .icono-user {
+        padding: 5px 10px; /* Ajusta el padding para pantallas pequeñas */
+    }
+}

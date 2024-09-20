@@ -1,0 +1,508 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden; /* Esto oculta el desbordamiento horizontal */
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    flex: 1; /* Hace que el body ocupe el espacio restante disponible */
+    min-height: 100vh;
+}
+
+main {
+    flex: 1; /* El main se expande para ocupar todo el espacio restante disponible */
+}
+
+header {
+    background: url('../../images/inicio/fondo-logo.jfif') no-repeat center center, #D4AF37;
+    background-size: cover;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 0 1rem;
+    width: 100%;
+}
+
+
+.logo-cabecera {
+    width: 200px;
+    height: 100px; 
+    
+}
+
+.btn-secondary:hover{
+    background-color: transparent;
+    border-color: transparent;
+    color: black;
+}
+
+.icono-user{
+    position: absolute;
+    right: 1rem; 
+    display: flex;
+    gap: 1.5rem;
+    font-size: 1.5rem;
+    background-color: transparent;
+    border-color: transparent;
+    color: black;
+    box-shadow: none !important; 
+    outline: none !important;
+}
+
+
+.icono-menu,.dropdown, .dropdown-toggle {
+    position: absolute;
+    left: 1rem;
+    display: flex;
+    gap: 1.5rem;
+    font-size: 1.5rem;
+    background-color: transparent;
+    border-color: transparent;
+    color: black;
+    bottom: 20px;
+}
+
+.dropdown-toggle:hover,.dropdown-toggle:active, .dropdown-toggle:focus, .dropdown-toggle:enabled{
+    background-color: transparent; 
+    border-color: transparent;
+    color: black;
+}
+
+#dropdownMenuButton:active, #dropdownMenuButton:focus {
+    background-color: transparent; /* No cambia de color al pasar el ratón */
+    border-color: transparent;
+    color: black;
+}
+
+/* Estilo del enlace de cerrar sesión */
+.btn-secondary.icono-user {
+    background-color: transparent; /* Elimina el color de fondo */
+    border: none; /* Elimina el borde */
+    color: inherit; /* Mantiene el color del texto según el tema */
+    outline: none; /* Elimina el contorno de enfoque */
+    text-decoration: none; /* Elimina el subrayado si aplica */
+}
+
+/* Estilo del icono dentro del enlace */
+.btn-secondary.icono-user i {
+    color: inherit; /* Mantiene el color original del icono */
+}
+
+/* Estado activo (cuando se hace clic) */
+.btn-secondary.icono-user:active {
+    background-color: transparent; /* Asegura que el fondo se mantenga transparente */
+    color: inherit; /* Asegura que el color del texto no cambie */
+}
+
+/* Estado de enfoque (cuando se enfoca con el teclado) */
+.btn-secondary.icono-user:focus {
+    background-color: transparent; /* Asegura que el fondo se mantenga transparente */
+    box-shadow: none; /* Elimina cualquier sombra que pueda aparecer */
+    color: inherit; /* Asegura que el color del texto no cambie */
+}
+
+/* Estado hover (cuando el ratón está sobre el enlace) */
+.btn-secondary.icono-user:hover {
+    background-color: transparent; /* Asegura que el fondo se mantenga transparente */
+    color: inherit; /* Asegura que el color del texto no cambie */
+}
+
+/* Estado activo del icono (cuando se hace clic) */
+.btn-secondary.icono-user:active i {
+    color: inherit; /* Mantiene el color original del icono */
+}
+
+
+.contenedor-titulos {
+    position: relative;
+    background: url('../../images/inicio/fondo-body.jpg') no-repeat center center, #D4AF37;
+    background-size: cover;
+    width: 100%; 
+    padding: 100px 0; 
+    text-align: center;
+}
+
+.titulo {
+    font-size: 2.5rem;
+    margin: 0;
+    text-align: center;
+}
+
+.eslogan {
+    margin-top: 10px;
+    font-size: 1.25rem;
+}
+
+.contenedor-busqueda {
+    margin: 20px auto;
+    border: 3px solid #3c3c3c;
+    padding: 20px;
+    max-width: 800px;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.form-control {
+    border-color: #3c3c3c;
+    border: 3px solid #ccc;
+}
+
+.seccion-descubre {
+    margin-top: 50px;
+}
+
+.contenedor-ciudades .ciudad img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    background-color: #ccc;
+}
+.img-ciudades {
+    width: 200px; 
+    height: 150px; 
+    object-fit: cover; 
+    border-radius: 15px; 
+    display: block; 
+    margin: 0 auto;
+}
+.img-ciudades:hover {
+    border: 3px solid black !important;
+}
+.txt-ciudades {
+    font-size: 1.2rem;
+}
+
+footer {
+    flex-shrink: 0;
+    padding: 20px;
+    text-align: center;
+    background: url('../../images/inicio/fondo-logo.jfif') no-repeat center center, #D4AF37;
+    background-size: cover;
+    height: 160px; 
+    position: relative;
+    width: 100%;
+    margin-top: auto;
+}
+
+.campo-edad{
+    margin-top: 10px;
+}
+
+.campo-edad .form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    margin-bottom: .5rem;
+}
+
+.mundo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+.texto-mundo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-control2.is-invalid {
+    border-color: #dc3545;
+}
+.invalid-feedback {
+    display: none;
+    color: #dc3545;
+}
+.form-control2.error + .invalid-feedback {
+    display: block;
+}
+
+.invalid-feedback {
+    display: none;
+    color: #dc3545;
+}
+
+.invalid-feedback.show {
+    display: block;
+}
+
+.cuadrado {
+    width: 100%;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid #3c3c3c;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 5px;
+}
+
+.cuadrado-central {
+    width: 100%;
+    height: 197px;
+    display: flex;
+    flex-direction: column; /* Alinea los elementos verticalmente */
+    border: 3px solid #3c3c3c;
+    margin: 0; /* Elimina márgenes extra */
+    border-radius: 5px;
+    position: relative;
+    padding: 15px; /* Espacio interior del cuadrado */
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.centros{
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+}
+
+.icono-user2 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 100px; 
+    padding: 0;
+}
+
+.boton-perfil{
+    font-size: 10px;
+    margin-top: -40px;
+}
+
+.informacion-personal{
+    text-decoration: underline;
+    font-size: 15px;
+    margin-top: -10px;
+}
+
+.email,.domicilio,.dni,.tlf{
+    text-align: left;
+    margin-left: 20px;
+    font-size: 13px;
+}
+
+.detalles-usuario {
+    text-decoration: underline;
+    font-size: 15px;
+    text-align: left; /* Alinea el texto a la izquierda */
+    margin: 0; /* Elimina márgenes para asegurar alineación */
+    padding: 0; /* Elimina padding para evitar desplazamiento */
+    width: 100%; /* Asegura que el texto no se salga del contenedor */
+    box-sizing: border-box; /* Incluye padding en el ancho total */
+}
+
+.nombre {
+    font-size: 13px;
+    text-align: left; /* Alinea el texto a la izquierda */
+    margin-top: 5px; /* Espacio superior entre detalles y nombre */
+    padding: 0; /* Elimina padding para evitar desplazamiento */
+    width: 100%; /* Asegura que el texto no se salga del contenedor */
+    box-sizing: border-box; /* Incluye padding en el ancho total */
+}
+.apellidos{
+    font-size: 13px;
+    text-align: left; /* Alinea el texto a la izquierda */
+    padding: 0; /* Elimina padding para evitar desplazamiento */
+    width: 100%; /* Asegura que el texto no se salga del contenedor */
+    box-sizing: border-box; /* Incluye padding en el ancho total */
+}
+.email2{
+    font-size: 13px;
+    text-align: left; /* Alinea el texto a la izquierda */
+    padding: 0; /* Elimina padding para evitar desplazamiento */
+    width: 100%; /* Asegura que el texto no se salga del contenedor */
+    box-sizing: border-box; /* Incluye padding en el ancho total */
+}
+
+.enlace-perfil {
+    position: absolute;
+    top: 10px; /* Ajusta la distancia desde la parte superior */
+    right: 10px; /* Ajusta la distancia desde el lado derecho */
+    text-decoration: none; /* Elimina el subrayado por defecto del enlace */
+    color: #007bff; /* Cambia el color del enlace (opcional) */
+    font-size: 14px; /* Tamaño de fuente del enlace (opcional) */
+}
+
+.tabla-reservas {
+    width: 100%; /* Ajusta el tamaño de la tabla (cámbialo según tu preferencia) */
+    border-collapse: collapse; /* Asegura que los bordes se junten */
+    margin: 20px auto; /* Centra la tabla horizontalmente */
+    font-size: 12px; /* Haz que el texto sea más pequeño */
+    height: 100px;
+    border-radius: 5px;
+}
+
+.tabla-reservas th, 
+.tabla-reservas td {
+    border: 3px solid #3c3c3c; /* Bordes negros en las celdas */
+    border-radius: 5px;
+    padding: 4px; /* Espacio dentro de las celdas */
+    text-align: center; /* Alineación del texto a la izquierda */
+}
+
+.tabla-reservas th {
+    background-color: #859eca; /* Color de fondo para el encabezado */
+}
+
+.resenas {
+    text-decoration: underline;
+    font-size: 15px;
+    text-align: left; /* Alinea el texto a la izquierda */
+    margin: 0; /* Elimina márgenes para asegurar alineación */
+    padding: 0; /* Elimina padding para evitar desplazamiento */
+    width: 100%; /* Asegura que el texto no se salga del contenedor */
+    box-sizing: border-box; /* Incluye padding en el ancho total */
+    position: absolute; /* Permite moverlo fuera del flujo normal */
+    top: 10px; /* Ajusta la posición vertical */
+    left: 10px; /* Ajusta la posición horizontal */
+}
+
+.cuadrado {
+    position: relative; /* Permite que el título se posicione absolutamente respecto a este contenedor */
+    padding: 20px; /* Añade espacio dentro del recuadro */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+.reseñas-container {
+    display: flex; /* Cambiar a fila */
+    flex-wrap: wrap; /* Permitir que se ajusten en múltiples filas si no caben */
+    justify-content: center; /* Centrar recuadros en la fila */
+    padding: 0;
+    box-sizing: border-box;
+    margin: 0; /* Elimina márgenes */
+    width: 100%; /* Asegura que el contenedor ocupe el 100% del espacio disponible */
+    margin-right: 0px;
+    margin-bottom: 40px;
+}
+
+.contenedor-resena {
+    display: flex; /* Mantiene la imagen y el texto en fila */
+    align-items: center; /* Alinea verticalmente al centro */
+    border: 3px solid #3c3c3c; /* Bordes negros en las celdas */
+    border-radius: 5px;
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px; /* Espacio dentro del recuadro */
+    width: 300px; /* Ajusta el ancho como necesites */
+    margin: 10px; /* Espacio entre los recuadros */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra opcional para darle profundidad */
+    box-sizing: border-box; /* Incluye padding y bordes en el ancho total */
+}
+
+
+.imagen-resena {
+    width: 50px; 
+    height: 50px; 
+    object-fit: cover; 
+    border-radius: 5px;
+    margin-right: 10px; /* Espacio entre la imagen y el texto */
+}
+
+.nombre-hotel {
+    margin: 0; /* Elimina márgenes para ajustar el texto */
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.texto-resena {
+    font-size: 12px; /* Ajusta el tamaño de la fuente según lo necesites */
+}
+
+.menu-izquierda {
+    position: absolute; /* Posiciona el menú a la izquierda de la cabecera */
+    top: 10px; /* Ajusta según sea necesario */
+    left: 40px; /* Ajusta según sea necesario */
+    margin-top: 40px;
+    overflow-x: auto;
+}
+
+.menu-izquierda ul {
+    display: flex; /* Muestra los elementos en fila */
+    flex-wrap: nowrap; 
+}
+
+.menu-izquierda a {
+    text-decoration: none; /* Sin subrayado */
+    color: black;
+}
+
+.menu-izquierda li {
+    margin: 0 5px; /* Espacio entre enlaces */
+}
+
+/* Estilo para pantallas pequeñas */
+
+@media (max-width: 992px){
+    .menu-izquierda{
+        margin-top: 20px;
+    }
+    .menu-izquierda ul {
+        flex-direction: column; /* Cambia a diseño vertical */
+        align-items: flex-start; /* Alinea los elementos a la izquierda */
+        font-size: 10px;
+        
+    }
+
+    .menu-izquierda .divider {
+        display: none; /* Oculta los divisores en el modo vertical */
+    }
+
+    .menu-izquierda li {
+        margin-bottom: 5px; /* Espacio entre los enlaces */
+    }
+}
+
+@media (max-width: 992px) {
+    .reseñas-container{
+        margin-top: 100px;
+    }
+    .contenedor-resena {
+        width: 100%; /* Ocupa todo el ancho en pantallas pequeñas */
+        flex-direction: column; /* Cambia a columna */
+        align-items: flex-start; /* Alinea el contenido a la izquierda */
+        font-size: 10px;
+    }
+
+    .enlace-resena{
+        margin-top: 20px;
+        margin-right: 70px;
+    }
+
+    .imagen-resena {
+        width: 20px;
+        height: 20px;
+        margin-bottom: 0px; /* Espacio entre la imagen y el texto */
+    }
+
+    .resenas {
+        font-size: 14px; /* Ajusta el tamaño de la fuente para pantallas pequeñas */
+    }
+    .nombre-hotel,.texto-resena{
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .user-name {
+        margin-left: 100px;
+    }
+
+    .enlace-resena{
+        margin-top: 0px;
+        margin-right: 0px;
+    }
+    
+    .fa-right-from-bracket {
+        font-size: 14px; /* Ajusta el tamaño del ícono */
+    }
+    
+    .icono-user {
+        padding: 5px 10px; /* Ajusta el padding para pantallas pequeñas */
+    }
+}
