@@ -7,6 +7,7 @@ use App\Http\Controllers\DescubreEspanaControlador;
 use App\Http\Controllers\InformacionUsuarioControlador;
 use App\Http\Controllers\OlvidoPasswordControlador;
 use App\Http\Controllers\RealizarReservaControlador;
+use App\Http\Controllers\EditarPerfilControlador;
 
 Route::get('/', function () {
     return view('inicio');
@@ -37,4 +38,6 @@ Route::middleware([
     Route::post('/guardarreserva', [RealizarReservaControlador::class, 'guardarreserva'])->name('guardarreserva');
     Route::get('/exitoreserva', [RealizarReservaControlador::class, 'mostrarexito'])->name('exitoreserva');
     Route::get('/informacionusuario', [InformacionUsuarioControlador::class, 'mostrarinformacion'])->name('informacionusuario');
+    Route::get('/editarperfil/{clienteID}', [EditarPerfilControlador::class, 'mostrarPerfil'])->name('editarperfil');
+    Route::post('/editarperfil/{clienteID}/{id}', [EditarPerfilControlador::class, 'editarPerfil'])->name('editarPerfil');
 });

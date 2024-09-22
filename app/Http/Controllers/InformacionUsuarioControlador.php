@@ -37,7 +37,7 @@ class InformacionUsuarioControlador extends Controller
             $reserva->num_dias = $numDias;
         }
 
-        // Obtiene las reseñas del cliente, uniendo con las tablas hoteles y la tabla imagenes_hoteles
+        // Obtiene las reseñas del cliente, junto con el nombre y la imagen del hotel
         $resenas = DB::table('resenas')
             ->join('hoteles', 'resenas.hotelID', '=', 'hoteles.hotelID')
             ->join('imagenes_hoteles', function ($join) {
@@ -46,10 +46,9 @@ class InformacionUsuarioControlador extends Controller
             })
             ->where('resenas.clienteID', $cliente->clienteID)
             ->select('resenas.*', 'hoteles.nombre', 'imagenes_hoteles.imagen as imagen_portada')
-            ->take(2) // Limitar a las 3 primeras reseñas
+            ->take(2) // Seleeciona solo las 2 primeras reseñas
             ->get();
 
-        // Pasa todas las variables a la vista en un solo array
         return view('informacionusuario', [
             'cliente' => $cliente,
             'reservas' => $reservas,

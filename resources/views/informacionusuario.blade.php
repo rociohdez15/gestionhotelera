@@ -97,7 +97,7 @@
                         <div class="icono-user2">
                             <i class="fas fa-user"></i>
                             <h6>{{ $cliente->apellidos}}, {{ $cliente->nombre }}</h6>
-                            <a href="#" class="btn btn-primary boton-perfil" role="button">Editar perfil</a>
+                            <a href="{{ route ('editarperfil', ['clienteID' => Auth::user()->id ] , ['id' => Auth::user()->id ]) }}" class="btn btn-primary boton-perfil" role="button">Editar perfil</a>
                             <p class="informacion-personal"><strong>Información Personal</strong></p>
                             <h6 class="email"><strong>Dirección de correo: </strong>{{ $cliente->email}}</h6>
                             <h6 class="domicilio"><strong>Domicilio: </strong>{{ $cliente->direccion}}</h6>
@@ -113,7 +113,7 @@
                 <div class="col-md-6">
                     <div class="d-flex flex-column justify-content-center align-items-start">
                         <div class="cuadrado-central mb-1">
-                            <a href="#" class="enlace-perfil">Editar perfil</a>
+                            <a href="{{ route ('editarperfil', ['clienteID' => Auth::user()->id ] , ['id' => Auth::user()->id ]) }}" class="enlace-perfil">Editar perfil</a>
                             <h6 class="detalles-usuario"><strong>Detalles de usuario</strong></h6>
                             <h6 class="nombre"><strong>Nombre: </strong>{{ $cliente->nombre}}</h6>
                             <h6 class="apellidos"><strong>Apellidos: </strong>{{ $cliente->apellidos}}</h6>
