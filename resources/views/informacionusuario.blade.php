@@ -90,7 +90,7 @@
         <h2 class="titulo">INFORMACIÓN DEL USUARIO</h2>
         <br>
         <div class="container-fluid px-2 container">
-            <div class="row g-1"> <!-- Ajusta el espacio entre columnas con g-1 o g-0 -->
+            <div class="row g-1">
                 <!-- Cuadro izquierdo -->
                 <div class="col-md-3 d-flex justify-content-center align-items-center">
                     <div class="cuadrado d-flex flex-column align-items-center">
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Cuadros centrales (uno debajo del otro) -->
+                <!-- Cuadros centrales -->
                 <div class="col-md-6">
                     <div class="d-flex flex-column justify-content-center align-items-start">
                         <div class="cuadrado-central mb-1">
@@ -120,7 +120,7 @@
                             <h6 class="email2"><strong>Correo: </strong>{{ $cliente->email}}</h6>
                         </div>
                         <div class="cuadrado-central">
-                            <a href="#" class="enlace-perfil">Ver Reservas</a>
+                            <a href="#" class="enlace-perfil">Ver Mis Reservas</a>
                             <h6 class="detalles-usuario"><strong>Mis Reservas</strong></h6>
                             @if($reservas->isEmpty())
                             <p>No hay reservas para este cliente.</p>
@@ -159,7 +159,7 @@
                         @else
                         <div class="reseñas-container">
                             @foreach ($resenas as $resena)
-                            <div class="contenedor-resena"> <!-- Recuadro para cada reseña -->
+                            <div class="contenedor-resena">
                                 <img src="{{ asset($resena->imagen_portada) }}" alt="Imagen del hotel" class="imagen-resena" />
                                 <div>
                                     <h6 class="nombre-hotel">Hotel: {{ $resena->nombre }}</h6>
@@ -168,7 +168,9 @@
                             </div>
                             @endforeach
                         </div>
-                        <a href="#" class="enlace-perfil enlace-resena">Ver Reseñas</a>
+                        <a href="#" class="enlace-perfil enlace-resena">Ver Mis Reseñas</a>
+                        <br>
+                        <a href="{{ route ('dejarResenas') }}" class="enlace-perfil enlace-dejaresena">Dejar Reseñas</a>
                         @endif
                     </div>
                 </div>
