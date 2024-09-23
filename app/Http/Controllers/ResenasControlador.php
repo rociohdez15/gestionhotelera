@@ -16,56 +16,104 @@ class ResenasControlador extends Controller
 {
     //Método que mostrará los hoteles que no han recibido la reseña
     public function dejarResenas(Request $request)
-{
-    // Obtener el cliente autenticado
-    $clienteID = Auth::id();
+    {
+        // Obtener el cliente autenticado
+        $clienteID = Auth::id();
 
-    // Filtrar hoteles de reservas donde el cliente aún no ha dejado una reseña
-    $hotelesSinResena = Hotel::select('hoteles.*', DB::raw('(SELECT imagen FROM imagenes_hoteles WHERE hotelID = hoteles.hotelID AND imagen LIKE "images/portadas/portada%" LIMIT 1) as imagen_url'))
-        ->whereIn('hotelID', function ($habitaciones) use ($clienteID) {  // Filtra los hoteles cuyo 'hotelID' está en la tabla habitaciones
-            $habitaciones->select('habitaciones.hotelID') //Selecciona el hotelID de la tabla habitaciones
-                  ->from('reservas') // Selecciona la tabla reservas 
-                  ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID') // Une la tabla reservas con la tabla habitaciones
-                  ->where('reservas.clienteID', $clienteID) // Filtra las reservas para el cliente autenticado
-                  ->whereNotExists(function ($resenas) use ($clienteID) { // Comprueba que no existan reseñas para el hotel
-                      $resenas->select(DB::raw(1)) //Verifica si hay al menos una fila que contenga dichas restricciones
-                              ->from('resenas') // Consulta la tabla 'resenas'
-                              ->whereColumn('resenas.hotelID', 'habitaciones.hotelID') // Asegura que el 'hotelID' en 'resenas' coincida con el de 'habitaciones'
-                              ->where('resenas.clienteID', $clienteID); // Filtra para el cliente específico
-                  });
-        })
-        ->get();
+        // Filtrar hoteles de reservas donde el cliente aún no ha dejado una reseña
+        $hotelesSinResena = Hotel::select('hoteles.*', DB::raw('(SELECT imagen FROM imagenes_hoteles WHERE hotelID = hoteles.hotelID AND imagen LIKE "images/portadas/portada%" LIMIT 1) as imagen_url'))
+            ->whereIn('hotelID', function ($habitaciones) use ($clienteID) {  // Filtra los hoteles cuyo 'hotelID' está en la tabla habitaciones
+                $habitaciones->select('habitaciones.hotelID') //Selecciona el hotelID de la tabla habitaciones
+                    ->from('reservas') // Selecciona la tabla reservas 
+                    ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID') // Une la tabla reservas con la tabla habitaciones
+                    ->where('reservas.clienteID', $clienteID) // Filtra las reservas para el cliente autenticado
+                    ->whereNotExists(function ($resenas) use ($clienteID) { // Comprueba que no existan reseñas para el hotel
+                        $resenas->select(DB::raw(1)) //Verifica si hay al menos una fila que contenga dichas restricciones
+                            ->from('resenas') // Consulta la tabla 'resenas'
+                            ->whereColumn('resenas.hotelID', 'habitaciones.hotelID') // Asegura que el 'hotelID' en 'resenas' coincida con el de 'habitaciones'
+                            ->where('resenas.clienteID', $clienteID); // Filtra para el cliente específico
+                    });
+            })
+            ->get();
+            
 
-    // Cuenta el número total de hoteles sin reseña
-    $totalHoteles = $hotelesSinResena->count();
+        // Cuenta el número total de hoteles sin reseña
+        $totalHoteles = $hotelesSinResena->count();
 
-    // Define los parámetros de paginación
-    $registros_por_pagina = 5; // Muestra 1 registro por página
-    $pagina_actual = $request->input('pagina', 1);
-    $total_paginas = ceil($totalHoteles / $registros_por_pagina);
+        // Define los parámetros de paginación
+        $registros_por_pagina = 5; // Muestra 1 registro por página
+        $pagina_actual = $request->input('pagina', 1);
+        $total_paginas = ceil($totalHoteles / $registros_por_pagina);
 
-    // Valida la página actual
-    if ($pagina_actual < 1) $pagina_actual = 1;
-    if ($pagina_actual > $total_paginas) $pagina_actual = $total_paginas;
+        // Valida la página actual
+        if ($pagina_actual < 1) $pagina_actual = 1;
+        if ($pagina_actual > $total_paginas) $pagina_actual = $total_paginas;
 
-    // Calcula el índice de inicio
-    $inicio = ($pagina_actual - 1) * $registros_por_pagina;
+        // Calcula el índice de inicio
+        $inicio = ($pagina_actual - 1) * $registros_por_pagina;
 
-    // Obtiene los datos para la página actual
-    $datos_paginados = $hotelesSinResena->slice($inicio, $registros_por_pagina);
+        // Obtiene los datos para la página actual
+        $datos_paginados = $hotelesSinResena->slice($inicio, $registros_por_pagina);
 
-    // Cambia la colección a una nueva colección para no perder la información de paginación
-    $datos = $datos_paginados->values(); 
+        // Cambia la colección a una nueva colección para no perder la información de paginación
+        $datos = $datos_paginados->values();
 
-    $parametros = [
-        "datos" => $datos,
-        "pagina_actual" => $pagina_actual,
-        "total_paginas" => $total_paginas,
-        "registros_por_pagina" => $registros_por_pagina,
-    ];
+        $parametros = [
+            "datos" => $datos,
+            "pagina_actual" => $pagina_actual,
+            "total_paginas" => $total_paginas,
+            "registros_por_pagina" => $registros_por_pagina,
+            'hotelesSinResena' => $hotelesSinResena
+        ];
 
-    return view('dejaresena', compact('hotelesSinResena'), $parametros);
+        return view('dejaresena',$parametros);
+    }
+
+    public function escribirResenasForm($hotelID) {
+        // Obtener el hotel específico por ID
+        $hotel = DB::table('hoteles')->where('hotelID', $hotelID)->first();
+    
+        // Obtener la fecha de hoy
+        $fechaHoy = Carbon::now()->format('Y-m-d');
+    
+        $parametros = [
+            "mensajes" => [], 
+            "hotel" => $hotel, // Pasar el hotel a la vista
+            "fechaHoy" => $fechaHoy, // Pasar la fecha de hoy a la vista
+        ];
+    
+        return view('escribirresena', $parametros);
+    }
+
+    public function guardarResena(Request $request){
+        // Validar los datos enviados en la solicitud
+        $request->validate([
+            'hotelID' => 'required|exists:hoteles,hotelID', 
+            'fecha' => 'required|date', 
+            'resena' => 'required|string', 
+            'puntuacion' => 'required|integer|between:0,10', 
+        ]);
+
+        $fechaHoy = Carbon::now()->format('Y-m-d');
+        $clienteID = Auth::id();
+        $cliente = Auth::user()->name;
+        
+
+        // Obtener los datos del formulario
+        $hotelID = $request->input('hotelID');
+        $fecha = $fechaHoy;
+        $texto = $request->input('resena');
+        $puntuacion = $request->input('puntuacion');
+
+        $resena = new Resena();
+        $resena->clienteID = $clienteID;
+        $resena->hotelID = $hotelID;
+        $resena->nombre_cliente = $cliente; 
+        $resena->fecha = $fecha;
+        $resena->texto = $texto;
+        $resena->puntuacion = $puntuacion;
+        $resena->save();
+
+        return redirect()->route('dejarResenas')->with('success', 'Reseña registrada exitosamente.');
+    }
 }
-
-
-}    

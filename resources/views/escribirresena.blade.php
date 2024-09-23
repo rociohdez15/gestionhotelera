@@ -87,61 +87,34 @@
 
     <main>
         <br>
+        <h2 class="titulo text-center">ESCRIBE TU RESEÑAS</h2>
         <br>
-        <h2 class="titulo text-center">DÉJANOS TUS RESEÑAS</h2>
-        <br>
-        @if ($hotelesSinResena->isEmpty())
-        <p class="text-center">No tienes hoteles pendientes de reseñar.</p>
-        @else
         <div class="container">
-            @if ($errors->any())
-            <div class="alert alert-danger ml-2" style="max-width: 400px; margin: 0 auto;">
-                @foreach ($errors->all() as $error)
-                {{ $error }}
-                @endforeach
-            </div>
-            <br>
-            @endif
+            <form action="{{ route('guardarResena', ['hotelID' => $hotel->hotelID]) }}" method="POST">
+                @csrf
+                <input type="hidden" name="clienteID" value="{{ Auth::id() }}">
+                <input type="hidden" name="fecha" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+                <input type="hidden" name="nombre_cliente" value="{{ Auth::user()->name }}">
+                <div class="form-group row align-items-center">
+                    <div class="col-sm-6 offset-sm-3">
+                        <h6><strong>Hotel:</strong> {{ $hotel->nombre }}</h6>
+                        <h6><strong>Fecha:</strong> {{ $fechaHoy }}</h6>
 
-            <!-- Mostrar mensaje de éxito -->
-            @if(session('success'))
-            <div class="alert alert-success" style="max-width: 400px; margin: 0 auto;">
-                {{ session('success') }}
-            </div>
-            @endif
+                        <label for="resena"><strong>Reseña: </strong></label>
+                        <textarea class="form-control" id="resena" name="resena" rows="4" placeholder="Escribe tu reseña aquí..."></textarea>
 
-            <br>
-            @foreach ($datos as $hotel)
-            <div class="row align-items-start mb-3 mostrar-alojamientos">
-                <!-- Imagen del hotel -->
-                <div class="col-12 col-md-4 hotel-imagen mb-3 mb-md-0">
-                    @if ($hotel->imagen_url)
-                    <img src="{{ asset($hotel->imagen_url) }}" alt="{{ $hotel->nombre }}" class="img-fluid rounded imagen-portada-alojamiento">
-                    @else
-                    <p>No hay imagen de portada disponible.</p>
-                    @endif
+                        <label for="puntuacion"><strong>Puntuación (0-10): </strong></label>
+                        <input type="number" class="form-control" id="puntuacion" name="puntuacion" min="0" max="10" step="1" placeholder="Introduce una puntuación">
+                        <br>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Publicar</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-12 col-md-8">
-                    <h5>{{ $hotel->nombre }}</h5>
-                    <p><strong>Dirección:</strong> {{ $hotel->direccion }}</p>
-                    <p><strong>Descripción:</strong> {{ $hotel->descripcion }}</p>
-                    <a href="{{ route('escribirResenasForm', ['hotelID' => $hotel->hotelID]) }}" class="btn btn-primary mt-2">Escribir Reseña</a>
-                </div>
-            </div>
-            @endforeach
-        </div>
+                <br>
+            </form>
 
-        <br>
-        <!-- Paginación -->
-        <div class="container text-center">
-            <p>
-                Página {{ $pagina_actual }} de {{ $total_paginas }} | Mostrar {{ $registros_por_pagina }} registros por página | Ir a página:
-                @for ($i = 1; $i <= $total_paginas; $i++)
-                    <a href="{{ route('dejarResenas', array_merge(request()->except('pagina'), ['pagina' => $i])) }}">{{ $i }}</a>
-                    @endfor
-            </p>
         </div>
-        @endif
     </main>
     <footer>
         <a href="#">Términos y Condiciones</a> |

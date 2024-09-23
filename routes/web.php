@@ -42,4 +42,6 @@ Route::middleware([
     Route::get('/editarperfil/{clienteID}', [EditarPerfilControlador::class, 'mostrarPerfil'])->name('editarperfil');
     Route::post('/editarperfil/{clienteID}/{id}', [EditarPerfilControlador::class, 'editarPerfil'])->name('editarPerfil');
     Route::get('/dejarresena', [ResenasControlador::class, 'dejarResenas'])->name('dejarResenas');
+    Route::get('/escribirresena/{hotelID}', [ResenasControlador::class, 'escribirResenasForm'])->name('escribirResenasForm');
+    Route::post('/escribirresena', [ResenasControlador::class, 'guardarResena'])->name('guardarResena');
 });
