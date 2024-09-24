@@ -30,7 +30,7 @@
                 <li class="divider">|</li>
                 <li><a href="#">Mis Reservas</a></li>
                 <li class="divider">|</li>
-                <li><a href="#">Mis Reseñas</a></li>
+                <li><a href="{{ route ('mostrarResenas', ['clienteID' => Auth::id()]) }}">Mis Reseñas</a></li>
             </ul>
         </nav>
 

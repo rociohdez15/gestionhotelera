@@ -35,7 +35,7 @@ class ResenasControlador extends Controller
                     });
             })
             ->get();
-            
+
 
         // Cuenta el número total de hoteles sin reseña
         $totalHoteles = $hotelesSinResena->count();
@@ -66,38 +66,42 @@ class ResenasControlador extends Controller
             'hotelesSinResena' => $hotelesSinResena
         ];
 
-        return view('dejaresena',$parametros);
+        return view('dejaresena', $parametros);
     }
 
-    public function escribirResenasForm($hotelID) {
+    //Método para mostrar el formulario de escribir reseñas
+    public function escribirResenasForm($hotelID)
+    {
         // Obtener el hotel específico por ID
         $hotel = DB::table('hoteles')->where('hotelID', $hotelID)->first();
-    
+
         // Obtener la fecha de hoy
         $fechaHoy = Carbon::now()->format('Y-m-d');
-    
+
         $parametros = [
-            "mensajes" => [], 
+            "mensajes" => [],
             "hotel" => $hotel, // Pasar el hotel a la vista
             "fechaHoy" => $fechaHoy, // Pasar la fecha de hoy a la vista
         ];
-    
+
         return view('escribirresena', $parametros);
     }
 
-    public function guardarResena(Request $request){
+    //Método para guardar los datos del formulario
+    public function guardarResena(Request $request)
+    {
         // Validar los datos enviados en la solicitud
         $request->validate([
-            'hotelID' => 'required|exists:hoteles,hotelID', 
-            'fecha' => 'required|date', 
-            'resena' => 'required|string', 
-            'puntuacion' => 'required|integer|between:0,10', 
+            'hotelID' => 'required|exists:hoteles,hotelID',
+            'fecha' => 'required|date',
+            'resena' => 'required|string',
+            'puntuacion' => 'required|integer|between:0,10',
         ]);
 
         $fechaHoy = Carbon::now()->format('Y-m-d');
         $clienteID = Auth::id();
         $cliente = Auth::user()->name;
-        
+
 
         // Obtener los datos del formulario
         $hotelID = $request->input('hotelID');
@@ -108,12 +112,65 @@ class ResenasControlador extends Controller
         $resena = new Resena();
         $resena->clienteID = $clienteID;
         $resena->hotelID = $hotelID;
-        $resena->nombre_cliente = $cliente; 
+        $resena->nombre_cliente = $cliente;
         $resena->fecha = $fecha;
         $resena->texto = $texto;
         $resena->puntuacion = $puntuacion;
         $resena->save();
 
         return redirect()->route('dejarResenas')->with('success', 'Reseña registrada exitosamente.');
+    }
+
+    //Método que muestra todas las reseñas escritas por un cliente determinado
+    public function mostrarResenas($clienteID, Request $request)
+    {
+        // Consulta para obtener las reseñas del cliente, junto con los datos del hotel 
+        $resenas = DB::table('resenas')
+            ->join('hoteles', 'resenas.hotelID', '=', 'hoteles.hotelID') // Unir la tabla reseñas con la tabla de hoteles
+            ->leftJoin('imagenes_hoteles', function ($hoteles) { // REaliza la unión con la tabla imagenes_hoteles
+                $hoteles->on('hoteles.hotelID', '=', 'imagenes_hoteles.hotelID')
+                    ->where('imagenes_hoteles.imagen', 'like', 'images/portadas/portada%'); // Filtrar solo las portadas
+            })
+            ->select(
+                'resenas.*', // Selecciona todas las columnas de la tabla reseñas
+                'hoteles.nombre as hotel_nombre', // Selecciona el nombre del hotel
+                'imagenes_hoteles.imagen as hotel_imagen' // Selecciona la imagen de portada del hotel
+            )
+            ->where('resenas.clienteID', $clienteID) // Filtra por cliente
+            ->get(); // Obtiene todas las reseñas del cliente
+
+        // Cuenta el número total de hoteles sin reseña
+        $totalHoteles = $resenas->count();
+
+        // Define los parámetros de paginación
+        $registros_por_pagina = 5; // Muestra 1 registro por página
+        $pagina_actual = $request->input('pagina', 1);
+        $total_paginas = ceil($totalHoteles / $registros_por_pagina);
+
+        // Valida la página actual
+        if ($pagina_actual < 1) $pagina_actual = 1;
+        if ($pagina_actual > $total_paginas) $pagina_actual = $total_paginas;
+
+        // Calcula el índice de inicio
+        $inicio = ($pagina_actual - 1) * $registros_por_pagina;
+
+        // Obtiene los datos para la página actual
+        $datos_paginados = $resenas->slice($inicio, $registros_por_pagina);
+
+        // Cambia la colección a una nueva colección para no perder la información de paginación
+        $datos = $datos_paginados->values();
+
+        // Preparar los datos para la vista
+        $parametros = [
+            "mensajes" => [],
+            "datos" => $datos,
+            "pagina_actual" => $pagina_actual,
+            "total_paginas" => $total_paginas,
+            "registros_por_pagina" => $registros_por_pagina,
+            "resenas" => $resenas, // Pasar las reseñas y los datos del hotel a la vista
+        ];
+
+        // Devolver la vista con los parámetros
+        return view('mostrarresenas', $parametros);
     }
 }

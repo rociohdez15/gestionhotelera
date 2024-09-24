@@ -30,7 +30,7 @@
                 <li class="divider">|</li>
                 <li><a href="#">Mis Reservas</a></li>
                 <li class="divider">|</li>
-                <li><a href="#">Mis Reseñas</a></li>
+                <li><a href="{{ route ('mostrarResenas', ['clienteID' => Auth::id()]) }}">Mis Reseñas</a></li>
             </ul>
         </nav>
 
@@ -168,7 +168,7 @@
                             </div>
                             @endforeach
                         </div>
-                        <a href="#" class="enlace-perfil enlace-resena">Ver Mis Reseñas</a>
+                        <a href="{{ route ('mostrarResenas', ['clienteID' => Auth::id()]) }}" class="enlace-perfil enlace-resena">Ver Mis Reseñas</a>
                         <br>
                         <a href="{{ route ('dejarResenas') }}" class="enlace-perfil enlace-dejaresena">Dejar Reseñas</a>
                         @endif

@@ -44,4 +44,5 @@ Route::middleware([
     Route::get('/dejarresena', [ResenasControlador::class, 'dejarResenas'])->name('dejarResenas');
     Route::get('/escribirresena/{hotelID}', [ResenasControlador::class, 'escribirResenasForm'])->name('escribirResenasForm');
     Route::post('/escribirresena', [ResenasControlador::class, 'guardarResena'])->name('guardarResena');
+    Route::get('/mostrarresena/{clienteID}', [ResenasControlador::class, 'mostrarResenas'])->name('mostrarResenas');
 });

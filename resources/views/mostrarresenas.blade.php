@@ -34,8 +34,6 @@
             </ul>
         </nav>
 
-
-
         @guest
         <!-- Botón de usuario para iniciar sesión -->
         <a href="{{ route('login') }}" class="btn btn-secondary icono-user" id="dropdownMenuButton" role="button" aria-expanded="false">
@@ -87,35 +85,45 @@
 
     <main>
         <br>
-        <h2 class="titulo text-center">ESCRIBE TU RESEÑAS</h2>
         <br>
+        <h2 class="titulo text-center">Mis Reseñas</h2>
+        <br>
+        @if ($resenas->isEmpty())
+        <p class="text-center">No existen reseñas.</p>
+        @else
         <div class="container">
-            <form action="{{ route('guardarResena', ['hotelID' => $hotel->hotelID]) }}" method="POST">
-                @csrf
-                <input type="hidden" name="clienteID" value="{{ Auth::id() }}">
-                <input type="hidden" name="fecha" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
-                <input type="hidden" name="nombre_cliente" value="{{ Auth::user()->name }}">
-                <div class="form-group row align-items-center">
-                    <div class="col-sm-6 offset-sm-3">
-                        <h6><strong>Hotel:</strong> {{ $hotel->nombre }}</h6>
-                        <h6><strong>Fecha:</strong> {{ $fechaHoy }}</h6>
-
-                        <label for="resena"><strong>Reseña: </strong></label>
-                        <textarea class="form-control" id="resena" name="resena" rows="4" placeholder="Escribe tu reseña aquí..."></textarea>
-
-                        <label for="puntuacion"><strong>Puntuación (0-10): </strong></label>
-                        <input type="number" class="form-control" id="puntuacion" name="puntuacion" min="0" max="10" step="1" placeholder="Introduce una puntuación">
-                        <br>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Publicar</button>
-                        </div>
-                    </div>
+            @foreach ($resenas as $resena)
+            <div class="row align-items-start mb-3 mostrar-alojamientos">
+                <!-- Imagen del hotel -->
+                <div class="col-12 col-md-4 hotel-imagen mb-3 mb-md-0">
+                    @if ($resena->hotel_imagen)
+                    <img src="{{ asset($resena->hotel_imagen) }}" alt="Imagen de {{ $resena->hotel_nombre }}" class="img-fluid rounded imagen-portada-alojamiento">
+                    @else
+                    <p>No hay imagen disponible para este hotel.</p>
+                    @endif
                 </div>
-                <br>
-            </form>
-
+                <div class="col-12 col-md-8">
+                    <h5>{{ $resena->hotel_nombre }}</h5>
+                    <p>{{ $resena->texto }}</p>
+                </div>
+            </div>
+            <hr>
+            @endforeach
         </div>
+
+        <br>
+        <!-- Paginación -->
+        <div class="container text-center">
+            <p>
+                Página {{ $pagina_actual }} de {{ $total_paginas }} | Mostrar {{ $registros_por_pagina }} registros por página | Ir a página:
+                @for ($i = 1; $i <= $total_paginas; $i++)
+                    <a href="{{ route('dejarResenas', array_merge(request()->except('pagina'), ['pagina' => $i])) }}">{{ $i }}</a>
+                    @endfor
+            </p>
+        </div>
+        @endif
     </main>
+
     <footer>
         <a href="#">Términos y Condiciones</a> |
         <a href="#">Sobre AlojaDirecto.com</a>
