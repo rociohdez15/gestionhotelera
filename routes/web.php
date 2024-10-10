@@ -9,6 +9,8 @@ use App\Http\Controllers\OlvidoPasswordControlador;
 use App\Http\Controllers\RealizarReservaControlador;
 use App\Http\Controllers\EditarPerfilControlador;
 use App\Http\Controllers\ResenasControlador;
+use App\Http\Controllers\ReservasControlador;
+use App\Http\Controllers\PanelRecepcionistaControlador;
 
 Route::get('/', function () {
     return view('inicio');
@@ -45,4 +47,6 @@ Route::middleware([
     Route::get('/escribirresena/{hotelID}', [ResenasControlador::class, 'escribirResenasForm'])->name('escribirResenasForm');
     Route::post('/escribirresena', [ResenasControlador::class, 'guardarResena'])->name('guardarResena');
     Route::get('/mostrarresena/{clienteID}', [ResenasControlador::class, 'mostrarResenas'])->name('mostrarResenas');
+    Route::get('/misreservas', [ReservasControlador::class, 'mostrarMisReservas'])->name('mostrarMisReservas');
+    Route::get('/panelrecepcionista', [PanelRecepcionistaControlador::class, 'mostrarPanel'])->name('panelrecepcionista');
 });

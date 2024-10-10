@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlojaDirecto | Informacion de usuario</title>
+    <title>AlojaDirecto | Déjanos tu reseña</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
@@ -28,7 +28,7 @@
                 <li class="divider">|</li>
                 <li><a href="{{ route('informacionusuario') }}">Perfil</a></li>
                 <li class="divider">|</li>
-                <li><a href="#">Mis Reservas</a></li>
+                <li><a href="{{ route ('mostrarMisReservas') }}">Mis Reservas</a></li>
                 <li class="divider">|</li>
                 <li><a href="{{ route ('mostrarResenas', ['clienteID' => Auth::id()]) }}">Mis Reseñas</a></li>
             </ul>

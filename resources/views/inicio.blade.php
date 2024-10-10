@@ -66,6 +66,25 @@
     </header>
     
     <main>
+
+    @auth
+    @php
+        $rolUsuario = Auth::user()->rolID; // Suponiendo que 'rolID' es el campo que contiene el rol
+    @endphp
+
+    @if ($rolUsuario === 2) <!-- Si el rol del usuario es recepcionista -->
+    <script>
+            // Redirigir al panel de recepcionista
+            window.location.href = "{{ route('panelrecepcionista') }}";
+    </script>
+    @elseif ($rolUsuario === 3) <!-- Si el rol del usuario es administrador -->
+    <script>
+            // Redirigir al panel de administrador
+            window.location.href = "#";
+    </script>
+    @endif
+
+    @endauth
         <!-- Cabecera -->
         <div class="contenedor-titulos">
             <h1 class="titulo">Encuentra tu próximo alojamiento</h1>
@@ -177,6 +196,8 @@
                 </div>
             </div>
         </div>
+
+
     </main>
     <!-- Footer -->
     <footer>

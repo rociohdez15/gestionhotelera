@@ -28,7 +28,7 @@
                 <li class="divider">|</li>
                 <li><a href="{{ route('informacionusuario') }}">Perfil</a></li>
                 <li class="divider">|</li>
-                <li><a href="#">Mis Reservas</a></li>
+                <li><a href="{{ route ('mostrarMisReservas') }}">Mis Reservas</a></li>
                 <li class="divider">|</li>
                 <li><a href="{{ route ('mostrarResenas', ['clienteID' => Auth::id()]) }}">Mis Reseñas</a></li>
             </ul>
@@ -120,7 +120,7 @@
                             <h6 class="email2"><strong>Correo: </strong>{{ $cliente->email}}</h6>
                         </div>
                         <div class="cuadrado-central">
-                            <a href="#" class="enlace-perfil">Ver Mis Reservas</a>
+                            <a href="{{ route ('mostrarMisReservas') }}" class="enlace-perfil">Ver Mis Reservas</a>
                             <h6 class="detalles-usuario"><strong>Mis Reservas</strong></h6>
                             @if($reservas->isEmpty())
                             <p>No hay reservas para este cliente.</p>

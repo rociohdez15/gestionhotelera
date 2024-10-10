@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlojaDirecto | Escribir reseña</title>
+    <title>AlojaDirecto | Informacion de usuario</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- CSS -->
-    <link rel="stylesheet" href="../../css/deja-resena/styles.css">
+    <link rel="stylesheet" href="../../css/misreservas/styles.css">
     <!-- Favicon -->
     <link rel="icon" href="../../images/inicio/favicon.ico" type="image/x-icon">
 </head>
@@ -33,8 +33,6 @@
                 <li><a href="{{ route ('mostrarResenas', ['clienteID' => Auth::id()]) }}">Mis Reseñas</a></li>
             </ul>
         </nav>
-
-
 
         @guest
         <!-- Botón de usuario para iniciar sesión -->
@@ -87,35 +85,60 @@
 
     <main>
         <br>
-        <h2 class="titulo text-center">ESCRIBE TU RESEÑAS</h2>
         <br>
+        <h2 class="titulo text-center">Mis Reservas</h2>
+        <br>
+        @php
+        // Definir la clase de columna dependiendo de la cantidad de reservas
+        // Dependiendo del numero de columnas contadas se muestra un ancho u otro
+        $col_class = $datos->count() === 1 ? 'col-md-12' : 'col-md-4';
+        @endphp
+
+        @if ($datos->isEmpty())
+        <p class="text-center">No tienes reservas.</p>
+        @else
         <div class="container">
-            <form action="{{ route('guardarResena', ['hotelID' => $hotel->hotelID]) }}" method="POST">
-                @csrf
-                <input type="hidden" name="clienteID" value="{{ Auth::id() }}">
-                <input type="hidden" name="fecha" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
-                <input type="hidden" name="nombre_cliente" value="{{ Auth::user()->name }}">
-                <div class="form-group row align-items-center">
-                    <div class="col-sm-6 offset-sm-3">
-                        <h6><strong>Hotel:</strong> {{ $hotel->nombre }}</h6>
-                        <h6><strong>Fecha:</strong> {{ $fechaHoy }}</h6>
-
-                        <label for="resena"><strong>Reseña: </strong></label>
-                        <textarea class="form-control" id="resena" name="resena" rows="4" placeholder="Escribe tu reseña aquí..."></textarea>
-
-                        <label for="puntuacion"><strong>Puntuación (0-10): </strong></label>
-                        <input type="number" class="form-control" id="puntuacion" name="puntuacion" min="0" max="10" step="1" placeholder="Introduce una puntuación">
-                        <br>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Publicar</button>
+            <div class="row justify-content-center"> <!-- Alineación central -->
+                @foreach($datos as $reserva)
+                <div class="{{ $col_class }} col-sm-12 mb-4"> <!-- Usar col_class -->
+                    <div class="card">
+                        <img src="{{ asset($reserva->hotel_imagen) }}" class="card-img-top" alt="Imagen del hotel">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $reserva->hotel_nombre }}</h5>
+                            <p class="card-text"><strong>Huesped: </strong>{{ $reserva->cliente_nombre }}</p>
+                            <p class="card-text"><strong>Fecha de entrada: </strong>{{ $reserva->fechainicio }}</p>
+                            <p class="card-text"><strong>Fecha de salida: </strong>{{ $reserva->fechafin }}</p>
+                            <p class="card-text"><strong>Días: </strong>{{ $reserva->num_dias }}</p>
+                            <p class="card-text"><strong>Servicios Adicionales:</strong></p>
+                            <ul class="list-unstyled">
+                                @if($reserva->servicio_detalles)
+                                @foreach(explode(', ', $reserva->servicio_detalles) as $detalle)
+                                <li class="mb-2">{{ $detalle }}</li>
+                                @endforeach
+                                @else
+                                <li>No hay servicios adicionales contratados.</li>
+                                @endif
+                            </ul>
                         </div>
                     </div>
                 </div>
-                <br>
-            </form>
-
+                @endforeach
+            </div>
         </div>
+        <br>
+        <!-- Paginación -->
+        <div class="container text-center">
+            <p>
+                Página {{ $pagina_actual }} de {{ $total_paginas }} | Mostrar {{ $registros_por_pagina }} registros por página | Ir a página:
+                @for ($i = 1; $i <= $total_paginas; $i++)
+                    <a href="{{ route('mostrarMisReservas', array_merge(request()->except('pagina'), ['pagina' => $i])) }}">{{ $i }}</a>
+                    @endfor
+            </p>
+        </div>
+        @endif
+
     </main>
+
     <footer>
         <a href="#">Términos y Condiciones</a> |
         <a href="#">Sobre AlojaDirecto.com</a>

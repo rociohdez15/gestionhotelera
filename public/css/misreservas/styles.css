@@ -379,7 +379,7 @@ footer {
     margin: 0; /* Elimina márgenes */
     width: 100%; /* Asegura que el contenedor ocupe el 100% del espacio disponible */
     margin-right: 0px;
-    margin-bottom: 40px;
+    margin-bottom: 0px;
 }
 
 .contenedor-resena {
@@ -435,7 +435,9 @@ footer {
 .menu-izquierda li {
     margin: 0 5px; /* Espacio entre enlaces */
 }
-
+.enlace-dejaresena{
+    margin-top: 20px;
+}
 /* Estilo para pantallas pequeñas */
 
 @media (max-width: 992px){
@@ -460,19 +462,26 @@ footer {
 
 @media (max-width: 992px) {
     .reseñas-container{
-        margin-top: 100px;
+        margin-top: 70px;
     }
     .contenedor-resena {
         width: 100%; /* Ocupa todo el ancho en pantallas pequeñas */
         flex-direction: column; /* Cambia a columna */
         align-items: flex-start; /* Alinea el contenido a la izquierda */
         font-size: 10px;
+        margin-top: 0px;
     }
 
     .enlace-resena{
-        margin-top: 20px;
+        margin-top: 40px;
         margin-right: 70px;
     }
+
+    .enlace-dejaresena{
+        margin-top: 20px;
+        margin-right: 60px;
+    }
+
 
     .imagen-resena {
         width: 20px;
@@ -497,6 +506,11 @@ footer {
         margin-top: 0px;
         margin-right: 0px;
     }
+
+    .enlace-dejaresena{
+        margin-top: 20px;
+        margin-right: 0px;
+    }
     
     .fa-right-from-bracket {
         font-size: 14px; /* Ajusta el tamaño del ícono */
@@ -507,48 +521,32 @@ footer {
     }
 }
 
-#graficaReservas {
-    width: 100% !important;
-    height: auto !important;
+.mostrar-alojamientos {
+    border: 3px solid #3c3c3c;
+    border-radius: 5px;
+    padding: 15px; /* Espacio interno */
+    margin: 15px 0; /* Espacio entre los elementos */
 }
 
-.menu-opciones{
-    background-color: #3c3c3c;
-    color: white;
+.container {
+    display: flex;              /* Utiliza flexbox para centrar los divs */
+    justify-content: center;    /* Centra horizontalmente */
+    flex-wrap: wrap;           /* Permite que los divs se ajusten a la siguiente línea si no hay espacio */
 }
 
-.txt-opciones{
-    font-size: 20px;
-    text-decoration: underline;
+.card {
+    margin: 15px;              /* Margen alrededor de cada tarjeta */
+    padding: 15px;             /* Espaciado interno dentro de cada tarjeta */
+    border: 3px solid #3c3c3c; /* Borde de 3px, puedes cambiar el color si lo deseas */
+    border-radius: 5px;        /* Bordes redondeados */
 }
 
-.txt-listado, .nav-link{
-    color: white;
-}
 
-.nav-link:hover, .nav-link:focus{
-    color: white;
-}
-
-@media (max-width: 768px) {
-    .user-name {
-        margin-left: 100px;
-    }
-
-    .enlace-resena{
-        margin-top: 0px;
-        margin-right: 0px;
-    }
-    
-    .fa-right-from-bracket {
-        font-size: 14px; /* Ajusta el tamaño del ícono */
-    }
-    
-    .icono-user {
-        padding: 10px 0px; /* Ajusta el padding para pantallas pequeñas */
-    }
-
-    .nav-link{
-        text-align: center;
-    }
+.card-img-top {
+    width: 100%;               /* Asegura que la imagen ocupe el 100% del contenedor */
+    max-width: 200px;          /* Tamaño máximo de la imagen */
+    height: auto;              /* Mantiene la relación de aspecto */
+    border: 3px; /* Borde de 3px, puedes cambiar el color si lo deseas */
+    border-radius: 5px;    
+    margin: 0 auto;           /* Centra la imagen horizontalmente */
 }
