@@ -56,5 +56,5 @@ Route::middleware([
     Route::put('/editarreserva/{reservaID}', [ListarReservasControlador::class, 'editarReserva'])->name('editarReserva');
     Route::get('/comprobar-reserva/{hotelID}', [ListarReservasControlador::class, 'comprobarReserva']);
     Route::get('/verificar-habitacion/{hotelID}', [ListarReservasControlador::class, 'verificarHabitacion']);
-
+    Route::get('/generar-pdf-listar-reservas', [ListarReservasControlador::class, 'generarPDF'])->name('generar_pdf_listar_reservas');
 });

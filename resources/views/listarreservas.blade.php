@@ -198,9 +198,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn btn-success btn-sm">
+                                <a href="{{ route('generar_pdf_listar_reservas') }}" class="btn btn-success btn-sm">
                                     <i class="fa-solid fa-file-pdf"></i>
-                                </button>
+                                </a>
                             </td>
                         </tr>
                         @endforeach
