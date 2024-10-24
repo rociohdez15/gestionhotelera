@@ -115,6 +115,14 @@
             <h2 class="text-center">LISTADO DE RESERVAS</h2>
 
             <br>
+            <!-- Buscador -->
+            <form action="{{ route('buscarReservas') }}" method="GET" class="mb-3">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="query" placeholder="Buscar por ID, cliente, hotel, adultos o niños" aria-label="Buscar reservas">
+                    <button class="btn btn-primary" type="submit">Buscar</button>
+                </div>
+            </form>
+            
             <!-- Muestra la tabla de reservas -->
             <div class="table-responsive mx-auto">
                 <table class="table table-bordered table-striped text-center">

@@ -284,8 +284,43 @@ class ListarReservasControlador extends Controller
 
         // Salida del PDF al navegador
         $pdf->Output($filename, 'D');
-        
-        
     }
-    
+
+    public function buscarReservas(Request $request)
+    {
+        $query = $request->input('query');
+
+        // Realiza la consulta con uniones a las tablas necesarias
+        $consulta = Reserva::select('reservas.*','clientes.nombre', 'clientes.apellidos','habitaciones.numhabitacion','hoteles.nombre as hotel_nombre') // Selecciona todas las columnas de reservas
+            ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID') // Une con la tabla de clientes
+            ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID') // Une con la tabla de habitaciones
+            ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID') // Une con la tabla de hoteles
+            ->where('reservas.reservaID', 'LIKE', "%$query%")
+            ->orWhere('clientes.nombre', 'LIKE', "%$query%")
+            ->orWhere('clientes.apellidos', 'LIKE', "%$query%")
+            ->orWhere('hoteles.nombre', 'LIKE', "%$query%")
+            ->orWhere('reservas.num_adultos', 'LIKE', "%$query%")
+            ->orWhere('reservas.num_ninos', 'LIKE', "%$query%");
+
+
+        $totalReservas = $consulta->count();
+
+        $registros_por_pagina = 5;
+        $pagina_actual = $request->input('pagina', 1);
+        $total_paginas = ceil($totalReservas / $registros_por_pagina);
+
+        if ($pagina_actual < 1) $pagina_actual = 1;
+        if ($pagina_actual > $total_paginas) $pagina_actual = $total_paginas;
+
+        $inicio = ($pagina_actual - 1) * $registros_por_pagina;
+
+        $reservas = $consulta->skip($inicio)->take($registros_por_pagina)->get();
+
+        return view('listarreservas', [
+            'reserva' => $reservas,
+            'total_paginas' => $total_paginas,
+            'pagina_actual' => $pagina_actual,
+            'registros_por_pagina' => $registros_por_pagina
+        ], compact('reservas'));
+    }
 }
