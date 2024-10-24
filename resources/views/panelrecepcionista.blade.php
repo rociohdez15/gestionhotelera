@@ -86,7 +86,7 @@
                     <h4 class="mt-4 txt-opciones" style="align-self: center;">Panel de opciones</h4>
                     <ul class="nav flex-column w-100 txt-listado">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#">Lista reservas</a>
+                            <a class="nav-link active" href="{{ route('listarReservas') }}">Lista reservas</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Check - in</a>

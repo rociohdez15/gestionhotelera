@@ -339,17 +339,19 @@ footer {
     border-radius: 5px;
 }
 
-.tabla-reservas th, 
-.tabla-reservas td {
-    border: 3px solid #3c3c3c; /* Bordes negros en las celdas */
-    border-radius: 5px;
-    padding: 4px; /* Espacio dentro de las celdas */
-    text-align: center; /* Alineación del texto a la izquierda */
+.table-responsive {
+
+    border-radius: 10px !important;
+    font-size: 15px;
 }
 
-.tabla-reservas th {
-    background-color: #859eca; /* Color de fondo para el encabezado */
+table {
+    border-collapse: separate !important; /* Asegura que los bordes no se colapsen */
+    border-spacing: 0; /* Elimina el espacio entre las celdas */
+    border-radius: 10px !important; /* Aplica el borde redondeado en la tabla */
+    overflow: hidden; /* Asegura que el contenido no sobresalga de los bordes */
 }
+
 
 .resenas {
     text-decoration: underline;
@@ -552,13 +554,6 @@ footer {
         text-align: center;
     }
 
-    .table {
-        border-radius: 0.5rem; /* Bordes redondeados */
-        overflow: hidden; /* Para que los bordes redondeados se apliquen correctamente */
-    }
-    
-    .table th, .table td {
-        border: 1px solid #dee2e6; /* Color del borde de las celdas */
-    }
+
     
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\EditarPerfilControlador;
 use App\Http\Controllers\ResenasControlador;
 use App\Http\Controllers\ReservasControlador;
 use App\Http\Controllers\PanelRecepcionistaControlador;
+use App\Http\Controllers\ListarReservasControlador;
 
 Route::get('/', function () {
     return view('inicio');
@@ -49,4 +50,11 @@ Route::middleware([
     Route::get('/mostrarresena/{clienteID}', [ResenasControlador::class, 'mostrarResenas'])->name('mostrarResenas');
     Route::get('/misreservas', [ReservasControlador::class, 'mostrarMisReservas'])->name('mostrarMisReservas');
     Route::get('/panelrecepcionista', [PanelRecepcionistaControlador::class, 'mostrarPanel'])->name('panelrecepcionista');
+    Route::get('/listarreservas', [ListarReservasControlador::class, 'listarReservas'])->name('listarReservas');
+    Route::delete('/delreserva/{reservaID}', [ListarReservasControlador::class, 'delReserva'])->name('delReserva');
+    Route::get('/mostrarreserva/{reservaID}', [ListarReservasControlador::class, 'mostrarReserva'])->name('mostrarReserva');
+    Route::put('/editarreserva/{reservaID}', [ListarReservasControlador::class, 'editarReserva'])->name('editarReserva');
+    Route::get('/comprobar-reserva/{hotelID}', [ListarReservasControlador::class, 'comprobarReserva']);
+    Route::get('/verificar-habitacion/{hotelID}', [ListarReservasControlador::class, 'verificarHabitacion']);
+
 });
