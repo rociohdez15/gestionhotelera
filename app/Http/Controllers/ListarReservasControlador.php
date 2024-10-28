@@ -136,6 +136,8 @@ class ListarReservasControlador extends Controller
             // Actualizar los datos de la reserva
             $reserva->fechainicio = $validatedData['fechaEntrada'];
             $reserva->fechafin = $validatedData['fechaSalida'];
+            $reserva->fecha_checkin = $validatedData['fechaEntrada'];
+            $reserva->fecha_checkout = $validatedData['fechaSalida'];
             $reserva->num_adultos = $validatedData['numAdultos'];
             $reserva->num_ninos = $validatedData['numNinos'];
             $reserva->habitacionID = $validatedData['habitacionID'];

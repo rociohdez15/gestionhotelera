@@ -32,7 +32,7 @@ class PanelRecepcionistaControlador extends Controller
         $alojamientosMensuales = array_fill(0, 12, 0); // 12 meses
 
         // Obtener las reservas agrupadas por mes 
-        $reservas = Reserva::selectRaw('MONTH(fecha_checkin) as mes, COUNT(*) as total')
+        $reservas = Reserva::selectRaw('MONTH(fechainicio) as mes, COUNT(*) as total')
             ->groupBy('mes')
             ->orderBy('mes')
             ->get();

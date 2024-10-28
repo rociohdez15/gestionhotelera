@@ -19,8 +19,8 @@ return new class extends Migration
             $table->decimal('preciototal', 7, 2);
             $table->integer('num_adultos'); 
             $table->integer('num_ninos'); 
-            $table->date('fecha_checkin'); 
-            $table->date('fecha_checkout'); 
+            $table->dateTime('fecha_checkin'); 
+            $table->dateTime('fecha_checkout'); 
             $table->unsignedBigInteger('clienteID');
             $table->unsignedBigInteger('habitacionID');
             $table->timestamps();

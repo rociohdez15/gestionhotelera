@@ -12,6 +12,7 @@ use App\Http\Controllers\ResenasControlador;
 use App\Http\Controllers\ReservasControlador;
 use App\Http\Controllers\PanelRecepcionistaControlador;
 use App\Http\Controllers\ListarReservasControlador;
+use App\Http\Controllers\ListadoCheckoutControlador;
 
 Route::get('/', function () {
     return view('inicio');
@@ -58,4 +59,6 @@ Route::middleware([
     Route::get('/verificar-habitacion/{hotelID}', [ListarReservasControlador::class, 'verificarHabitacion']);
     Route::get('/generar-pdf-listar-reservas', [ListarReservasControlador::class, 'generarPDF'])->name('generar_pdf_listar_reservas');
     Route::get('/buscar-reservas', [ListarReservasControlador::class, 'buscarReservas'])->name('buscarReservas');
+    Route::get('/listadocheckout', [ListadoCheckoutControlador::class, 'listadoCheckout'])->name('listadoCheckout');
+    Route::get('/buscar-checkout', [ListadoCheckoutControlador::class, 'buscarCheckout'])->name('buscarCheckout');
 });

@@ -92,7 +92,7 @@
                             <a class="nav-link" href="#">Check - in</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Check - out</a>
+                            <a class="nav-link" href="{{ route('listadoCheckout') }}">Check - out</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Habitaciones</a>
