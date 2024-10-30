@@ -13,6 +13,7 @@ use App\Http\Controllers\ReservasControlador;
 use App\Http\Controllers\PanelRecepcionistaControlador;
 use App\Http\Controllers\ListarReservasControlador;
 use App\Http\Controllers\ListadoCheckoutControlador;
+use App\Http\Controllers\ListadoCheckinControlador;
 
 Route::get('/', function () {
     return view('inicio');
@@ -63,4 +64,8 @@ Route::middleware([
     Route::get('/buscar-checkout', [ListadoCheckoutControlador::class, 'buscarCheckout'])->name('buscarCheckout');
     Route::get('/mostrarcheckout/{reservaID}', [ListadoCheckoutControlador::class, 'mostrarCheckout'])->name('mostrarCheckout');
     Route::put('/registrarcheckout/{reservaID}', [ListadoCheckoutControlador::class, 'registrarCheckout'])->name('registrarCheckout');
+    Route::get('/listadocheckin', [ListadoCheckinControlador::class, 'listadoCheckin'])->name('listadoCheckin');
+    Route::get('/buscar-checkin', [ListadoCheckinControlador::class, 'buscarCheckin'])->name('buscarCheckin');
+    Route::get('/mostrarcheckin/{reservaID}', [ListadoCheckinControlador::class, 'mostrarCheckin'])->name('mostrarCheckin');
+    Route::put('/registrarcheckin/{reservaID}', [ListadoCheckinControlador::class, 'registrarCheckin'])->name('registrarCheckin');
 });

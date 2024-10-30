@@ -89,7 +89,7 @@
                             <a class="nav-link active" href="{{ route('listarReservas') }}">Lista reservas</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Check - in</a>
+                            <a class="nav-link" href="{{ route('listadoCheckin') }}">Check - in</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('listadoCheckout') }}">Check - out</a>
