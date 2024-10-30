@@ -61,4 +61,6 @@ Route::middleware([
     Route::get('/buscar-reservas', [ListarReservasControlador::class, 'buscarReservas'])->name('buscarReservas');
     Route::get('/listadocheckout', [ListadoCheckoutControlador::class, 'listadoCheckout'])->name('listadoCheckout');
     Route::get('/buscar-checkout', [ListadoCheckoutControlador::class, 'buscarCheckout'])->name('buscarCheckout');
+    Route::get('/mostrarcheckout/{reservaID}', [ListadoCheckoutControlador::class, 'mostrarCheckout'])->name('mostrarCheckout');
+    Route::put('/registrarcheckout/{reservaID}', [ListadoCheckoutControlador::class, 'registrarCheckout'])->name('registrarCheckout');
 });

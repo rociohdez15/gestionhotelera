@@ -144,7 +144,7 @@
                             <td>{{ $reserva->fecha_checkout }}</td>
                             <td class="d-flex justify-content-center gap-2">
                                 @if ($reserva->fecha_checkout == $fecha_actual)
-                                <a href="#" class="btn btn-primary btn-sm">
+                                <a href="{{ route('mostrarCheckout', $reserva->reservaID) }}" class="btn btn-primary btn-sm">
                                     GESTIONAR CHECK-OUT
                                 </a>
                                 @else
