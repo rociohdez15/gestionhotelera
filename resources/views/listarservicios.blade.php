@@ -116,9 +116,9 @@
 
             <br>
             <!-- Buscador -->
-            <form action="{{ route('buscarReservas') }}" method="GET" class="mb-3">
+            <form action="{{ route('buscarServicios') }}" method="GET" class="mb-3">
                 <div class="input-group">
-                    <input type="text" class="form-control" name="query" placeholder="Buscar por ID, cliente, hotel, adultos o niños" aria-label="Buscar reservas">
+                    <input type="text" class="form-control" name="query" placeholder="Buscar por ID, cliente, hotel..." aria-label="Buscar servicios">
                     <button class="btn btn-primary" type="submit">Buscar</button>
                 </div>
             </form>
@@ -189,11 +189,11 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                ¿Estás seguro de que deseas editarar esta reserva?
+                                                ¿Estás seguro de que deseas editar este servicio?
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
-                                                <form action="{{ route('mostrarReserva', $reserva->reservaID) }}" method="POST">
+                                                <form action="{{ route('mostrarServicio', $reserva->servicioID) }}" method="POST">
                                                     @csrf
                                                     @method('GET')
                                                     <button type="submit" class="btn btn-danger">Editar</button>
@@ -202,7 +202,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="{{ route('generar_pdf_listar_reservas') }}" class="btn btn-success btn-sm">
+                                <a href="{{ route('generar_pdf_listar_servicios') }}" class="btn btn-success btn-sm">
                                     <i class="fa-solid fa-file-pdf"></i>
                                 </a>
                             </td>
@@ -218,7 +218,7 @@
                 <p>
                     Página {{ $pagina_actual }} de {{ $total_paginas }} | Mostrar {{ $registros_por_pagina }} registros por página | Ir a página:
                     @for ($i = 1; $i <= $total_paginas; $i++)
-                        <a href="{{ route('listarReservas', array_merge(request()->except('pagina'), ['pagina' => $i])) }}">{{ $i }} </a>
+                        <a href="{{ route('listarServicios', array_merge(request()->except('pagina'), ['pagina' => $i])) }}">{{ $i }} </a>
                         @endfor
                 </p>
             </div>

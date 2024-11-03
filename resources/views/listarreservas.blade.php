@@ -193,7 +193,7 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                ¿Estás seguro de que deseas editarar esta reserva?
+                                                ¿Estás seguro de que deseas editar esta reserva?
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>

@@ -76,4 +76,5 @@ Route::middleware([
     Route::get('/mostrarservicio/{servicioID}', [ListarServiciosControlador::class, 'mostrarServicio'])->name('mostrarServicio');
     Route::put('/editarservicio/{servicioID}', [ListarServiciosControlador::class, 'editarServicio'])->name('editarServicio');
     Route::get('/generar-pdf-listar-servicios', [ListarServiciosControlador::class, 'generarPDF'])->name('generar_pdf_listar_servicios');
+    Route::get('/buscar-servicio', [ListarServiciosControlador::class, 'buscarServicios'])->name('buscarServicios');
 });
