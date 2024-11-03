@@ -14,6 +14,8 @@ use App\Http\Controllers\PanelRecepcionistaControlador;
 use App\Http\Controllers\ListarReservasControlador;
 use App\Http\Controllers\ListadoCheckoutControlador;
 use App\Http\Controllers\ListadoCheckinControlador;
+use App\Http\Controllers\HabitacionesControlador;
+use App\Http\Controllers\ListarServiciosControlador;
 
 Route::get('/', function () {
     return view('inicio');
@@ -68,4 +70,10 @@ Route::middleware([
     Route::get('/buscar-checkin', [ListadoCheckinControlador::class, 'buscarCheckin'])->name('buscarCheckin');
     Route::get('/mostrarcheckin/{reservaID}', [ListadoCheckinControlador::class, 'mostrarCheckin'])->name('mostrarCheckin');
     Route::put('/registrarcheckin/{reservaID}', [ListadoCheckinControlador::class, 'registrarCheckin'])->name('registrarCheckin');
+    Route::get('/disponibilidadHabitaciones', [HabitacionesControlador::class, 'dispHabitaciones'])->name('dispHabitaciones');
+    Route::get('/listarservicios', [ListarServiciosControlador::class, 'listarServicios'])->name('listarServicios');
+    Route::delete('/delservicio/{servicioID}', [ListarServiciosControlador::class, 'delServicio'])->name('delServicio');
+    Route::get('/mostrarservicio/{servicioID}', [ListarServiciosControlador::class, 'mostrarServicio'])->name('mostrarServicio');
+    Route::put('/editarservicio/{servicioID}', [ListarServiciosControlador::class, 'editarServicio'])->name('editarServicio');
+    Route::get('/generar-pdf-listar-servicios', [ListarServiciosControlador::class, 'generarPDF'])->name('generar_pdf_listar_servicios');
 });

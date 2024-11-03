@@ -152,33 +152,31 @@ class ListadoCheckinControlador extends Controller
     }
 
     public function registrarCheckin(Request $request, $reservaID)
-{
-    $reserva = Reserva::find($reservaID);
-    if (!$reserva) {
-        Log::error('Reserva no encontrada', ['reservaID' => $reservaID]);
-        return response()->json(['message' => 'Reserva no encontrada'], 404);
-    }
-
-    try {
-        $validatedData = $request->validate([
-            'fechaCheckin' => 'required|date|after:fechainicio', // Verifica que sea una fecha válida y después de la fecha de entrada
-        ]);
-
-        $fechaCheckinNueva = Carbon::parse($validatedData['fechaCheckin']);
-
-        // Comparar con la fecha de checkout actual, para actualizar solo si es necesario
-        if ($reserva->fecha_checkin !== $fechaCheckinNueva->toDateString()) {
-            // Actualizar solo la fecha de checkout
-            $reserva->fecha_checkin = $fechaCheckinNueva;
-            $reserva->fechainicio = $fechaCheckinNueva; // Sincronizar si `fechafin` debe ser igual a `fecha_checkout`
-            $reserva->save();
+    {
+        $reserva = Reserva::find($reservaID);
+        if (!$reserva) {
+            Log::error('Reserva no encontrada', ['reservaID' => $reservaID]);
+            return response()->json(['message' => 'Reserva no encontrada'], 404);
         }
 
-        return response()->json(['message' => 'La fecha de checkout se ha actualizado correctamente.']);
-    } catch (\Exception $e) {
-        return response()->json(['message' => 'Error al actualizar la fecha de checkout', 'error' => $e->getMessage()], 500);
+        try {
+            $validatedData = $request->validate([
+                'fechaCheckin' => 'required|date|after:fechainicio', // Verifica que sea una fecha válida y después de la fecha de entrada
+            ]);
+
+            $fechaCheckinNueva = Carbon::parse($validatedData['fechaCheckin']);
+
+            // Comparar con la fecha de checkout actual, para actualizar solo si es necesario
+            if ($reserva->fecha_checkin !== $fechaCheckinNueva->toDateString()) {
+                // Actualizar solo la fecha de checkout
+                $reserva->fecha_checkin = $fechaCheckinNueva;
+                $reserva->fechainicio = $fechaCheckinNueva; // Sincronizar si `fechafin` debe ser igual a `fecha_checkout`
+                $reserva->save();
+            }
+
+            return response()->json(['message' => 'La fecha de checkout se ha actualizado correctamente.']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al actualizar la fecha de checkout', 'error' => $e->getMessage()], 500);
+        }
     }
-}
-
-
 }

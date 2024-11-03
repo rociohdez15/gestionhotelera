@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nombre', 40);
             $table->string('descripcion', 255);
             $table->decimal('precio', 7, 2);
-            $table->string('horario', 255);
+            $table->dateTime('horario', 6);
             $table->timestamps();
         });
     }

@@ -64,7 +64,7 @@
 
         @auth
         <a href="{{ route('informacionusuario') }}" class="btn btn-secondary user-name icono-user d-flex align-items-center" id="dropdownMenuButton" role="button" aria-expanded="false">
-            {{ Auth::user()->name }} 
+            {{ Auth::user()->name }}
             <i class="fa-solid fa-right-from-bracket ms-2"></i>
         </a>
         <a href="{{ route('logout') }}" class="btn btn-secondary icono-user" role="button" aria-expanded="false">
@@ -102,16 +102,16 @@
             <div class="container">
                 <div class="form-group">
                     <div class="form-row">
-                        <p><strong>RESTAURANTE-> </strong> FECHA:</p>
-                        <input type="date" id="fecha-restaurante" name="fecha-restaurante" class="form-control">
+                        <p><strong>RESTAURANTE-> </strong> FECHA Y HORA:</p>
+                        <input type="datetime-local" id="fecha-restaurante" name="fecha-restaurante" class="form-control">
                     </div>
                     <div class="form-row">
-                        <p><strong>SPA-> </strong> FECHA:</p>
-                        <input type="date" id="fecha-spa" name="fecha-spa" class="form-control">
+                        <p><strong>SPA-> </strong> FECHA Y HORA:</p>
+                        <input type="datetime-local" id="fecha-spa" name="fecha-spa" class="form-control">
                     </div>
                     <div class="form-row">
-                        <p><strong>TOURS-> </strong> FECHA:</p>
-                        <input type="date" id="fecha-tours" name="fecha-tours" class="form-control">
+                        <p><strong>TOURS-> </strong> FECHA Y HORA:</p>
+                        <input type="datetime-local" id="fecha-tours" name="fecha-tours" class="form-control">
                     </div>
                     <p id="mensaje-error" class="text-danger"></p>
                     <button id="validar-fechas" class="btn btn-primary">Reservar servicios</button>

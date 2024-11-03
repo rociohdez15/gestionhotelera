@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlojaDirecto | Panel de Recepcionista</title>
+    <title>AlojaDirecto | Disponibilidad de Habitaciones</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
@@ -21,7 +20,7 @@
 
 <body>
     <header>
-        <!-- Logo -->
+        <!-- Logo y navegación -->
         <a href="{{ route('inicio') }}">
             <img src="../../images/inicio/logo.png" alt="Logo de Aloja Directo" class="logo-cabecera">
         </a>
@@ -79,60 +78,19 @@
     </header>
 
     <main id="app">
-        <div class="container-fluid">
-            <div class="row">
-                <!-- Menú Vertical Izquierdo -->
-                <div class="col-md-3 col-lg-2 d-flex flex-column align-items-start border-end menu-opciones" style="min-height: 100vh;">
-                    <h4 class="mt-4 txt-opciones" style="align-self: center;">PANEL DE OPCIONES</h4>
-                    <ul class="nav flex-column w-100 txt-listado">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('listarReservas') }}">Lista de reservas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('listadoCheckin') }}">Realizar Check-In</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('listadoCheckout') }}">Realizar Check-Out</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('dispHabitaciones') }}">Disponibilidad de habitaciones</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('listarServicios') }}">Lista de servicios</a>
-                        </li>
-                    </ul>
-                </div>
+        <div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+            <!-- Contenido Principal -->
+            <div class="col-md-9 col-lg-8">
+                <h2 class="text-center">DISPONIBILIDAD DE HABITACIONES</h2>
 
-                <!-- Contenido Principal -->
-                <div class="col-md-9 col-lg-10 grafica">
-                    <br>
-                    @if ($errors->any())
-                    <div class="alert alert-danger ml-2" style="max-width: 400px; margin: 0 auto;">
-                        @foreach ($errors->all() as $error)
-                        {{ $error }}
-                        @endforeach
-                    </div>
-                    <br>
-                    @endif
-
-                    @if(session('status'))
-                    <div class="alert alert-success" style="max-width: 400px; margin: 0 auto;">
-                        {{ session('status') }}
-                    </div>
-                    @endif
-
-                    <br>
-                    <h2 class="text-center">PANEL DE RECEPCIONISTA</h2>
-
-                    <!-- Gráfica de reservas -->
-                    <div class="container my-4 d-flex justify-content-center">
-                        <div class="card" style="width: 100%; max-width: 900px;">
-                            <div class="card-header">
-                                <h5 class="mb-0 text-center">Dashboard de reservas</h5>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="graficaReservas"></canvas>
-                            </div>
+                <!-- Gráfica de reservas -->
+                <div class="container my-4 d-flex justify-content-center">
+                    <div class="card" style="width: 100%; max-width: 900px;">
+                        <div class="card-header text-center">
+                            <h5 class="mb-0">DASHBOARD</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="graficaHabitacionesDisponibles"></canvas>
                         </div>
                     </div>
                 </div>
@@ -140,19 +98,20 @@
         </div>
     </main>
 
-    <footer>
+    <footer class="text-center mt-4">
         <a href="#">Términos y Condiciones</a> |
         <a href="#">Sobre AlojaDirecto.com</a>
         <p>Copyright © 2024 AlojaDirecto.com<br>Todos los derechos reservados</p>
     </footer>
 
     <script>
-        window.chartData = <?php echo json_encode($data); ?>;
+    window.hotelNames = <?php echo json_encode(array_keys($data)); ?>;
+    window.availableRooms = <?php echo json_encode(array_values($data)); ?>;
     </script>
+
 </body>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Incluye el archivo de Vue -->
-<script src="{{ asset('../../vue/panelrecepcionistas/panel1.js') }}"></script>
-
+<script src="{{ asset('../../vue/habitaciones/disponibilidad.js') }}"></script>
 </html>

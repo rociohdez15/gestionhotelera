@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Hotel;
-use App\Models\Cliente;
+use App\Models\Servicio;
 use App\Models\EdadNino;
 use App\Models\Reserva;
 use App\Models\Habitacion;
@@ -14,16 +14,28 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use TCPDF;
 
-class ListarReservasControlador extends Controller
+class ListarServiciosControlador extends Controller
 {
-    public function listarReservas(Request $request)
+    public function listarServicios(Request $request)
     {
 
         $query = DB::table('reservas')
             ->join('habitaciones', 'habitaciones.habitacionID', '=', 'reservas.habitacionID')
             ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID')
             ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID')
-            ->select('reservas.*', 'clientes.nombre', 'clientes.apellidos', 'habitaciones.numhabitacion', 'hoteles.nombre as hotel_nombre');
+            ->join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID') // Unión con la tabla intermedia
+            ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID') // Unión con la tabla de servicios a través de la intermedia
+            ->select(
+                'reservas.*',
+                'clientes.nombre',
+                'clientes.apellidos',
+                'habitaciones.numhabitacion',
+                'servicios.servicioID',
+                'hoteles.nombre as nombre_hotel',
+                'servicios.nombre as nombre_servicio',
+                DB::raw("SUBSTRING_INDEX(servicios.horario, ' ', 1) as dia_servicio"), // Separando el día del campo horario
+                DB::raw("DATE_FORMAT(servicios.horario, '%H:%i') as hora_servicio") // Separando la hora del campo horario
+            );
 
         $totalReservas = $query->count();
 
@@ -38,7 +50,7 @@ class ListarReservasControlador extends Controller
 
         $reservas = $query->skip($inicio)->take($registros_por_pagina)->get();
 
-        return view('listarreservas', [
+        return view('listarservicios', [
             'reservas' => $reservas,
             'total_paginas' => $total_paginas,
             'pagina_actual' => $pagina_actual,
@@ -46,42 +58,18 @@ class ListarReservasControlador extends Controller
         ]);
     }
 
-    public function delReserva($reservaID)
+    public function delServicio($servicioID)
     {
-        // Buscar la reserva
-        $reserva = Reserva::find($reservaID);
+        $servicio = Servicio::find($servicioID);
 
-        if (!$reserva) {
-            return back()->withError('La reserva especificada no existe.');
+        if (!$servicio) {
+            return back()->withError('El servicio especificado no existe.');
         }
 
-        // Eliminar edades de niños asociados a la reserva
-        DB::table('edadesninos')->where('reservaID', $reservaID)->delete();
+        $servicio->delete();
 
-        // Obtener los IDs de los servicios asociados a esta reserva
-        $serviciosIDs = DB::table('reservas_servicios')
-            ->where('reservaID', $reservaID)
-            ->pluck('servicioID');
-
-        // Eliminar los registros de la tabla intermedia reservas_servicios para esta reserva
-        DB::table('reservas_servicios')->where('reservaID', $reservaID)->delete();
-
-        // Eliminar los servicios que ya no están asociados a ninguna reserva
-        DB::table('servicios')
-            ->whereIn('servicioID', $serviciosIDs)
-            ->whereNotExists(function ($query) {
-                $query->select(DB::raw(1))
-                    ->from('reservas_servicios')
-                    ->whereColumn('reservas_servicios.servicioID', 'servicios.servicioID');
-            })
-            ->delete();
-
-        // Eliminar la reserva
-        $reserva->delete();
-
-        return redirect()->route('listarReservas')->with('status', 'La reserva se ha eliminado correctamente.');
+        return redirect()->route('listarServicios')->with('status', 'El servicio se ha eliminado correctamente.');
     }
-
 
     public function mostrarReserva($reservaID)
     {
