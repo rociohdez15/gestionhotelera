@@ -107,7 +107,7 @@ class ListarServiciosControlador extends Controller
             return response()->json(['error' => 'Cliente no encontrado'], 404);
         }
 
-        // Pasar los datos del servicio, cliente, hotel y fechas a la vista
+        
         return view('editarservicio', compact('servicio', 'fecha', 'hora', 'reserva', 'cliente'));
     }
 
@@ -125,7 +125,7 @@ class ListarServiciosControlador extends Controller
             // Valida que los campos 'fecha' y 'hora' estén presentes
             $validatedData = $request->validate([
                 'fecha' => 'required|date',
-                'hora' => 'required|date_format:H:i', // Asegúrate de que la hora esté en el formato correcto
+                'hora' => 'required|date_format:H:i', 
             ]);
 
             // Combina la fecha y la hora para crear un solo campo 'horario'
@@ -145,7 +145,7 @@ class ListarServiciosControlador extends Controller
 
     public function generarPDF()
     {
-        // Consulta de datos utilizando Eloquent ORM
+        // Consulta para generar el pdf de la lista de servicios
         $reservas = Reserva::join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID') // Relación con la tabla intermedia
             ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID') // Relación con la tabla servicios
             ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID')
@@ -224,7 +224,7 @@ class ListarServiciosControlador extends Controller
     {
         $query = $request->input('query');
 
-        // Realiza la consulta con uniones a las tablas necesarias
+        // Consulta para buscar servicios en el listado
         $consulta = Reserva::select(
             'reservas.*',
             'clientes.nombre',
@@ -244,10 +244,10 @@ class ListarServiciosControlador extends Controller
             ->where('reservas.reservaID', 'LIKE', "%$query%")
             ->orWhere('clientes.nombre', 'LIKE', "%$query%")
             ->orWhere('clientes.apellidos', 'LIKE', "%$query%")
-            ->orWhere('habitaciones.numhabitacion', 'LIKE', "%$query%") // Búsqueda por número de habitación
+            ->orWhere('habitaciones.numhabitacion', 'LIKE', "%$query%") 
             ->orWhere('hoteles.nombre', 'LIKE', "%$query%")
-            ->orWhere('servicios.nombre', 'LIKE', "%$query%") // Búsqueda por nombre del servicio
-            ->orWhere('servicios.servicioID', 'LIKE', "%$query%"); // Búsqueda por ID del servicio
+            ->orWhere('servicios.nombre', 'LIKE', "%$query%") 
+            ->orWhere('servicios.servicioID', 'LIKE', "%$query%"); 
 
         $totalReservas = $consulta->count();
 
@@ -269,4 +269,12 @@ class ListarServiciosControlador extends Controller
             'registros_por_pagina' => $registros_por_pagina
         ], compact('reservas'));
     }
+
+    public function anadirServicio(Request $request)
+{
+    // Obtén todas las reservas desde la base de datos
+    $reservas = Reserva::all(); 
+
+    return view('anadirServicio', ['reservas' => $reservas]);
+}
 }

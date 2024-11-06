@@ -247,15 +247,15 @@ class ListarReservasControlador extends Controller
 
     public function generarPDF()
     {
-        // Consulta de datos utilizando Eloquent ORM
+        // Consulta para generar un pdf del listado de reservas
         $reservas = Reserva::join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID')
             ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID')
             ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID')
             ->select(
                 'reservas.*',
                 'hoteles.nombre as nombre_hotel',
-                'habitaciones.numhabitacion', // Asegúrate de incluir el número de habitación
-                DB::raw("CONCAT(clientes.nombre, ' ', clientes.apellidos) as nombre_completo") // Concatenar nombre y apellido
+                'habitaciones.numhabitacion', 
+                DB::raw("CONCAT(clientes.nombre, ' ', clientes.apellidos) as nombre_completo") 
             )
             ->get();
 
@@ -287,12 +287,12 @@ class ListarReservasControlador extends Controller
         // Iterar sobre los datos de las reservas y agregarlos a la tabla del PDF
         foreach ($reservas as $reserva) {
             $html .= '<tr>';
-            $html .= '<td>' . $reserva->reservaID . '</td>'; // Asumiendo que este es el ID de la reserva
+            $html .= '<td>' . $reserva->reservaID . '</td>'; // ID de la reserva
             $html .= '<td>' . $reserva->nombre_completo . '</td>'; // Nombre del cliente
             $html .= '<td>' . $reserva->nombre_hotel . '</td>'; // Nombre del hotel
             $html .= '<td>' . $reserva->fechainicio . '</td>'; // Fecha de inicio
             $html .= '<td>' . $reserva->fechafin . '</td>'; // Fecha de fin
-            $html .= '<td>' . $reserva->numhabitacion . '</td>'; // Número de habitación (debes asegurarte de que este campo está en la tabla de reservas o hacer el join correspondiente)
+            $html .= '<td>' . $reserva->numhabitacion . '</td>'; // Número de habitación 
             $html .= '<td>' . $reserva->preciototal . '</td>'; // Precio total
             $html .= '<td>' . $reserva->num_adultos . '</td>'; // Número de adultos
             $html .= '<td>' . $reserva->num_ninos . '</td>'; // Número de niños
@@ -316,7 +316,7 @@ class ListarReservasControlador extends Controller
     {
         $query = $request->input('query');
 
-        // Realiza la consulta con uniones a las tablas necesarias
+        // Consulta para utilizar el buscador en el listado de reservas
         $consulta = Reserva::select('reservas.*', 'clientes.nombre', 'clientes.apellidos', 'habitaciones.numhabitacion', 'hoteles.nombre as hotel_nombre') // Selecciona todas las columnas de reservas
             ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID') // Une con la tabla de clientes
             ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID') // Une con la tabla de habitaciones

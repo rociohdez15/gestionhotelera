@@ -22,7 +22,7 @@ class OlvidoPasswordControlador extends Controller{
             return redirect()->back()->withErrors(['email' => 'No se encontró un usuario con esa dirección de correo electrónico.'])->withInput();
         }
 
-        // IActualiza la contraseña en la table 'users'
+        // Actualiza la contraseña en la table 'users'
         DB::table('users')
                     ->where('email', $request->email)
                     ->update(['password' => Hash::make($request->password)]);

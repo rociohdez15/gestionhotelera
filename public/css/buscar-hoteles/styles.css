@@ -2,19 +2,19 @@ html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    overflow-x: hidden; /* Esto oculta el desbordamiento horizontal */
+    overflow-x: hidden; 
     display: flex;
     flex-direction: column;
 
 }
 
 body {
-    flex: 1; /* Hace que el body ocupe el espacio restante disponible */
+    flex: 1; 
     min-height: 100vh;
 }
 
 main {
-    flex: 1; /* El main se expande para ocupar todo el espacio restante disponible */
+    flex: 1; 
 }
 
 header {
@@ -74,7 +74,7 @@ header {
 }
 
 #dropdownMenuButton:active, #dropdownMenuButton:focus {
-    background-color: transparent; /* No cambia de color al pasar el ratón */
+    background-color: transparent; 
     border-color: transparent;
     color: black;
 }
@@ -202,18 +202,18 @@ footer {
 }
 
 .hotel-imagen {
-    flex-shrink: 0; /* Para evitar que la imagen se reduzca en tamaño */
+    flex-shrink: 0; 
 }
 
 .imagen-portada-alojamiento {
     width: 150px;
-    height: auto; /* Mantener la proporción de la imagen */
+    height: auto; 
     border: 3px solid #3c3c3c;
     border-radius: 5px;
 }
 
 .hotel-info {
-    flex: 1; /* Ocupa el espacio restante */
+    flex: 1; 
 }
 
 .hotel-info h5 {
@@ -245,42 +245,42 @@ footer {
     max-width: 100%;
 }
 
-/* Estilo del enlace de cerrar sesión */
+
 .btn-secondary.icono-user {
-    background-color: transparent; /* Elimina el color de fondo */
-    border: none; /* Elimina el borde */
-    color: inherit; /* Mantiene el color del texto según el tema */
-    outline: none; /* Elimina el contorno de enfoque */
-    text-decoration: none; /* Elimina el subrayado si aplica */
+    background-color: transparent; 
+    border: none; 
+    color: inherit; 
+    outline: none; 
+    text-decoration: none; 
 }
 
-/* Estilo del icono dentro del enlace */
+
 .btn-secondary.icono-user i {
-    color: inherit; /* Mantiene el color original del icono */
+    color: inherit; 
 }
 
-/* Estado activo (cuando se hace clic) */
+
 .btn-secondary.icono-user:active {
-    background-color: transparent; /* Asegura que el fondo se mantenga transparente */
-    color: inherit; /* Asegura que el color del texto no cambie */
+    background-color: transparent; 
+    color: inherit; 
 }
 
-/* Estado de enfoque (cuando se enfoca con el teclado) */
+
 .btn-secondary.icono-user:focus {
-    background-color: transparent; /* Asegura que el fondo se mantenga transparente */
-    box-shadow: none; /* Elimina cualquier sombra que pueda aparecer */
-    color: inherit; /* Asegura que el color del texto no cambie */
+    background-color: transparent; 
+    box-shadow: none; 
+    color: inherit; 
 }
 
-/* Estado hover (cuando el ratón está sobre el enlace) */
+
 .btn-secondary.icono-user:hover {
-    background-color: transparent; /* Asegura que el fondo se mantenga transparente */
-    color: inherit; /* Asegura que el color del texto no cambie */
+    background-color: transparent; 
+    color: inherit; 
 }
 
-/* Estado activo del icono (cuando se hace clic) */
+
 .btn-secondary.icono-user:active i {
-    color: inherit; /* Mantiene el color original del icono */
+    color: inherit; 
 }
 
 @media (max-width: 768px) {
@@ -294,10 +294,10 @@ footer {
     }
     
     .fa-right-from-bracket {
-        font-size: 14px; /* Ajusta el tamaño del ícono */
+        font-size: 14px; 
     }
     
     .icono-user {
-        padding: 5px 10px; /* Ajusta el padding para pantallas pequeñas */
+        padding: 5px 10px;
     }
 }

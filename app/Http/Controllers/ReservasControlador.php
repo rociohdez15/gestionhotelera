@@ -68,7 +68,6 @@ class ReservasControlador extends Controller
             "registros_por_pagina" => $registros_por_pagina,
         ];
 
-        // Pasar las reservas a la vista
         return view('misreservas', $parametros);
     }
 }

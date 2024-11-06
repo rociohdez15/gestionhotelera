@@ -75,8 +75,8 @@ export default {
     const fechaCheckout = new Date(this.reserva.fecha_checkout);
     
     // Asegurarse de que la fecha se maneje correctamente en la zona horaria local
-    const offset = fechaCheckout.getTimezoneOffset() * 60000; // Obtener el offset en milisegundos
-    const fechaLocal = new Date(fechaCheckout.getTime() - offset); // Ajustar a la zona local
+    const offset = fechaCheckout.getTimezoneOffset() * 60000; 
+    const fechaLocal = new Date(fechaCheckout.getTime() - offset); 
     const fechaISO = fechaLocal.toISOString();
     this.fechaCheckout = fechaISO.slice(0, 16); // YYYY-MM-DDTHH:MM
 },
@@ -106,16 +106,12 @@ export default {
                 this.errorMessage =
                     "La fecha de checkout debe ser igual al día actual.";
             } else {
-                // Aquí la fecha de checkout es igual al día actual, no hay error.
                 this.errorMessage = "";
             }
         },
         async registrarCheckout() {
             const checkout = new Date(this.fechaCheckout);
 
-            
-
-            // Solo se necesita la fecha de checkout para la actualización
             const actualizaCheckout = {
                 fechaCheckout: this.fechaCheckout,
             };

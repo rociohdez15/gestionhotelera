@@ -122,7 +122,7 @@
                     <button class="btn btn-primary" type="submit">Buscar</button>
                 </div>
             </form>
-            
+
             <!-- Muestra la tabla de reservas -->
             <div class="table-responsive mx-auto">
                 <table class="table table-bordered table-striped text-center">
@@ -210,6 +210,13 @@
                         @endforeach
                     </tbody>
                 </table>
+
+            </div>
+
+            <div class="text-center">
+                <a href="{{ route('anadirServicio') }}" class="btn btn-success btn-sm">
+                    Añadir servicio
+                </a>
             </div>
 
             <br>

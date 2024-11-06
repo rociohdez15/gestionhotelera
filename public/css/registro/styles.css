@@ -2,7 +2,7 @@ html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    overflow-x: hidden; /* Esto oculta el desbordamiento horizontal */
+    overflow-x: hidden; 
     display: flex;
     flex-direction: column;
 
@@ -76,7 +76,7 @@ header {
 }
 
 #dropdownMenuButton:active, #dropdownMenuButton:focus {
-    background-color: transparent; /* No cambia de color al pasar el ratón */
+    background-color: transparent; 
     border-color: transparent;
     color: black;
 }
@@ -205,18 +205,18 @@ footer {
 }
 
 .hotel-imagen {
-    flex-shrink: 0; /* Para evitar que la imagen se reduzca en tamaño */
+    flex-shrink: 0; 
 }
 
 .imagen-portada-alojamiento {
     width: 150px;
-    height: auto; /* Mantener la proporción de la imagen */
+    height: auto; 
     border: 3px solid #3c3c3c;
     border-radius: 5px;
 }
 
 .hotel-info {
-    flex: 1; /* Ocupa el espacio restante */
+    flex: 1; 
 }
 
 .hotel-info h5 {
@@ -260,10 +260,10 @@ footer {
     }
     
     .fa-right-from-bracket {
-        font-size: 14px; /* Ajusta el tamaño del ícono */
+        font-size: 14px; 
     }
     
     .icono-user {
-        padding: 5px 10px; /* Ajusta el padding para pantallas pequeñas */
+        padding: 5px 10px; 
     }
 }

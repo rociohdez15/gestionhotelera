@@ -2,18 +2,18 @@ html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    overflow-x: hidden; /* Esto oculta el desbordamiento horizontal */
+    overflow-x: hidden; 
     display: flex;
     flex-direction: column;
 }
 
 body {
-    flex: 1; /* Hace que el body ocupe el espacio restante disponible */
+    flex: 1; 
     min-height: 100vh;
 }
 
 main {
-    flex: 1; /* El main se expande para ocupar todo el espacio restante disponible */
+    flex: 1; 
 }
 
 header {
@@ -74,47 +74,47 @@ header {
 }
 
 #dropdownMenuButton:active, #dropdownMenuButton:focus {
-    background-color: transparent; /* No cambia de color al pasar el ratón */
+    background-color: transparent; 
     border-color: transparent;
     color: black;
 }
 
-/* Estilo del enlace de cerrar sesión */
+
 .btn-secondary.icono-user {
-    background-color: transparent; /* Elimina el color de fondo */
-    border: none; /* Elimina el borde */
-    color: inherit; /* Mantiene el color del texto según el tema */
-    outline: none; /* Elimina el contorno de enfoque */
-    text-decoration: none; /* Elimina el subrayado si aplica */
+    background-color: transparent; 
+    border: none; 
+    color: inherit; 
+    outline: none; 
+    text-decoration: none; 
 }
 
-/* Estilo del icono dentro del enlace */
+
 .btn-secondary.icono-user i {
-    color: inherit; /* Mantiene el color original del icono */
+    color: inherit; 
 }
 
-/* Estado activo (cuando se hace clic) */
+
 .btn-secondary.icono-user:active {
-    background-color: transparent; /* Asegura que el fondo se mantenga transparente */
-    color: inherit; /* Asegura que el color del texto no cambie */
+    background-color: transparent; 
+    color: inherit; 
 }
 
-/* Estado de enfoque (cuando se enfoca con el teclado) */
+
 .btn-secondary.icono-user:focus {
-    background-color: transparent; /* Asegura que el fondo se mantenga transparente */
-    box-shadow: none; /* Elimina cualquier sombra que pueda aparecer */
-    color: inherit; /* Asegura que el color del texto no cambie */
+    background-color: transparent; 
+    box-shadow: none; 
+    color: inherit; 
 }
 
-/* Estado hover (cuando el ratón está sobre el enlace) */
+
 .btn-secondary.icono-user:hover {
-    background-color: transparent; /* Asegura que el fondo se mantenga transparente */
-    color: inherit; /* Asegura que el color del texto no cambie */
+    background-color: transparent; 
+    color: inherit; 
 }
 
-/* Estado activo del icono (cuando se hace clic) */
+
 .btn-secondary.icono-user:active i {
-    color: inherit; /* Mantiene el color original del icono */
+    color: inherit; 
 }
 
 
@@ -249,13 +249,13 @@ footer {
     width: 100%;
     height: 197px;
     display: flex;
-    flex-direction: column; /* Alinea los elementos verticalmente */
+    flex-direction: column; 
     border: 3px solid #3c3c3c;
-    margin: 0; /* Elimina márgenes extra */
+    margin: 0; 
     border-radius: 5px;
     position: relative;
-    padding: 15px; /* Espacio interior del cuadrado */
-    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+    padding: 15px; 
+    box-sizing: border-box; 
 }
 
 .centros{
@@ -291,108 +291,108 @@ footer {
 .detalles-usuario {
     text-decoration: underline;
     font-size: 15px;
-    text-align: left; /* Alinea el texto a la izquierda */
-    margin: 0; /* Elimina márgenes para asegurar alineación */
-    padding: 0; /* Elimina padding para evitar desplazamiento */
-    width: 100%; /* Asegura que el texto no se salga del contenedor */
-    box-sizing: border-box; /* Incluye padding en el ancho total */
+    text-align: left; 
+    margin: 0; 
+    padding: 0; 
+    width: 100%; 
+    box-sizing: border-box; 
 }
 
 .nombre {
     font-size: 13px;
-    text-align: left; /* Alinea el texto a la izquierda */
-    margin-top: 5px; /* Espacio superior entre detalles y nombre */
-    padding: 0; /* Elimina padding para evitar desplazamiento */
-    width: 100%; /* Asegura que el texto no se salga del contenedor */
-    box-sizing: border-box; /* Incluye padding en el ancho total */
+    text-align: left; 
+    margin-top: 5px; 
+    padding: 0; 
+    width: 100%; 
+    box-sizing: border-box; 
 }
 .apellidos{
     font-size: 13px;
-    text-align: left; /* Alinea el texto a la izquierda */
-    padding: 0; /* Elimina padding para evitar desplazamiento */
-    width: 100%; /* Asegura que el texto no se salga del contenedor */
-    box-sizing: border-box; /* Incluye padding en el ancho total */
+    text-align: left; 
+    padding: 0; 
+    width: 100%; 
+    box-sizing: border-box; 
 }
 .email2{
     font-size: 13px;
-    text-align: left; /* Alinea el texto a la izquierda */
-    padding: 0; /* Elimina padding para evitar desplazamiento */
-    width: 100%; /* Asegura que el texto no se salga del contenedor */
-    box-sizing: border-box; /* Incluye padding en el ancho total */
+    text-align: left; 
+    padding: 0; 
+    width: 100%; 
+    box-sizing: border-box; 
 }
 
 .enlace-perfil {
     position: absolute;
-    top: 10px; /* Ajusta la distancia desde la parte superior */
-    right: 10px; /* Ajusta la distancia desde el lado derecho */
-    text-decoration: none; /* Elimina el subrayado por defecto del enlace */
-    color: #007bff; /* Cambia el color del enlace (opcional) */
-    font-size: 14px; /* Tamaño de fuente del enlace (opcional) */
+    top: 10px; 
+    right: 10px; 
+    text-decoration: none; 
+    color: #007bff; 
+    font-size: 14px; 
 }
 
 .tabla-reservas {
-    width: 100%; /* Ajusta el tamaño de la tabla (cámbialo según tu preferencia) */
-    border-collapse: collapse; /* Asegura que los bordes se junten */
-    margin: 20px auto; /* Centra la tabla horizontalmente */
-    font-size: 12px; /* Haz que el texto sea más pequeño */
+    width: 100%; 
+    border-collapse: collapse; 
+    margin: 20px auto; 
+    font-size: 12px; 
     height: 100px;
     border-radius: 5px;
 }
 
 .tabla-reservas th, 
 .tabla-reservas td {
-    border: 3px solid #3c3c3c; /* Bordes negros en las celdas */
+    border: 3px solid #3c3c3c; 
     border-radius: 5px;
-    padding: 4px; /* Espacio dentro de las celdas */
-    text-align: center; /* Alineación del texto a la izquierda */
+    padding: 4px; 
+    text-align: center; 
 }
 
 .tabla-reservas th {
-    background-color: #859eca; /* Color de fondo para el encabezado */
+    background-color: #859eca; 
 }
 
 .resenas {
     text-decoration: underline;
     font-size: 15px;
-    text-align: left; /* Alinea el texto a la izquierda */
-    margin: 0; /* Elimina márgenes para asegurar alineación */
-    padding: 0; /* Elimina padding para evitar desplazamiento */
-    width: 100%; /* Asegura que el texto no se salga del contenedor */
-    box-sizing: border-box; /* Incluye padding en el ancho total */
-    position: absolute; /* Permite moverlo fuera del flujo normal */
-    top: 10px; /* Ajusta la posición vertical */
-    left: 10px; /* Ajusta la posición horizontal */
+    text-align: left; 
+    margin: 0; 
+    padding: 0; 
+    width: 100%; 
+    box-sizing: border-box; 
+    position: absolute; 
+    top: 10px; 
+    left: 10px; 
 }
 
 .cuadrado {
-    position: relative; /* Permite que el título se posicione absolutamente respecto a este contenedor */
-    padding: 20px; /* Añade espacio dentro del recuadro */
-    border-radius: 5px; /* Bordes redondeados */
+    position: relative; 
+    padding: 20px; 
+    border-radius: 5px; 
 }
 
 .reseñas-container {
-    display: flex; /* Cambiar a fila */
-    flex-wrap: wrap; /* Permitir que se ajusten en múltiples filas si no caben */
-    justify-content: center; /* Centrar recuadros en la fila */
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
     padding: 0;
     box-sizing: border-box;
-    margin: 0; /* Elimina márgenes */
-    width: 100%; /* Asegura que el contenedor ocupe el 100% del espacio disponible */
+    margin: 0; 
+    width: 100%; 
     margin-right: 0px;
     margin-bottom: 40px;
 }
 
 .contenedor-resena {
-    display: flex; /* Mantiene la imagen y el texto en fila */
-    align-items: center; /* Alinea verticalmente al centro */
-    border: 3px solid #3c3c3c; /* Bordes negros en las celdas */
+    display: flex; 
+    align-items: center; 
+    border: 3px solid #3c3c3c; 
     border-radius: 5px;
-    border-radius: 5px; /* Bordes redondeados */
-    padding: 10px; /* Espacio dentro del recuadro */
-    width: 300px; /* Ajusta el ancho como necesites */
-    margin: 10px; /* Espacio entre los recuadros */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra opcional para darle profundidad */
-    box-sizing: border-box; /* Incluye padding y bordes en el ancho total */
+    border-radius: 5px; 
+    padding: 10px; 
+    width: 300px; 
+    margin: 10px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    box-sizing: border-box; 
 }
 
 
@@ -401,60 +401,60 @@ footer {
     height: 50px; 
     object-fit: cover; 
     border-radius: 5px;
-    margin-right: 10px; /* Espacio entre la imagen y el texto */
+    margin-right: 10px; 
 }
 
 .nombre-hotel {
-    margin: 0; /* Elimina márgenes para ajustar el texto */
+    margin: 0; 
     font-size: 14px;
     font-weight: bold;
 }
 
 .texto-resena {
-    font-size: 12px; /* Ajusta el tamaño de la fuente según lo necesites */
+    font-size: 12px; 
 }
 
 .menu-izquierda {
-    position: absolute; /* Posiciona el menú a la izquierda de la cabecera */
-    top: 10px; /* Ajusta según sea necesario */
-    left: 40px; /* Ajusta según sea necesario */
+    position: absolute; 
+    top: 10px; 
+    left: 40px; 
     margin-top: 40px;
     overflow-x: auto;
 }
 
 .menu-izquierda ul {
-    display: flex; /* Muestra los elementos en fila */
+    display: flex; 
     flex-wrap: nowrap; 
 }
 
 .menu-izquierda a {
-    text-decoration: none; /* Sin subrayado */
+    text-decoration: none; 
     color: black;
 }
 
 .menu-izquierda li {
-    margin: 0 5px; /* Espacio entre enlaces */
+    margin: 0 5px; 
 }
 
-/* Estilo para pantallas pequeñas */
+
 
 @media (max-width: 992px){
     .menu-izquierda{
         margin-top: 20px;
     }
     .menu-izquierda ul {
-        flex-direction: column; /* Cambia a diseño vertical */
-        align-items: flex-start; /* Alinea los elementos a la izquierda */
+        flex-direction: column; 
+        align-items: flex-start; 
         font-size: 10px;
         
     }
 
     .menu-izquierda .divider {
-        display: none; /* Oculta los divisores en el modo vertical */
+        display: none; 
     }
 
     .menu-izquierda li {
-        margin-bottom: 5px; /* Espacio entre los enlaces */
+        margin-bottom: 5px; 
     }
 }
 
@@ -463,9 +463,9 @@ footer {
         margin-top: 100px;
     }
     .contenedor-resena {
-        width: 100%; /* Ocupa todo el ancho en pantallas pequeñas */
-        flex-direction: column; /* Cambia a columna */
-        align-items: flex-start; /* Alinea el contenido a la izquierda */
+        width: 100%; 
+        flex-direction: column; 
+        align-items: flex-start; 
         font-size: 10px;
     }
 
@@ -477,11 +477,11 @@ footer {
     .imagen-resena {
         width: 20px;
         height: 20px;
-        margin-bottom: 0px; /* Espacio entre la imagen y el texto */
+        margin-bottom: 0px; 
     }
 
     .resenas {
-        font-size: 14px; /* Ajusta el tamaño de la fuente para pantallas pequeñas */
+        font-size: 14px; 
     }
     .nombre-hotel,.texto-resena{
         font-size: 12px;
@@ -499,11 +499,11 @@ footer {
     }
     
     .fa-right-from-bracket {
-        font-size: 14px; /* Ajusta el tamaño del ícono */
+        font-size: 14px; 
     }
     
     .icono-user {
-        padding: 5px 10px; /* Ajusta el padding para pantallas pequeñas */
+        padding: 5px 10px; 
     }
 }
 
@@ -541,11 +541,11 @@ footer {
     }
     
     .fa-right-from-bracket {
-        font-size: 14px; /* Ajusta el tamaño del ícono */
+        font-size: 14px; 
     }
     
     .icono-user {
-        padding: 10px 0px; /* Ajusta el padding para pantallas pequeñas */
+        padding: 10px 0px; 
     }
 
     .nav-link{
@@ -553,12 +553,12 @@ footer {
     }
 
     .table {
-        border-radius: 0.5rem; /* Bordes redondeados */
-        overflow: hidden; /* Para que los bordes redondeados se apliquen correctamente */
+        border-radius: 0.5rem; 
+        overflow: hidden; 
     }
     
     .table th, .table td {
-        border: 1px solid #dee2e6; /* Color del borde de las celdas */
+        border: 1px solid #dee2e6; 
     }
     
 }

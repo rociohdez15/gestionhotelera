@@ -19,12 +19,12 @@ class ListadoCheckoutControlador extends Controller
     public function listadoCheckout(Request $request)
     {
         // Obtener el valor del query desde el request
-        $queryParam = $request->input('query', ''); // Por defecto vacío
+        $queryParam = $request->input('query', '');
 
         // Obtener la fecha actual
         $fecha_actual = Carbon::now()->startOfDay();
 
-        // Construir la consulta
+        // Consulta para mostrar el listado de las reservas disponibles para realizar el check-out
         $query = DB::table('reservas')
             ->join('habitaciones', 'habitaciones.habitacionID', '=', 'reservas.habitacionID')
             ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID')
@@ -66,8 +66,8 @@ class ListadoCheckoutControlador extends Controller
             'total_paginas' => $total_paginas,
             'pagina_actual' => $pagina_actual,
             'registros_por_pagina' => $registros_por_pagina,
-            'fecha_actual' => $fecha_actual->toDateTimeString(), // Pasar fecha actual
-            'query' => $queryParam // Asegúrate de pasar el query a la vista
+            'fecha_actual' => $fecha_actual->toDateTimeString(), 
+            'query' => $queryParam 
         ]);
     }
 
@@ -80,7 +80,7 @@ class ListadoCheckoutControlador extends Controller
         // Obtener la fecha actual
         $fecha_actual = Carbon::now()->startOfDay();
 
-        // Realiza la consulta con uniones a las tablas necesarias
+        // Consulta para cuando se haga uso del buscador del listado
         $consulta = Reserva::select('reservas.*', 'clientes.nombre', 'clientes.apellidos', 'habitaciones.numhabitacion')
             ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID')
             ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID')
@@ -170,7 +170,7 @@ class ListadoCheckoutControlador extends Controller
         if ($reserva->fecha_checkout !== $fechaCheckoutNueva->toDateString()) {
             // Actualizar solo la fecha de checkout
             $reserva->fecha_checkout = $fechaCheckoutNueva;
-            $reserva->fechafin = $fechaCheckoutNueva; // Sincronizar si `fechafin` debe ser igual a `fecha_checkout`
+            $reserva->fechafin = $fechaCheckoutNueva; // `fechafin` debe ser igual a `fecha_checkout`
             $reserva->save();
         }
 

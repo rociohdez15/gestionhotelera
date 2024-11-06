@@ -46,7 +46,7 @@ class InformacionUsuarioControlador extends Controller
             })
             ->where('resenas.clienteID', $cliente->clienteID)
             ->select('resenas.*', 'hoteles.nombre', 'imagenes_hoteles.imagen as imagen_portada')
-            ->take(2) // Seleeciona solo las 2 primeras reseñas
+            ->take(2) // Selecciona solo las 2 primeras reseñas
             ->get();
 
         return view('informacionusuario', [

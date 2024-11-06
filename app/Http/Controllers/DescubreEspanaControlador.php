@@ -41,7 +41,7 @@ class DescubreEspanaControlador extends Controller
         $inicio = ($pagina_actual - 1) * $registros_por_pagina;
 
         // Obtener los datos para la página actual utilizando slice()
-        $datos_paginados = $hoteles->slice($inicio, $registros_por_pagina)->values(); // ->values() para reiniciar las claves del array
+        $datos_paginados = $hoteles->slice($inicio, $registros_por_pagina)->values(); 
 
         $parametros = [
             "tituloventana" => "AlojaDirecto | Descubre España",

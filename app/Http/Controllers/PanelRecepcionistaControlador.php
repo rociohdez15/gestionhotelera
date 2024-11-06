@@ -20,7 +20,6 @@ class PanelRecepcionistaControlador extends Controller
         // Obtener los datos de los alojamientos mensuales
         $data = $this->obtenerAlojamientosMensuales();
 
-        // Pasar los datos a la vista
         return view('panelrecepcionista', ['data' => $data]);
     }
 
@@ -29,7 +28,7 @@ class PanelRecepcionistaControlador extends Controller
     {
 
         // Inicializa un array para los conteos por mes
-        $alojamientosMensuales = array_fill(0, 12, 0); // 12 meses
+        $alojamientosMensuales = array_fill(0, 12, 0); 
 
         // Obtener las reservas agrupadas por mes 
         $reservas = Reserva::selectRaw('MONTH(fechainicio) as mes, COUNT(*) as total')

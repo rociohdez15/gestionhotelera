@@ -80,8 +80,8 @@ class ResenasControlador extends Controller
 
         $parametros = [
             "mensajes" => [],
-            "hotel" => $hotel, // Pasar el hotel a la vista
-            "fechaHoy" => $fechaHoy, // Pasar la fecha de hoy a la vista
+            "hotel" => $hotel, 
+            "fechaHoy" => $fechaHoy, 
         ];
 
         return view('escribirresena', $parametros);
@@ -90,7 +90,7 @@ class ResenasControlador extends Controller
     //Método para guardar los datos del formulario
     public function guardarResena(Request $request)
     {
-        // Validar los datos enviados en la solicitud
+        // Validar los datos 
         $request->validate([
             'hotelID' => 'required|exists:hoteles,hotelID',
             'fecha' => 'required|date',
@@ -143,7 +143,7 @@ class ResenasControlador extends Controller
         $totalHoteles = $resenas->count();
 
         // Define los parámetros de paginación
-        $registros_por_pagina = 5; // Muestra 1 registro por página
+        $registros_por_pagina = 5; 
         $pagina_actual = $request->input('pagina', 1);
         $total_paginas = ceil($totalHoteles / $registros_por_pagina);
 
@@ -167,10 +167,9 @@ class ResenasControlador extends Controller
             "pagina_actual" => $pagina_actual,
             "total_paginas" => $total_paginas,
             "registros_por_pagina" => $registros_por_pagina,
-            "resenas" => $resenas, // Pasar las reseñas y los datos del hotel a la vista
+            "resenas" => $resenas, 
         ];
 
-        // Devolver la vista con los parámetros
         return view('mostrarresenas', $parametros);
     }
 }

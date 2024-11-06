@@ -44,7 +44,7 @@ class RealizarReservaControlador extends Controller
             }
         }
 
-        // Obtén los datos del hotel usando el ID 
+        // Obtiene los datos del hotel usando el ID 
         $hotel = Hotel::findOrFail($hotelID);
 
         // Obtiene las imágenes del hotel que empiecen por esa ruta y esten almacenadas en la columna imagen
@@ -56,7 +56,6 @@ class RealizarReservaControlador extends Controller
         // Obtiene las reseñas del hotel
         $resenas = Resena::where('hotelID', $hotelID)->get();
 
-        // Pasa los parámetros a la vista
         $parametros = [
             "tituloventana" => "AlojaDirecto | Realizar Reserva",
             "hotel" => $hotel,
@@ -72,7 +71,7 @@ class RealizarReservaControlador extends Controller
             "resenas" => $resenas
         ];
 
-        return view('realizarreserva', $parametros); // Devuelve la vista pasando los parámetros anteriores
+        return view('realizarreserva', $parametros); 
     }
 
 
@@ -101,7 +100,7 @@ class RealizarReservaControlador extends Controller
             $habitacionID = explode(',', $habitacionID);
         }
 
-        // Calcula el número de noches calculando la diferencia de dias entre dos fechas con la clase Carbon
+        // Calcula el número de noches calculando la diferencia de dias entre dos fechas 
         $fechaEntradaCarbon = Carbon::parse($fechaEntrada);
         $fechaSalidaCarbon = Carbon::parse($fechaSalida);
         $numNoches = $fechaEntradaCarbon->diffInDays($fechaSalidaCarbon);
@@ -182,14 +181,11 @@ class RealizarReservaControlador extends Controller
                 ]);
             }
         }
-
-        // Redirige a la página de éxito
         return redirect()->route('exitoreserva');
     }
 
     public function mostrarexito()
     {
-        // Devuelve la vista que muestra el mensaje de éxito
         return view('exitoreserva');
     }
 }

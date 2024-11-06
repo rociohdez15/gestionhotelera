@@ -40,7 +40,7 @@ class BuscarHotelesControlador extends Controller
         foreach ($edadesNinos as $index => $edad) {
 
             /* Esto concatenará todas las edades de todos los niños introducidos en la búsqueda, teniendo
-            en cuenta eu $index + 1 irá numerando a cada niño (edad-nino-1, edad-nino-2, etc) y que al final
+            en cuenta su $index + 1 irá numerando a cada niño (edad-nino-1, edad-nino-2, etc) y que al final
             se introducirá '&' para separar el siguiente parámetro */
             $edadesNinosParams .= 'edad-nino-' . ($index + 1) . '=' . $edad . '&';
         }

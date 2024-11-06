@@ -98,9 +98,9 @@
         <p class="text-center">No tienes reservas.</p>
         @else
         <div class="container">
-            <div class="row justify-content-center"> <!-- Alineación central -->
+            <div class="row justify-content-center"> 
                 @foreach($datos as $reserva)
-                <div class="{{ $col_class }} col-sm-12 mb-4"> <!-- Usar col_class -->
+                <div class="{{ $col_class }} col-sm-12 mb-4"> 
                     <div class="card">
                         <img src="{{ asset($reserva->hotel_imagen) }}" class="card-img-top" alt="Imagen del hotel">
                         <div class="card-body">
