@@ -3,29 +3,29 @@
         <h1 class="titulo"><strong>Registrar Check-Out</strong></h1>
 
         <div v-if="reserva">
-            <p><strong>ID de Reserva:</strong> {{ reserva.reservaID }}</p>
-            <p>
+            <h2><strong>ID de Reserva:</strong> {{ reserva.reservaID }}</h2>
+            <h2>
                 <strong>Nombre del Cliente:</strong> {{ cliente.nombre }},
                 {{ cliente.apellidos }}
-            </p>
+            </h2>
 
             <div class="mb-3 d-flex align-items-center">
+                <h2><strong class="me-2">Fecha de Check-in: </strong></h2>
                 <label class="form-label me-2" style="margin-bottom: 0">
-                    <strong>Fecha de Check-in:</strong>
                 </label>
-                <span>{{ reserva.fecha_checkin }}</span>
+                <span style="color: black;">{{ reserva.fecha_checkin }}</span>
             </div>
             <div class="mb-3 d-flex align-items-center">
+                <h2><strong class="me-2">Fecha de Check-Out: </strong></h2>
                 <label
                     for="fechaCheckout"
                     class="form-label me-2"
                     style="margin-bottom: 0"
                 >
-                    <strong>Fecha de Check-Out:</strong>
                 </label>
                 <input
                     type="datetime-local"
-                    class="form-control rounded-input"
+                    class="form-control rounded-input me-2"
                     id="fechaCheckout"
                     v-model="fechaCheckout"
                     style="max-width: 200px"
@@ -67,19 +67,19 @@ export default {
         };
     },
     mounted() {
-    const appElement = document.getElementById("app2");
-    this.reserva = JSON.parse(appElement.getAttribute("data-reserva"));
-    this.cliente = JSON.parse(appElement.getAttribute("data-cliente"));
+        var appElement = document.getElementById("app2");
+        this.reserva = JSON.parse(appElement.getAttribute("data-reserva"));
+        this.cliente = JSON.parse(appElement.getAttribute("data-cliente"));
 
-    // Convertir la fecha de checkout al formato "YYYY-MM-DDTHH:MM" para el campo de tipo datetime-local
-    const fechaCheckout = new Date(this.reserva.fecha_checkout);
-    
-    // Asegurarse de que la fecha se maneje correctamente en la zona horaria local
-    const offset = fechaCheckout.getTimezoneOffset() * 60000; 
-    const fechaLocal = new Date(fechaCheckout.getTime() - offset); 
-    const fechaISO = fechaLocal.toISOString();
-    this.fechaCheckout = fechaISO.slice(0, 16); // YYYY-MM-DDTHH:MM
-},
+        // Convertir la fecha de checkout al formato "YYYY-MM-DDTHH:MM" para el campo de tipo datetime-local
+        var fechaCheckout = new Date(this.reserva.fecha_checkout);
+        
+        // Asegurarse de que la fecha se maneje correctamente en la zona horaria local
+        var offset = fechaCheckout.getTimezoneOffset() * 60000; 
+        var fechaLocal = new Date(fechaCheckout.getTime() - offset); 
+        var fechaISO = fechaLocal.toISOString();
+        this.fechaCheckout = fechaISO.slice(0, 16); // YYYY-MM-DDTHH:MM
+    },
 
     computed: {
         isFormValid() {
@@ -92,32 +92,34 @@ export default {
 
             if (!this.fechaCheckout) return;
 
-            const hoy = new Date();
-            const checkout = new Date(this.fechaCheckout);
+            var hoy = new Date();
+            var checkout = new Date(this.fechaCheckout);
 
-            // Extraer solo la fecha en formato "YYYY-MM-DD" para ambas fechas
-            const hoyDateOnly = hoy.toISOString().split("T")[0];
-            const checkoutDateOnly = checkout.toISOString().split("T")[0];
+            // Extraer solo la fecha y la hora
+            var hoySoloFecha = hoy.toISOString().split("T")[0];
+            var checkoutSoloFecha = checkout.toISOString().split("T")[0];
+            var checkoutHora = checkout.getHours();
+            var checkoutMinutos = checkout.getMinutes();
 
-            if (checkoutDateOnly < hoyDateOnly) {
+            if (checkoutSoloFecha !== hoySoloFecha) {
                 this.errorMessage =
                     "La fecha de checkout debe ser igual al día actual.";
-            } else if (checkoutDateOnly > hoyDateOnly) {
+            } else if (checkoutHora > 12 || (checkoutHora === 12 && checkoutMinutos > 30)) {
                 this.errorMessage =
-                    "La fecha de checkout debe ser igual al día actual.";
+                    "La hora del check-out debe ser antes de las 12:30.";
             } else {
                 this.errorMessage = "";
             }
         },
         async registrarCheckout() {
-            const checkout = new Date(this.fechaCheckout);
+            var checkout = new Date(this.fechaCheckout);
 
-            const actualizaCheckout = {
+            var actualizaCheckout = {
                 fechaCheckout: this.fechaCheckout,
             };
 
             try {
-                const actualizarResponse = await fetch(
+                var actualizarResponse = await fetch(
                     `/registrarcheckout/${this.reserva.reservaID}`,
                     {
                         method: "PUT",
@@ -135,7 +137,7 @@ export default {
                     window.location.href =
                         "/listarreservas?success=Reserva actualizada correctamente";
                 } else {
-                    const errorText = await actualizarResponse.text();
+                    var errorText = await actualizarResponse.text();
                     window.location.href = `/listarreservas?error=${encodeURIComponent(
                         errorText
                     )}`;
@@ -168,5 +170,18 @@ export default {
 .rounded-input {
     border-radius: 12px;
     border: 1px solid #ccc;
+}
+
+.editar-reserva p,
+.editar-reserva label,
+.editar-reserva strong,
+.editar-reserva h2,
+.editar-reserva h3 {
+    color: black;
+    line-height: 2;
+}
+
+.me-2 {
+    margin-right: 0.5rem;
 }
 </style>

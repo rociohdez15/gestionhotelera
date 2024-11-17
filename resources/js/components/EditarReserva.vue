@@ -3,13 +3,15 @@
     <h1 class="titulo"><strong>Editar Reserva</strong></h1>
 
     <div v-if="reserva">
-      <p><strong>ID de Reserva:</strong> {{ reserva.reservaID }}</p>
-      <p>
-        <strong>Nombre del Cliente:</strong> {{ cliente.nombre }}, {{ cliente.apellidos }}
-      </p>
+      <h2><strong>ID de Reserva:</strong> {{ reserva.reservaID }}</h2>
+      <h2>
+        <strong>Nombre del Cliente:</strong> {{ cliente.nombre }},
+        {{ cliente.apellidos }}
+      </h2>
 
       <div class="mb-3 d-flex align-items-center">
-        <label for="fechaEntrada" class="form-label me-2" style="margin-bottom: 0"><strong>Fecha de Entrada:</strong></label>
+        <h2 class="me-2"><strong>Fecha de Entrada:</strong></h2>
+        <label for="fechaEntrada" class="form-label me-2 mb-0"></label>
         <input
           type="date"
           class="form-control rounded-input me-2"
@@ -20,7 +22,8 @@
         />
       </div>
       <div class="mb-3 d-flex align-items-center">
-        <label for="fechaSalida" class="form-label me-2" style="margin-bottom: 0"><strong>Fecha de Salida:</strong></label>
+        <h2 class="me-2"><strong>Fecha de Salida:</strong></h2>
+        <label for="fechaSalida" class="form-label me-2 mb-0"></label>
         <input
           type="date"
           class="form-control rounded-input"
@@ -36,7 +39,8 @@
       </div>
 
       <div class="mb-3 d-flex align-items-center">
-        <label for="numAdultos" class="form-label me-2" style="margin-bottom: 0"><strong>Número de Adultos:</strong></label>
+        <h2 class="me-2"><strong>Nº Adultos:</strong></h2>
+        <label for="numAdultos" class="form-label me-2 mb-0"></label>
         <input
           type="number"
           class="form-control rounded-input me-2"
@@ -45,11 +49,12 @@
           :max="maxAdults"
           min="1"
           @change="updateMaxChildren"
-          style="max-width: 80px;"
+          style="max-width: 80px"
         />
       </div>
       <div class="mb-3 d-flex align-items-center">
-        <label for="numNinos" class="form-label me-2" style="margin-bottom: 0"><strong>Número de Niños:</strong></label>
+        <h2 class="me-2"><strong>Nº Niños:</strong></h2>
+        <label for="numNinos" class="form-label me-2 mb-0"></label>
         <input
           type="number"
           class="form-control rounded-input me-2"
@@ -58,31 +63,39 @@
           min="0"
           :max="maxChildren"
           @change="updateChildAgeFields"
-          style="max-width: 80px;"
+          style="max-width: 80px"
         />
       </div>
 
       <h2><strong>Hotel: </strong>{{ hotel.nombre }}</h2>
       <h2><strong>Precio Reserva: </strong>{{ reserva.preciototal }}</h2>
-      <p><strong>Dirección del Hotel:</strong> {{ hotel.direccion }}</p>
-      
+      <h2><strong>Dirección del Hotel:</strong> {{ hotel.direccion }}</h2>
 
-      <h3><strong>Edades de los Niños:</strong></h3>
+      <h2><strong>Edades de los Niños:</strong></h2>
       <div id="edades_ninos">
         <ul>
-          <li v-for="(nino, index) in edadesNinos" :key="index">
-            <strong>• Niño {{ index + 1 }}</strong>: 
-            <label :for="'nino-' + index" class="visually-hidden">Edad del Niño {{ index + 1 }}</label>
+          <li
+            v-for="(nino, index) in edadesNinos"
+            :key="index"
+            style="display: flex; align-items: center"
+          >
+            <h2 style="margin-right: 10px">
+              <strong>• Niño {{ index + 1 }}:</strong>
+            </h2>
+            <label :for="'nino-' + index" class="visually-hidden"
+              >Edad del Niño {{ index + 1 }}</label
+            >
             <input
               type="number"
-              v-model="nino.edad"  
+              v-model="nino.edad"
               class="form-control rounded-input"
               :id="'edad-nino-' + index"
               min="0"
               max="17"
-              style="max-width: 80px; display: inline-block;"
+              style="max-width: 80px; display: inline-block"
               placeholder="Edad"
-            /> años
+            />
+            <h2 style="margin-left: 10px"><strong>años</strong></h2>
           </li>
         </ul>
       </div>
@@ -130,11 +143,13 @@ export default {
     };
   },
   mounted() {
-    const appElement = document.getElementById("app");
+    var appElement = document.getElementById("app");
     this.reserva = JSON.parse(appElement.getAttribute("data-reserva"));
     this.hotel = JSON.parse(appElement.getAttribute("data-hotel"));
     this.cliente = JSON.parse(appElement.getAttribute("data-cliente"));
-    this.edadesNinos = JSON.parse(appElement.getAttribute("data-edades-ninos"));
+    this.edadesNinos = JSON.parse(
+      appElement.getAttribute("data-edades-ninos")
+    );
     this.reservaID = appElement.getAttribute("data-reserva-id");
 
     this.fechaEntrada = this.reserva.fechainicio;
@@ -145,28 +160,31 @@ export default {
     this.habitacionID = this.reserva.habitacionID;
 
     this.originalFechaEntrada = this.fechaEntrada;
-    this.originalFechaSalida = this.fechaSalida; 
+    this.originalFechaSalida = this.fechaSalida;
 
     if (this.edadesNinos && Array.isArray(this.edadesNinos)) {
-      this.edadesNinos = this.edadesNinos.map(nino => ({
-        edad: nino.edad || null 
+      this.edadesNinos = this.edadesNinos.map((nino) => ({
+        edad: nino.edad || null,
       }));
     } else {
-      this.edadesNinos = []; 
+      this.edadesNinos = [];
     }
 
     this.updateMaxChildren();
   },
   computed: {
     isFormValid() {
-      return this.errorMessage === "";
+      return this.errorMessage === "" && this.allChildAgesFilled;
     },
+    allChildAgesFilled() {
+      return this.edadesNinos.every(nino => nino.edad !== null);
+    }
   },
   methods: {
     updateMaxChildren() {
-      const numAdultos = this.numAdultos || 0;
-      const numNinos = this.numNinos || 0;
-      const totalPersonas = numAdultos + numNinos;
+      var numAdultos = this.numAdultos || 0;
+      var numNinos = this.numNinos || 0;
+      var totalPersonas = numAdultos + numNinos;
 
       if (totalPersonas > 4) {
         if (numAdultos > 4 - numNinos) {
@@ -183,11 +201,13 @@ export default {
       this.updateChildAgeFields();
     },
     updateChildAgeFields() {
-      const numNinos = this.numNinos || 0;
-      const edadesExistentes = this.edadesNinos.slice(0, numNinos);
+      var numNinos = this.numNinos || 0;
+      var edadesExistentes = this.edadesNinos.slice(0, numNinos);
       this.edadesNinos = [];
-      for (let i = 0; i < numNinos; i++) {
-        this.edadesNinos.push({ edad: edadesExistentes[i] ? edadesExistentes[i].edad : null });
+      for (var i = 0; i < numNinos; i++) {
+        this.edadesNinos.push({
+          edad: edadesExistentes[i] ? edadesExistentes[i].edad : null,
+        });
       }
     },
     async validarFechas() {
@@ -196,73 +216,86 @@ export default {
         return;
       }
 
-      const hoy = new Date();
-      const entrada = new Date(this.fechaEntrada);
-      const salida = new Date(this.fechaSalida);
+      var hoy = new Date();
+      var entrada = new Date(this.fechaEntrada);
+      var salida = new Date(this.fechaSalida);
 
       if (entrada < hoy || salida < hoy) {
-        this.errorMessage = "Las fechas deben ser posteriores al día actual.";
+        this.errorMessage =
+          "Las fechas deben ser posteriores al día actual.";
         return;
       }
 
       if (salida < entrada) {
-        this.errorMessage = "La fecha de salida no puede ser anterior a la fecha de entrada.";
+        this.errorMessage =
+          "La fecha de salida no puede ser anterior a la fecha de entrada.";
         return;
       }
     },
     async verificarHabitacionDisponible() {
       try {
-        const response = await fetch(`/verificar-habitacion/${this.hotelID}?numAdultos=${this.numAdultos}`);
+        var response = await fetch(
+          `/verificar-habitacion/${this.hotelID}?numAdultos=${this.numAdultos}`
+        );
 
         if (response.ok) {
-          const disponible = await response.json();
+          var disponible = await response.json();
 
           if (disponible.habitacionID) {
             this.habitacionID = disponible.habitacionID;
           } else {
-            window.location.href = "/listarreservas?error=No hay habitaciones disponibles para el número de adultos especificado.";
+            window.location.href =
+              "/listarreservas?error=No hay habitaciones disponibles para el número de adultos especificado.";
             return false;
           }
 
           return disponible;
         } else {
-          window.location.href = "/listarreservas?error=No hay habitaciones disponibles para el número de adultos especificado.";
+          window.location.href =
+            "/listarreservas?error=No hay habitaciones disponibles para el número de adultos especificado.";
           return false;
         }
       } catch (error) {
-        window.location.href = "/listarreservas?error=Se produjo un error al verificar la disponibilidad de la habitación.";
+        window.location.href =
+          "/listarreservas?error=Se produjo un error al verificar la disponibilidad de la habitación.";
         return false;
       }
     },
     async actualizarReserva() {
-      const entrada = new Date(this.fechaEntrada);
-      const salida = new Date(this.fechaSalida);
+      var entrada = new Date(this.fechaEntrada);
+      var salida = new Date(this.fechaSalida);
 
-      if (this.fechaEntrada !== this.originalFechaEntrada || this.fechaSalida !== this.originalFechaSalida) {
-        const response = await fetch(
+      if (
+        this.fechaEntrada !== this.originalFechaEntrada ||
+        this.fechaSalida !== this.originalFechaSalida
+      ) {
+        var response = await fetch(
           `/comprobar-reserva/${this.hotelID}?fechaEntrada=${
             entrada.toISOString().split("T")[0]
           }&fechaSalida=${salida.toISOString().split("T")[0]}`
         );
 
         if (response.ok) {
-          const existeReserva = await response.json();
+          var existeReserva = await response.json();
           if (existeReserva) {
-            window.location.href = "/listarreservas?error=Ya existe una reserva en el hotel durante las fechas seleccionadas.";
+            window.location.href =
+              "/listarreservas?error=Ya existe una reserva en el hotel durante las fechas seleccionadas.";
             return;
           }
         } else {
-          window.location.href = "/listarreservas?error=Error al comprobar la disponibilidad.";
+          window.location.href =
+            "/listarreservas?error=Error al comprobar la disponibilidad.";
           return;
         }
       }
 
-      const habitacionDisponible = await this.verificarHabitacionDisponible();
+      var habitacionDisponible =
+        await this.verificarHabitacionDisponible();
       if (!habitacionDisponible) {
         return;
       }
 
-      const reservaActualizada = {
+      var reservaActualizada = {
         fechaEntrada: this.fechaEntrada,
         fechaSalida: this.fechaSalida,
         numAdultos: this.numAdultos,
@@ -272,7 +305,7 @@ export default {
       };
 
       try {
-        const actualizarResponse = await fetch(
+        var actualizarResponse = await fetch(
           `/editarreserva/${this.reservaID}`,
           {
             method: "PUT",
@@ -287,13 +320,17 @@ export default {
         );
 
         if (actualizarResponse.ok) {
-          window.location.href = "/listarreservas?success=Reserva actualizada correctamente";
+          window.location.href =
+            "/listarreservas?success=Reserva actualizada correctamente";
         } else {
-          const errorText = await actualizarResponse.text();
-          window.location.href = `/listarreservas?error=${encodeURIComponent(errorText)}`;
+          var errorText = await actualizarResponse.text();
+          window.location.href = `/listarreservas?error=${encodeURIComponent(
+            errorText
+          )}`;
         }
       } catch (e) {
-        window.location.href = "/listarreservas?error=Error al actualizar la reserva.";
+        window.location.href =
+          "/listarreservas?error=Error al actualizar la reserva.";
       }
     },
   },
@@ -317,7 +354,20 @@ export default {
 }
 
 .rounded-input {
-  border-radius: 12px; 
-  border: 1px solid #ccc; 
+  border-radius: 12px;
+  border: 1px solid #ccc;
+}
+
+.editar-reserva p,
+.editar-reserva label,
+.editar-reserva strong,
+.editar-reserva h2,
+.editar-reserva h3 {
+  color: black;
+  line-height: 2;
+}
+
+.me-2 {
+  margin-right: 0.5rem;
 }
 </style>

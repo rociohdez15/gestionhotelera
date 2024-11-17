@@ -60,7 +60,8 @@ Route::middleware([
     Route::put('/editarreserva/{reservaID}', [ListarReservasControlador::class, 'editarReserva'])->name('editarReserva');
     Route::get('/comprobar-reserva/{hotelID}', [ListarReservasControlador::class, 'comprobarReserva']);
     Route::get('/verificar-habitacion/{hotelID}', [ListarReservasControlador::class, 'verificarHabitacion']);
-    Route::get('/generar-pdf-listar-reservas', [ListarReservasControlador::class, 'generarPDF'])->name('generar_pdf_listar_reservas');
+    Route::get('/generar-pdf-listar-reservas/{reservaID}', [ListarReservasControlador::class, 'generarPDF'])->name('generar_pdf_listar_reservas');
+    Route::get('/generar-pdf-listar-reservas-total', [ListarReservasControlador::class, 'generarPDFTotal'])->name('generar_pdf_listar_reservas_total');
     Route::get('/buscar-reservas', [ListarReservasControlador::class, 'buscarReservas'])->name('buscarReservas');
     Route::get('/listadocheckout', [ListadoCheckoutControlador::class, 'listadoCheckout'])->name('listadoCheckout');
     Route::get('/buscar-checkout', [ListadoCheckoutControlador::class, 'buscarCheckout'])->name('buscarCheckout');
@@ -75,7 +76,9 @@ Route::middleware([
     Route::delete('/delservicio/{servicioID}', [ListarServiciosControlador::class, 'delServicio'])->name('delServicio');
     Route::get('/mostrarservicio/{servicioID}', [ListarServiciosControlador::class, 'mostrarServicio'])->name('mostrarServicio');
     Route::put('/editarservicio/{servicioID}', [ListarServiciosControlador::class, 'editarServicio'])->name('editarServicio');
-    Route::get('/generar-pdf-listar-servicios', [ListarServiciosControlador::class, 'generarPDF'])->name('generar_pdf_listar_servicios');
+    Route::get('/generar-pdf-listar-servicios/{servicioID}', [ListarServiciosControlador::class, 'generarPDF'])->name('generar_pdf_listar_servicios');
+    Route::get('/generar-pdf-listar-servicios-total', [ListarServiciosControlador::class, 'generarPDFTotal'])->name('generar_pdf_listar_servicios_total');
     Route::get('/buscar-servicio', [ListarServiciosControlador::class, 'buscarServicios'])->name('buscarServicios');
     Route::get('/anadir-servicio', [ListarServiciosControlador::class, 'anadirServicio'])->name('anadirServicio');
+    Route::post('/guardarservicio', [ListarServiciosControlador::class, 'guardarServicio'])->name('guardarServicio');
 });

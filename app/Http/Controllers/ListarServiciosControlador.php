@@ -10,6 +10,7 @@ use App\Models\Servicio;
 use App\Models\EdadNino;
 use App\Models\Reserva;
 use App\Models\Habitacion;
+use App\Models\ReservaServicio;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use TCPDF;
@@ -107,7 +108,7 @@ class ListarServiciosControlador extends Controller
             return response()->json(['error' => 'Cliente no encontrado'], 404);
         }
 
-        
+
         return view('editarservicio', compact('servicio', 'fecha', 'hora', 'reserva', 'cliente'));
     }
 
@@ -125,7 +126,7 @@ class ListarServiciosControlador extends Controller
             // Valida que los campos 'fecha' y 'hora' estén presentes
             $validatedData = $request->validate([
                 'fecha' => 'required|date',
-                'hora' => 'required|date_format:H:i', 
+                'hora' => 'required|date_format:H:i',
             ]);
 
             // Combina la fecha y la hora para crear un solo campo 'horario'
@@ -143,9 +144,73 @@ class ListarServiciosControlador extends Controller
         }
     }
 
-    public function generarPDF()
+    public function generarPDF($servicioID)
     {
-        // Consulta para generar el pdf de la lista de servicios
+        // Consulta para generar el pdf de la lista de servicios filtrado por servicioID
+        $reservas = Reserva::join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID') // Relación con la tabla intermedia
+            ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID') // Relación con la tabla servicios
+            ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID')
+            ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID')
+            ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID')
+            ->select(
+                'reservas.*',
+                'hoteles.nombre as nombre_hotel',
+                'habitaciones.numhabitacion',
+                DB::raw("CONCAT(clientes.nombre, ' ', clientes.apellidos) as nombre_completo"),
+                'servicios.servicioID', // ID del servicio
+                'servicios.horario', // Campo horario de servicios
+                'servicios.nombre as nombre_servicio', // Nombre del servicio
+                DB::raw("DATE(servicios.horario) as fecha"), // Extraer la fecha del campo horario
+                DB::raw("TIME(servicios.horario) as hora") // Extraer solo la parte de la hora
+            )
+            ->where('servicios.servicioID', $servicioID) // Filtrar por servicioID
+            ->get();
+
+        // Crear un nuevo objeto TCPDF
+        $pdf = new TCPDF();
+
+        // Agregar una página
+        $pdf->AddPage();
+
+        // Añadir título antes de los datos
+        $pdf->SetFont('helvetica', 'B', 14);
+        $pdf->Cell(0, 10, 'Reserva de Servicio', 0, 1, 'C');
+
+        // Crear el contenido en el PDF
+        $html = '<div style="font-size: 12px; text-align: center;">';
+
+        // Iterar sobre los datos de las reservas y agregarlos al contenido del PDF
+        foreach ($reservas as $reserva) {
+            $horario = $reserva->horario; // Obtiene el campo horario
+            $fecha = date('Y-m-d', strtotime($horario)); // Extrae la fecha
+            $hora = date('H:i', strtotime($horario)); // Extrae la hora
+
+            $html .= '<div style="margin-bottom: 20px;">';
+            $html .= '<strong>ID Servicio:</strong> ' . $reserva->servicioID . '<br>';
+            $html .= '<strong>Nombre Cliente:</strong> ' . $reserva->nombre_completo . '<br>';
+            $html .= '<strong>Nº Habitación:</strong> ' . $reserva->numhabitacion . '<br>';
+            $html .= '<strong>Nombre Hotel:</strong> ' . $reserva->nombre_hotel . '<br>';
+            $html .= '<strong>Nombre Servicio:</strong> ' . $reserva->nombre_servicio . '<br>';
+            $html .= '<strong>Día:</strong> ' . $fecha . '<br>';
+            $html .= '<strong>Hora:</strong> ' . $hora . '<br>';
+            $html .= '</div>';
+        }
+
+        $html .= '</div>';
+
+        // Agregar el contenido al PDF
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Nombre del archivo PDF
+        $filename = "reserva_servicio.pdf";
+
+        // Salida del PDF al navegador
+        $pdf->Output($filename, 'D');
+    }
+
+    public function generarPDFTotal()
+    {
+        // Consulta para generar el pdf de la lista de servicios filtrado por servicioID
         $reservas = Reserva::join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID') // Relación con la tabla intermedia
             ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID') // Relación con la tabla servicios
             ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID')
@@ -163,9 +228,6 @@ class ListarServiciosControlador extends Controller
                 DB::raw("TIME(servicios.horario) as hora") // Extraer solo la parte de la hora
             )
             ->get();
-
-
-
 
         // Crear un nuevo objeto TCPDF
         $pdf = new TCPDF();
@@ -206,8 +268,6 @@ class ListarServiciosControlador extends Controller
             $html .= '</tr>';
         }
 
-
-
         $html .= '</table>';
 
         // Agregar la tabla al PDF
@@ -232,9 +292,9 @@ class ListarServiciosControlador extends Controller
             'habitaciones.numhabitacion',
             'hoteles.nombre as nombre_hotel',
             'servicios.servicioID',
-                'servicios.nombre as nombre_servicio',
-                DB::raw("SUBSTRING_INDEX(servicios.horario, ' ', 1) as dia_servicio"), // Separando el día del campo horario
-                DB::raw("DATE_FORMAT(servicios.horario, '%H:%i') as hora_servicio") 
+            'servicios.nombre as nombre_servicio',
+            DB::raw("SUBSTRING_INDEX(servicios.horario, ' ', 1) as dia_servicio"), // Separando el día del campo horario
+            DB::raw("DATE_FORMAT(servicios.horario, '%H:%i') as hora_servicio")
         )
             ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID') // Une con la tabla de clientes
             ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID') // Une con la tabla de habitaciones
@@ -244,10 +304,10 @@ class ListarServiciosControlador extends Controller
             ->where('reservas.reservaID', 'LIKE', "%$query%")
             ->orWhere('clientes.nombre', 'LIKE', "%$query%")
             ->orWhere('clientes.apellidos', 'LIKE', "%$query%")
-            ->orWhere('habitaciones.numhabitacion', 'LIKE', "%$query%") 
+            ->orWhere('habitaciones.numhabitacion', 'LIKE', "%$query%")
             ->orWhere('hoteles.nombre', 'LIKE', "%$query%")
-            ->orWhere('servicios.nombre', 'LIKE', "%$query%") 
-            ->orWhere('servicios.servicioID', 'LIKE', "%$query%"); 
+            ->orWhere('servicios.nombre', 'LIKE', "%$query%")
+            ->orWhere('servicios.servicioID', 'LIKE', "%$query%");
 
         $totalReservas = $consulta->count();
 
@@ -270,11 +330,63 @@ class ListarServiciosControlador extends Controller
         ], compact('reservas'));
     }
 
-    public function anadirServicio(Request $request)
-{
-    // Obtén todas las reservas desde la base de datos
-    $reservas = Reserva::all(); 
 
-    return view('anadirServicio', ['reservas' => $reservas]);
-}
+    public function anadirServicio(Request $request)
+    {
+        // Obtén todas las reservas desde la base de datos
+        $reservas = Reserva::all();
+
+        return view('anadirServicio', ['reservas' => $reservas]);
+    }
+
+    public function guardarServicio(Request $request)
+    {
+        // Validar los datos recibidos
+        $request->validate([
+            'reservaID' => 'required|exists:reservas,reservaID',
+            'nombreServicio' => 'required|string',
+            'fechaHora' => 'required|date_format:Y-m-d\TH:i',
+        ]);
+
+        // Obtener el número total de personas de la reserva
+        $reservaID = $request->input('reservaID');
+        $reserva = DB::table('reservas')->select('num_adultos', 'num_ninos')->where('reservaID', $reservaID)->first();
+
+        if (!$reserva) {
+            return response()->json(['error' => 'Reserva no encontrada'], 404);
+        }
+
+        // Calcular el número total de personas
+        $numPersonas = $reserva->num_adultos + $reserva->num_ninos;
+
+        // Crear un nuevo servicio
+        $servicio = new Servicio();
+        $servicio->nombre = $request->input('nombreServicio');
+        $servicio->descripcion = $request->input('nombreServicio');
+        $servicio->horario = $request->input('fechaHora');
+        // Calcular precio basado en el tipo de servicio y número de personas
+        switch ($servicio->nombre) {
+            case 'restaurante':
+                $servicio->precio = 20 * $numPersonas;
+                break;
+            case 'spa':
+                $servicio->precio = 25 * $numPersonas;
+                break;
+            case 'tour':
+                $servicio->precio = 10 * $numPersonas;
+                break;
+            default:
+                $servicio->precio = 0; // Precio por defecto si no se reconoce el servicio
+                break;
+        }
+        $servicio->save();
+
+        $servicioreserva = new ReservaServicio();
+        $servicioreserva->reservaID = $request->input('reservaID');
+        $servicioreserva->servicioID = $servicio->servicioID;
+        $servicioreserva->save();
+
+        // Redirigir con un mensaje de éxito
+        return response()->json(['message' => 'Servicio añadido correctamente'], 200);
+    }
 }

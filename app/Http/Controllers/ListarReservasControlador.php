@@ -245,7 +245,64 @@ class ListarReservasControlador extends Controller
         return response()->json(['habitacionID' => $habitacionIDs->first()]);
     }
 
-    public function generarPDF()
+    public function generarPDF($reservaID)
+    {
+        // Consulta para generar un pdf de la reserva específica
+        $reserva = Reserva::join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID')
+            ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID')
+            ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID')
+            ->select(
+                'reservas.*',
+                'hoteles.nombre as nombre_hotel',
+                'habitaciones.numhabitacion',
+                DB::raw("CONCAT(clientes.nombre, ' ', clientes.apellidos) as nombre_completo")
+            )
+            ->where('reservas.reservaID', $reservaID) // Filtrar por reservaID
+            ->first();
+
+        // Crear un nuevo objeto TCPDF
+        $pdf = new TCPDF();
+
+        // Agregar una página
+        $pdf->AddPage();
+
+        // Añadir título antes de los datos
+        $pdf->SetFont('helvetica', 'B', 14);
+        $pdf->Cell(0, 10, 'Datos Reserva', 0, 1, 'C');
+
+        // Crear el contenido en el PDF
+        $html = '<div style="font-size: 12px; text-align: center;">';
+
+        // Agregar los datos de la reserva al contenido del PDF
+        if ($reserva) {
+            $html .= '<div style="margin-bottom: 20px;">';
+            $html .= '<strong>ID Reserva:</strong> ' . $reserva->reservaID . '<br>';
+            $html .= '<strong>Nombre Cliente:</strong> ' . $reserva->nombre_completo . '<br>';
+            $html .= '<strong>Nombre Hotel:</strong> ' . $reserva->nombre_hotel . '<br>';
+            $html .= '<strong>Fecha inicio reserva:</strong> ' . $reserva->fechainicio . '<br>';
+            $html .= '<strong>Fecha fin reserva:</strong> ' . $reserva->fechafin . '<br>';
+            $html .= '<strong>Nº Habitación:</strong> ' . $reserva->numhabitacion . '<br>';
+            $html .= '<strong>Precio Total Reserva:</strong> ' . $reserva->preciototal . '<br>';
+            $html .= '<strong>Nº Adultos:</strong> ' . $reserva->num_adultos . '<br>';
+            $html .= '<strong>Nº de niños:</strong> ' . $reserva->num_ninos . '<br>';
+            $html .= '</div>';
+        } else {
+            $html .= '<div>No se encontraron datos para la reserva especificada.</div>';
+        }
+
+        $html .= '</div>';
+
+        // Agregar el contenido al PDF
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Nombre del archivo PDF
+        $filename = "reserva_" . $reservaID . ".pdf";
+
+        // Salida del PDF al navegador
+        $pdf->Output($filename, 'D');
+    }
+
+    public function generarPDFTotal()
     {
         // Consulta para generar un pdf del listado de reservas
         $reservas = Reserva::join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID')
@@ -254,8 +311,8 @@ class ListarReservasControlador extends Controller
             ->select(
                 'reservas.*',
                 'hoteles.nombre as nombre_hotel',
-                'habitaciones.numhabitacion', 
-                DB::raw("CONCAT(clientes.nombre, ' ', clientes.apellidos) as nombre_completo") 
+                'habitaciones.numhabitacion',
+                DB::raw("CONCAT(clientes.nombre, ' ', clientes.apellidos) as nombre_completo")
             )
             ->get();
 

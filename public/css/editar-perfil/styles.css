@@ -16,19 +16,6 @@ main {
     flex: 1; 
 }
 
-header {
-    background: url('../../images/inicio/fondo-logo.jfif') no-repeat center center, #D4AF37;
-    background-size: cover;
-    height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    padding: 0 1rem;
-    width: 100%;
-}
-
-
 .logo-cabecera {
     width: 200px;
     height: 100px; 
@@ -39,32 +26,6 @@ header {
     background-color: transparent;
     border-color: transparent;
     color: black;
-}
-
-.icono-user{
-    position: absolute;
-    right: 1rem; 
-    display: flex;
-    gap: 1.5rem;
-    font-size: 1.5rem;
-    background-color: transparent;
-    border-color: transparent;
-    color: black;
-    box-shadow: none !important; 
-    outline: none !important;
-}
-
-
-.icono-menu,.dropdown, .dropdown-toggle {
-    position: absolute;
-    left: 1rem;
-    display: flex;
-    gap: 1.5rem;
-    font-size: 1.5rem;
-    background-color: transparent;
-    border-color: transparent;
-    color: black;
-    bottom: 20px;
 }
 
 .dropdown-toggle:hover,.dropdown-toggle:active, .dropdown-toggle:focus, .dropdown-toggle:enabled{
@@ -175,18 +136,6 @@ header {
 }
 .txt-ciudades {
     font-size: 1.2rem;
-}
-
-footer {
-    flex-shrink: 0;
-    padding: 20px;
-    text-align: center;
-    background: url('../../images/inicio/fondo-logo.jfif') no-repeat center center, #D4AF37;
-    background-size: cover;
-    height: 160px; 
-    position: relative;
-    width: 100%;
-    margin-top: auto;
 }
 
 .campo-edad{
@@ -513,21 +462,22 @@ footer {
 }
 
 .menu-opciones{
-    background-color: #3c3c3c;
+    background-color: #d5d8dc;
     color: white;
 }
 
 .txt-opciones{
     font-size: 20px;
     text-decoration: underline;
+    color: grey;
 }
 
 .txt-listado, .nav-link{
-    color: white;
+    color: grey;
 }
 
 .nav-link:hover, .nav-link:focus{
-    color: white;
+    color: grey;
 }
 
 @media (max-width: 768px) {

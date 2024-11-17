@@ -20,6 +20,7 @@ class BuscarHotelesControlador extends Controller
         $ninos = $request->input('ninos');
         $totalPersonas = $adultos + $ninos;
         $habitacionesSolicitadas = $request->input('habitaciones');
+        
 
         $edadesNinos = []; // Array que almacenará las edades de los niños
 
@@ -222,7 +223,8 @@ class BuscarHotelesControlador extends Controller
         $fecha_salida = $request->input('fechaSalida');
         $adultos = $request->input('adultos');
         $ninos = $request->input('ninos');
-        $clienteID = $request->input('clienteID');
+        // Obtiene el clienteID del usuario autenticado
+        $clienteID = Auth::user()->id;
         $habitacionIDs = (array) $request->input('habitacionID');
         $precioHabitacion = $request->input('precioHabitacion');
 

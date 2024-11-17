@@ -13,24 +13,6 @@ body {
     min-height: 100vh;
 }
 
-main {
-    flex: 1; 
-    background-color: #3c3c3c;
-    color: white;
-}
-
-header {
-    background: url('../../images/inicio/fondo-logo.jfif') no-repeat center center, #D4AF37;
-    background-size: cover;
-    height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    padding: 0 1rem;
-    width: 100%;
-}
-
 
 .logo-cabecera {
     width: 200px;
@@ -38,35 +20,10 @@ header {
     
 }
 
-.icono-user{
-    position: absolute;
-    right: 1rem; 
-    display: flex;
-    gap: 1.5rem;
-    font-size: 1.5rem;
-    background-color: transparent;
-    border-color: transparent;
-    color: black;
-    box-shadow: none !important; 
-    outline: none !important;
-}
-
 .btn-secondary:hover{
     background-color: transparent;
     border-color: transparent;
     color: black;
-}
-
-.icono-menu,.dropdown, .dropdown-toggle {
-    position: absolute;
-    left: 1rem;
-    display: flex;
-    gap: 1.5rem;
-    font-size: 1.5rem;
-    background-color: transparent;
-    border-color: transparent;
-    color: black;
-    bottom: 20px;
 }
 
 .dropdown-toggle:hover,.dropdown-toggle:active, .dropdown-toggle:focus, .dropdown-toggle:enabled{
@@ -139,18 +96,6 @@ header {
 }
 .txt-ciudades {
     font-size: 1.2rem;
-}
-
-footer {
-    flex-shrink: 0;
-    padding: 20px;
-    text-align: center;
-    background: url('../../images/inicio/fondo-logo.jfif') no-repeat center center, #D4AF37;
-    background-size: cover;
-    height: 160px; 
-    position: relative;
-    width: 100%;
-    margin-top: auto;
 }
 
 .campo-edad{

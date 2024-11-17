@@ -25,22 +25,22 @@ class PanelRecepcionistaControlador extends Controller
 
     // Método para obtener los alojamientos mensuales
     private function obtenerAlojamientosMensuales()
-    {
+{
+    // Inicializa un array para los conteos por mes y día
+    $alojamientosMensuales = array_fill(0, 12, array_fill(0, 31, 0)); 
 
-        // Inicializa un array para los conteos por mes
-        $alojamientosMensuales = array_fill(0, 12, 0); 
+    // Obtener las reservas agrupadas por mes y día
+    $reservas = Reserva::selectRaw('MONTH(fechainicio) as mes, DAY(fechainicio) as dia, COUNT(*) as total')
+        ->groupBy('mes', 'dia')
+        ->orderBy('mes')
+        ->orderBy('dia')
+        ->get();
 
-        // Obtener las reservas agrupadas por mes 
-        $reservas = Reserva::selectRaw('MONTH(fechainicio) as mes, COUNT(*) as total')
-            ->groupBy('mes')
-            ->orderBy('mes')
-            ->get();
-
-        // Rellenar el array con los datos obtenidos
-        foreach ($reservas as $reserva) {
-            $alojamientosMensuales[$reserva->mes - 1] = $reserva->total;
-        }
-
-        return $alojamientosMensuales;
+    // Rellenar el array con los datos obtenidos
+    foreach ($reservas as $reserva) {
+        $alojamientosMensuales[$reserva->mes - 1][$reserva->dia - 1] = $reserva->total;
     }
+
+    return $alojamientosMensuales;
+}
 }

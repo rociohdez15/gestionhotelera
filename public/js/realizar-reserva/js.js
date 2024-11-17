@@ -56,12 +56,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Mostrar mensaje de error si ocurre algún problema
         const mensajeError = document.getElementById('mensaje-error');
+        const submitButton = document.getElementById('guardar-reserva');
         if (mensaje) {
             mensajeError.textContent = mensaje;
             mensajeError.className = mensajeColor; // Aplicamos el color que definimos antes
+            submitButton.disabled = true; // Deshabilitar el botón de realizar reserva
         } else {
             mensajeError.textContent = 'Servicios reservados.';
             mensajeError.className = 'text-success'; // Si no hay error lo mostramos en verde
+            submitButton.disabled = false; // Habilitar el botón de realizar reserva
         }
     });
 
@@ -101,5 +104,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Añade la clase 'active' a la imagen anterior
         items[nextIndex].classList.add('active');
+    });
+
+    // Inicializar el mapa
+    var map = L.map('mapContainer').setView([40.4168, -3.7038], 13); // Coordenadas de Madrid, España
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    L.marker([40.4168, -3.7038]).addTo(map) // Coordenadas de Madrid, España
+        .bindPopup('Ubicación en Madrid, España.')
+        .openPopup();
+
+    // Deshabilitar el botón de enviar al enviar el formulario
+    document.getElementById('reservaForm').addEventListener('submit', function(event) {
+        var submitButton = document.getElementById('guardar-reserva');
+        submitButton.disabled = true;
+        submitButton.innerText = 'Enviando...'; // Cambia el texto del botón para indicar que se está enviando
     });
 });

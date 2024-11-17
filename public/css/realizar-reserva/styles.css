@@ -17,18 +17,6 @@ main {
     flex: 1; 
 }
 
-header {
-    background: url('../../images/inicio/fondo-logo.jfif') no-repeat center center, #D4AF37;
-    background-size: cover;
-    height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    padding: 0 1rem;
-    width: 100%;
-}
-
 
 .logo-cabecera {
     width: 200px;
@@ -36,35 +24,10 @@ header {
     
 }
 
-.icono-user{
-    position: absolute;
-    right: 1rem; 
-    display: flex;
-    gap: 1.5rem;
-    font-size: 1.5rem;
-    background-color: transparent;
-    border-color: transparent;
-    color: black;
-    box-shadow: none !important; 
-    outline: none !important;
-}
-
 .btn-secondary:hover{
     background-color: transparent;
     border-color: transparent;
     color: black;
-}
-
-.icono-menu,.dropdown, .dropdown-toggle {
-    position: absolute;
-    left: 1rem;
-    display: flex;
-    gap: 1.5rem;
-    font-size: 1.5rem;
-    background-color: transparent;
-    border-color: transparent;
-    color: black;
-    bottom: 20px;
 }
 
 .dropdown-toggle:hover,.dropdown-toggle:active, .dropdown-toggle:focus, .dropdown-toggle:enabled{
@@ -137,18 +100,6 @@ header {
 }
 .txt-ciudades {
     font-size: 1.2rem;
-}
-
-footer {
-    flex-shrink: 0;
-    padding: 20px;
-    text-align: center;
-    background: url('../../images/inicio/fondo-logo.jfif') no-repeat center center, #D4AF37;
-    background-size: cover;
-    height: 160px; 
-    position: relative;
-    width: 100%;
-    margin-top: auto;
 }
 
 .campo-edad{
@@ -252,29 +203,24 @@ footer {
     text-align: center;
 }
 
-.carousel-inner {
-    text-align: center; 
-    margin-top: -30px;
-}
-
-.carousel-item img {
-    max-width: 300px;
-    height: auto;
+#carouselExampleIndicators {
+    max-width: 400px;
     margin: 0 auto;
-    border-radius: 5px;
-    border: 3px solid #3c3c3c;
 }
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-    background-color: rgba(0, 0, 0, 0.5); 
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
 }
 
 .carousel-control-prev,
 .carousel-control-next {
-   margin-left: 300px;
-   margin-right: 300px;
+    width: 5%;
 }
+
 
 .servicios{
     text-align: center;
@@ -285,6 +231,8 @@ footer {
     justify-content: center; 
     padding: 20px; 
 }
+
+
 
 .form-group {
     display: flex;

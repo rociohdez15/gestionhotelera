@@ -1,65 +1,80 @@
 const app = Vue.createApp({
-    // Define los datos utilizados en la aplicación
     data() {
         return {
-            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'], 
-            // Etiquetas para los meses del año
-            data: [] // Inicializa el array de datos vacío, se llenará más tarde con los datos recibidos del backend
+            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            datos: [], // Datos de reservas por mes y día
+            mesSeleccionado: -1, // -1 para mostrar datos anualmente por defecto
+            grafica: null // Referencia a la gráfica
         }
     },
-    
-    // Hook que se ejecuta cuando el componente se monta en el DOM
     mounted() {
-        this.data = window.chartData; // Asigna los datos pasados desde la vista a la variable 'data'
-        this.renderChart(); // Llama al método para visualizar la gráfica
+        this.datos = window.chartData; // Asigna los datos pasados desde la vista a la variable 'datos'
+        this.renderizarGrafica(); // Llama al método para visualizar la gráfica
     },
-
-    // Definición de los métodos de la aplicación
     methods: {
-        // Método que se encarga de crear y visualizar la gráfica con Chart.js
-        renderChart() {
-            var grafica = document.getElementById('graficaReservas').getContext('2d'); 
-            // Obtiene el canvas donde se dibujará la gráfica
-            new Chart(grafica, {
-                type: 'bar', // Define el tipo de gráfico como un gráfico de barras
+        renderizarGrafica() {
+            var contextoGrafica = document.getElementById('graficaReservas').getContext('2d');
+            this.grafica = new Chart(contextoGrafica, {
+                type: 'bar',
                 data: {
-                    labels: this.labels, // Usa las etiquetas de los meses del año
+                    labels: this.mesSeleccionado === -1 ? this.labels : Array.from({ length: 31 }, (_, i) => i + 1), // Días del mes o meses del año
                     datasets: [{
-                        label: 'Nº de reservas por meses', // Etiqueta que aparecerá en la gráfica
-                        data: this.data, // Los datos que se mostrarán
-                        backgroundColor: '#3c3c3c', // Color de fondo de las barras
-                        borderColor: '#3c3c3c', // Color de los bordes de las barras
-                        borderWidth: 1 // Grosor del borde de las barras
+                        label: this.mesSeleccionado === -1 ? 'Nº de reservas por mes' : 'Nº de reservas por día',
+                        data: this.mesSeleccionado === -1 ? this.datos.map(mesDatos => mesDatos.reduce((a, b) => a + b, 0)) : this.datos[this.mesSeleccionado], // Datos anuales o del mes seleccionado
+                        backgroundColor: '#0b31ee',
+                        borderColor: '#0b31ee',
+                        borderWidth: 1
                     }]
                 },
                 options: {
-                    responsive: true, // Hace que la gráfica sea responsive
-                    maintainAspectRatio: false, 
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
-                        // Configuración de las lineas verticales
                         y: {
-                            beginAtZero: true, 
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) { return Number.isInteger(value) ? value : null; }
+                            },
                             grid: {
-                                color: 'rgba(128, 128, 128, 0.5)', // Color de las líneas verticales de la cuadrícula
-                                lineWidth: 2 // Grosor de las líneas verticales de la cuadrícula 
+                                color: 'rgba(128, 128, 128, 0.5)',
+                                lineWidth: 2
                             }
                         },
-                        // Configuración de las lineas horizontales 
                         x: {
                             grid: {
-                                color: 'rgba(128, 128, 128, 0.5)', // Color de las líneas horizontales de la cuadrícula 
-                                lineWidth: 2 // Grosor de las líneas horizontales de la cuadrícula 
+                                color: 'rgba(128, 128, 128, 0.5)',
+                                lineWidth: 2
                             }
                         }
                     }
                 }
             });
+        },
+        actualizarGrafica() {
+            if (this.grafica) {
+                this.grafica.destroy();
+            }
+            this.renderizarGrafica();
+        },
+        cambiarVista(mes) {
+            this.mesSeleccionado = mes;
+            this.actualizarGrafica();
+        },
+        cambiarVistaAnual() {
+            this.mesSeleccionado = -1;
+            this.actualizarGrafica();
+        },
+        manejarCambioMes(evento) {
+            if (evento.target.value == -1) {
+                this.cambiarVistaAnual();
+            } else {
+                this.cambiarVista(evento.target.value);
+            }
         }
     }
 });
 
-// Monta la aplicación Vue después de que el DOM haya sido completamente cargado
 document.addEventListener('DOMContentLoaded', () => {
-    app.mount('#app'); // Monta la instancia de Vue en el elemento con el id "app"
+    app.mount('#app');
 });
 

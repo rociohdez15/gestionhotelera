@@ -16,76 +16,21 @@ main {
     flex: 1; 
 }
 
-header {
-    background: url('../../images/inicio/fondo-logo.jfif') no-repeat center center, #D4AF37;
-    background-size: cover;
-    height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    padding: 0 1rem;
-    width: 100%;
-}
-
-
-.logo-cabecera {
-    width: 200px;
-    height: 100px; 
-    
-}
-
-.btn-secondary:hover{
-    background-color: transparent;
-    border-color: transparent;
-    color: black;
-}
-
-.icono-user{
-    position: absolute;
-    right: 1rem; 
-    display: flex;
-    gap: 1.5rem;
-    font-size: 1.5rem;
-    background-color: transparent;
-    border-color: transparent;
-    color: black;
-    box-shadow: none !important; 
-    outline: none !important;
-}
-
-
-.icono-menu,.dropdown, .dropdown-toggle {
-    position: absolute;
-    left: 1rem;
-    display: flex;
-    gap: 1.5rem;
-    font-size: 1.5rem;
-    background-color: transparent;
-    border-color: transparent;
-    color: black;
-    bottom: 20px;
-}
-
-.dropdown-toggle:hover,.dropdown-toggle:active, .dropdown-toggle:focus, .dropdown-toggle:enabled{
-    background-color: transparent; 
-    border-color: transparent;
-    color: black;
-}
-
-#dropdownMenuButton:active, #dropdownMenuButton:focus {
-    background-color: transparent; 
-    border-color: transparent;
-    color: black;
+/* Estilo para el selector de idioma */
+.form-select-sm {
+    display: inline-block;
+    width: auto;
+    margin-left: 10px;
+    vertical-align: middle;
 }
 
 
 .contenedor-titulos {
     position: relative;
-    background: url('../../images/inicio/fondo-body.jpg') no-repeat center center, #D4AF37;
+    
     background-size: cover;
     width: 100%; 
-    padding: 100px 0; 
+    padding: 20px 0; 
     text-align: center;
 }
 
@@ -138,17 +83,7 @@ header {
     font-size: 1.2rem;
 }
 
-footer {
-    flex-shrink: 0;
-    padding: 20px;
-    text-align: center;
-    background: url('../../images/inicio/fondo-logo.jfif') no-repeat center center, #D4AF37;
-    background-size: cover;
-    height: 160px; 
-    position: relative;
-    width: 100%;
-    margin-top: auto;
-}
+
 
 .campo-edad{
     margin-top: 10px;
@@ -201,6 +136,8 @@ footer {
     outline: none; 
     text-decoration: none; 
 }
+
+
 
 
 .btn-secondary.icono-user i {
