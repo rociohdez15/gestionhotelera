@@ -119,9 +119,12 @@
             </div>
             @endif
 
+            <br>
+
             <form action="{{ route('editarPerfil', ['clienteID' => $cliente->clienteID, 'id' => $usuario->id]) }}" method="post" class="needs-validation hotel-booking-form" novalidate style="max-width: 600px; margin: 0 auto;">
 
                 @csrf
+                
                 <h3 class="text-center">Editar Perfil</h3>
                 <br>
                 <!-- clienteID (campo oculto) -->

@@ -14,32 +14,28 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use TCPDF;
 
-class ListarReservasControlador extends Controller
+class ListarHotelesControlador extends Controller
 {
-    public function listarReservas(Request $request)
+    public function listarHoteles(Request $request)
     {
+        $query = DB::table('hoteles')
+            ->select('hotelID', 'nombre', 'direccion', 'ciudad', 'telefono', 'descripcion');
 
-        $query = DB::table('reservas')
-            ->join('habitaciones', 'habitaciones.habitacionID', '=', 'reservas.habitacionID')
-            ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID')
-            ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID')
-            ->select('reservas.*', 'clientes.nombre', 'clientes.apellidos', 'habitaciones.numhabitacion', 'hoteles.nombre as hotel_nombre');
-
-        $totalReservas = $query->count();
+        $totalHoteles = $query->count();
 
         $registros_por_pagina = 5;
         $pagina_actual = $request->input('pagina', 1);
-        $total_paginas = ceil($totalReservas / $registros_por_pagina);
+        $total_paginas = ceil($totalHoteles / $registros_por_pagina);
 
         if ($pagina_actual < 1) $pagina_actual = 1;
         if ($pagina_actual > $total_paginas) $pagina_actual = $total_paginas;
 
         $inicio = ($pagina_actual - 1) * $registros_por_pagina;
 
-        $reservas = $query->skip($inicio)->take($registros_por_pagina)->get();
+        $hoteles = $query->skip($inicio)->take($registros_por_pagina)->get();
 
         $parametros = [
-            'reservas' => $reservas,
+            'hoteles' => $hoteles,
             'total_paginas' => $total_paginas,
             'pagina_actual' => $pagina_actual,
             'registros_por_pagina' => $registros_por_pagina
@@ -49,80 +45,37 @@ class ListarReservasControlador extends Controller
             return response()->json($parametros);
         }
 
-        return view('listarreservas', $parametros);
+        return view('listarhoteles', $parametros);
     }
-
-    public function delReserva($reservaID, Request $request)
+    public function delHotel($hotelID, Request $request)
     {
-        // Buscar la reserva
-        $reserva = Reserva::find($reservaID);
+        // Buscar el hotel
+        $hotel = Hotel::find($hotelID);
 
-        if (!$reserva) {
-            return back()->withError('La reserva especificada no existe.');
+        if (!$hotel) {
+            return back()->withError('El hotel especificado no existe.');
         }
 
-        // Eliminar edades de niños asociados a la reserva
-        DB::table('edadesninos')->where('reservaID', $reservaID)->delete();
+        // Eliminar las habitaciones asociadas al hotel
+        DB::table('habitaciones')->where('hotelID', $hotelID)->delete();
 
-        // Obtener los IDs de los servicios asociados a esta reserva
-        $serviciosIDs = DB::table('reservas_servicios')
-            ->where('reservaID', $reservaID)
-            ->pluck('servicioID');
-
-        // Obtener los servicios eliminados
-        $serviciosEliminados = DB::table('servicios')
-            ->whereIn('servicioID', $serviciosIDs)
-            ->get();
-
-        // Eliminar los registros de la tabla intermedia reservas_servicios para esta reserva
-        DB::table('reservas_servicios')->where('reservaID', $reservaID)->delete();
-
-        // Eliminar los servicios que ya no están asociados a ninguna reserva
-        DB::table('servicios')
-            ->whereIn('servicioID', $serviciosIDs)
-            ->whereNotExists(function ($query) {
-                $query->select(DB::raw(1))
-                    ->from('reservas_servicios')
-                    ->whereColumn('reservas_servicios.servicioID', 'servicios.servicioID');
-            })
-            ->delete();
-
-        // Eliminar la reserva
-        $reserva->delete();
+        // Eliminar el hotel
+        $hotel->delete();
 
         if ($request->wantsJson() || $request->is('api/*')) {
             return response()->json([
-                'status' => 'La reserva se ha eliminado correctamente.',
-                'reserva' => $reserva,
-                'serviciosEliminados' => $serviciosEliminados
+                'status' => 'El hotel se ha eliminado correctamente.',
+                'hotel' => $hotel
             ]);
         }
 
-        return redirect()->route('listarReservas')->with('status', 'La reserva se ha eliminado correctamente.');
+        return redirect()->route('listarHoteles')->with('status', 'El hotel se ha eliminado correctamente.');
     }
 
-    public function mostrarReserva(Request $request, $reservaID)
+    public function mostrarHotel(Request $request, $hotelID)
     {
-        $reserva = Reserva::find($reservaID);
+        $hotel = Hotel::find($hotelID);
 
-        if (!$reserva) {
-            if ($request->wantsJson() || $request->is('api/*')) {
-                return response()->json(['error' => 'Reserva no encontrada'], 404);
-            }
-            return back()->withError('Reserva no encontrada');
-        }
-
-        $edadesNinos = DB::table('edadesninos')->where('reservaID', $reservaID)->get();
-
-        $habitacion = DB::table('habitaciones')->where('habitacionID', $reserva->habitacionID)->first();
-        if (!$habitacion) {
-            if ($request->wantsJson() || $request->is('api/*')) {
-                return response()->json(['error' => 'Habitación no encontrada'], 404);
-            }
-            return back()->withError('Habitación no encontrada');
-        }
-
-        $hotel = DB::table('hoteles')->where('hotelID', $habitacion->hotelID)->first();
         if (!$hotel) {
             if ($request->wantsJson() || $request->is('api/*')) {
                 return response()->json(['error' => 'Hotel no encontrado'], 404);
@@ -130,112 +83,74 @@ class ListarReservasControlador extends Controller
             return back()->withError('Hotel no encontrado');
         }
 
-        $cliente = DB::table('clientes')->where('clienteID', $reserva->clienteID)->first();
-        if (!$cliente) {
-            if ($request->wantsJson() || $request->is('api/*')) {
-                return response()->json(['error' => 'Cliente no encontrado'], 404);
-            }
-            return back()->withError('Cliente no encontrado');
-        }
-
-        $parametros = compact('reserva', 'edadesNinos', 'hotel', 'cliente', 'habitacion');
+        $parametros = compact('hotel');
 
         if ($request->wantsJson() || $request->is('api/*')) {
             return response()->json($parametros);
         }
 
-        return view('editarreserva', $parametros);
+        return view('editarhotel', $parametros);
+    }
+    
+public function editarHotel(Request $request, $hotelID)
+{
+    $hotel = Hotel::find($hotelID);
+    if (!$hotel) {
+        Log::error('Hotel no encontrado', ['hotelID' => $hotelID]);
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json(['message' => 'Hotel no encontrado'], 404);
+        }
+        return back()->withError('Hotel no encontrado');
     }
 
-    public function editarReserva(Request $request, $reservaID)
-    {
-        $reserva = Reserva::find($reservaID);
-        if (!$reserva) {
-            Log::error('Reserva no encontrada', ['reservaID' => $reservaID]);
-            if ($request->wantsJson() || $request->is('api/*')) {
-                return response()->json(['message' => 'Reserva no encontrada'], 404);
-            }
-            return back()->withError('Reserva no encontrada');
-        }
-    
-        try {
-            $validatedData = $request->validate([
-                'fechaEntrada' => 'required|date',
-                'fechaSalida' => 'required|date|after:fechaEntrada',
-                'numAdultos' => 'required|integer|min:1',
-                'numNinos' => 'nullable|integer|min:0',
-                'edadesNinos.*' => 'nullable|integer|min:0',
-                'habitacionID' => 'required|integer',
+    try {
+        $validatedData = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'direccion' => 'required|string|max:255',
+            'ciudad' => 'required|string|max:255',
+            'telefono' => 'required|string|max:20',
+            'descripcion' => 'nullable|string',
+        ]);
+
+        // Actualizar los datos del hotel
+        $hotel->nombre = $validatedData['nombre'];
+        $hotel->direccion = $validatedData['direccion'];
+        $hotel->ciudad = $validatedData['ciudad'];
+        $hotel->telefono = $validatedData['telefono'];
+        $hotel->descripcion = $validatedData['descripcion'];
+        $hotel->save();
+
+        // Recargar el hotel para obtener los datos actualizados
+        $hotel->refresh();
+
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json([
+                'message' => 'El hotel se ha editado correctamente.',
+                'hotel' => $hotel
             ]);
-    
-            // Calcular la diferencia de días
-            $fechaEntradaOriginal = Carbon::parse($reserva->fechainicio);
-            $fechaSalidaOriginal = Carbon::parse($reserva->fechafin);
-            $fechaEntradaNueva = Carbon::parse($validatedData['fechaEntrada']);
-            $fechaSalidaNueva = Carbon::parse($validatedData['fechaSalida']);
-    
-            $diasOriginales = $fechaSalidaOriginal->diffInDays($fechaEntradaOriginal);
-            $diasNuevos = $fechaSalidaNueva->diffInDays($fechaEntradaNueva);
-    
-            // Calcular la diferencia de adultos y niños
-            $diferenciaAdultos = $validatedData['numAdultos'] - $reserva->num_adultos;
-            $diferenciaNinos = $validatedData['numNinos'] - $reserva->num_ninos;
-    
-            // Calcular el ajuste de precio por cambios
-            $ajustePrecio = ($diferenciaAdultos * 20) + ($diferenciaNinos * 10);
-    
-            // Calcular el precio basado en días, asegurando que no baje de 60€ por día
-            if ($diasNuevos !== $diasOriginales) {
-                // Asegurar que el precio total no sea inferior al original
-                $ajustePrecio += 200;
-            }
-    
-            // Ajustar el precio total
-            $reserva->preciototal += $ajustePrecio;
-    
-            // Actualizar los datos de la reserva
-            $reserva->fechainicio = $validatedData['fechaEntrada'];
-            $reserva->fechafin = $validatedData['fechaSalida'];
-            $reserva->fecha_checkin = $validatedData['fechaEntrada'];
-            $reserva->fecha_checkout = $validatedData['fechaSalida'];
-            $reserva->num_adultos = $validatedData['numAdultos'];
-            $reserva->num_ninos = $validatedData['numNinos'];
-            $reserva->habitacionID = $validatedData['habitacionID'];
-            $reserva->save();
-    
-            // Eliminar las edades anteriores
-            EdadNino::where('reservaID', $reserva->reservaID)->delete();
-    
-            // Guardar las nuevas edades de los niños
-            if (!empty($validatedData['edadesNinos'])) {
-                foreach ($validatedData['edadesNinos'] as $edad) {
-                    if (is_numeric($edad) && $edad >= 0) {
-                        EdadNino::create([
-                            'edad' => $edad,
-                            'reservaID' => $reserva->reservaID,
-                        ]);
-                    }
-                }
-            }
-    
-            // Recargar la reserva para obtener los datos actualizados
-            $reserva->refresh();
-    
-            if ($request->wantsJson() || $request->is('api/*')) {
-                return response()->json([
-                    'message' => 'La reserva se ha editado correctamente.',
-                    'reserva' => $reserva
-                ]);
-            }
-    
-            return redirect()->route('listarReservas')->with('status', 'La reserva se ha editado correctamente.');
-        } catch (\Exception $e) {
-            if ($request->wantsJson() || $request->is('api/*')) {
-                return response()->json(['message' => 'Error al editar la reserva', 'error' => $e->getMessage()], 500);
-            }
-            return back()->withError('Error al editar la reserva')->withInput();
         }
+
+        // Obtener la lista de hoteles para pasarla a la vista
+        $hoteles = Hotel::all();
+        $pagina_actual = 'gestionarhoteles'; // Define la variable $pagina_actual
+        $registros_por_pagina = 10; // Define la variable $registros_por_pagina
+        $total_paginas = ceil($hoteles->count() / $registros_por_pagina); // Define la variable $total_paginas
+
+        // Redirigir a la vista con el mensaje de estado, la lista de hoteles, la página actual y el total de páginas
+        return view('listarhoteles')->with([
+            'status' => 'El hotel se ha editado correctamente.',
+            'hoteles' => $hoteles,
+            'pagina_actual' => $pagina_actual,
+            'total_paginas' => $total_paginas,
+            'registros_por_pagina' => $registros_por_pagina
+        ]);
+    } catch (\Exception $e) {
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json(['message' => 'Error al editar el hotel', 'error' => $e->getMessage()], 500);
+        }
+        return back()->withError('Error al editar el hotel')->withInput();
     }
+}
 
 
 

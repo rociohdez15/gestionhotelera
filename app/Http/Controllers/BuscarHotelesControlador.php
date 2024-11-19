@@ -158,6 +158,10 @@ class BuscarHotelesControlador extends Controller
             '&' . $edadesNinosParams
         ];
 
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json($parametros);
+        }
+
         return view('buscarhoteles', $parametros); // Muestra la vista con los parametros anteriores
     }
 

@@ -4,16 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlojaDirecto | Déjanos tu reseña</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>AlojaDirecto | Editar Hotel</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- CSS -->
-    <link rel="stylesheet" href="../../css/deja-resena/styles.css">
-    <link rel="stylesheet" href="{{ asset('css/inicio/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/listar-reservas/styles.css') }}">
+    <link rel="stylesheet" href="../../css/inicio/style.css">
     <!-- Favicon -->
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic%7CPoppins:300,400,500,700">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
     <link rel="icon" href="../../images/inicio/favicon.ico" type="image/x-icon">
+    <script src="https://unpkg.com/vue@3.5.12/dist/vue.global.js"></script>
+    @vite('resources/css/app.css')
 </head>
 
 <body>
@@ -78,6 +83,25 @@
                             <div class="rd-navbar-nav-scroll-holder">
                                 <ul class="rd-navbar-nav">
                                     <li><a href="{{ route('inicio') }}">Inicio</a></li>
+                                    @auth
+                                    @php
+                                    $rolUsuario = Auth::user()->rolID;
+                                    @endphp
+                                    @if ($rolUsuario === 2)
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Reservas
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <li><a class="dropdown-item" href="{{ route('listarReservas') }}">Lista de reservas</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('listadoCheckin') }}">Realizar Check-In</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('listadoCheckout') }}">Realizar Check-Out</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="{{ route('dispHabitaciones') }}">Estadísticas</a></li>
+                                    <li><a href="{{ route('listarServicios') }}">Servicios</a></li>
+                                    @else
+                                    <li><a href="{{ route('inicio') }}">Inicio</a></li>
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="{{ route('inicio') }}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             Descubre España
@@ -91,6 +115,8 @@
                                     </li>
                                     <li><a href="{{ asset('about-us.html') }}">Sobre Nosotros</a></li>
                                     <li><a href="{{ asset('contacts.html') }}">Contacto</a></li>
+                                    @endif
+                                    @endauth
                                 </ul>
                             </div>
                         </div>
@@ -99,69 +125,14 @@
             </nav>
         </div>
     </header>
-
     <main>
-        <br>
-        <br>
-        <h2 class="titulo text-center">Déjanos tus reseñas</h2>
-        <br>
-        @if ($hotelesSinResena->isEmpty())
-        <p class="text-center">No tienes hoteles pendientes de reseñar.</p>
-        @else
-        <div class="container">
-            @if ($errors->any())
-            <div class="alert alert-danger ml-2" style="max-width: 400px; margin: 0 auto;">
-                @foreach ($errors->all() as $error)
-                {{ $error }}
-                @endforeach
-            </div>
-            <br>
-            @endif
-
-            <!-- Mostrar mensaje de éxito -->
-            @if(session('success'))
-            <div class="alert alert-success" style="max-width: 400px; margin: 0 auto;">
-                {{ session('success') }}
-            </div>
-            @endif
-
-            <br>
-            @foreach ($datos as $hotel)
-            <div class="p-3 row align-items-start mb-3 border rounded bg-light w-100 h-100 d-flex flex-grow-1">
-                <!-- Imagen del hotel -->
-                <div class="col-12 col-md-4 hotel-imagen mb-3 mb-md-0">
-                    @if ($hotel->imagen_url)
-                    <img src="{{ asset($hotel->imagen_url) }}" alt="{{ $hotel->nombre }}" class="img-fluid rounded imagen-portada-alojamiento">
-                    @else
-                    <p>No hay imagen de portada disponible.</p>
-                    @endif
-                </div>
-                <div class="col-12 col-md-8" style="color: black;">
-                    <h5>{{ $hotel->nombre }}</h5>
-                    <p style="line-height: 0 !important;"><strong>Dirección:</strong> {{ $hotel->direccion }}</p>
-                    <p style="line-height: 0 !important;"><strong>Descripción:</strong> {{ $hotel->descripcion }}</p>
-                    <br>
-                    <a href="{{ route('escribirResenasForm', ['hotelID' => $hotel->hotelID]) }}" class="btn btn-primary mt-2">Escribir Reseña</a>
-                </div>
-            </div>
-            @endforeach
+        <div id="app6"
+            data-hotel="{{ json_encode($hotel) }}">
         </div>
-
-        <br>
-        <!-- Paginación -->
-        <div class="container text-center" style="color: black;">
-            <p>
-                Página {{ $pagina_actual }} de {{ $total_paginas }} | Mostrar {{ $registros_por_pagina }} registros por página | Ir a página:
-                @for ($i = 1; $i <= $total_paginas; $i++)
-                    <a href="{{ route('dejarResenas', array_merge(request()->except('pagina'), ['pagina' => $i])) }}">{{ $i }}</a>
-                    @endfor
-            </p>
-        </div>
-        <br>
-        @endif
+        @vite('resources/js/app.js')
     </main>
-       <!-- Footer -->
-       <footer class="page-footer text-left text-sm-left">
+
+    <footer class="page-footer text-left text-sm-left">
         <div class="shell-wide">
             <div class="page-footer-minimal">
                 <div class="shell-wide">
@@ -231,9 +202,6 @@
         </div>
     </footer>
 </body>
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../../js/informacion-usuario/js.js"></script>
 <script src="{{ asset('js/inicio/core.min.js') }}"></script>
 <script src="{{ asset('js/inicio/script.js') }}"></script>
 

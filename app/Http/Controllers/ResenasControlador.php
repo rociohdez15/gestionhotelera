@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Hotel;
 use App\Models\Cliente;
+use App\Models\User;
 use App\Models\Reserva;
 use App\Models\Resena;
 use Carbon\Carbon;
@@ -15,10 +16,12 @@ use Carbon\Carbon;
 class ResenasControlador extends Controller
 {
     //Método que mostrará los hoteles que no han recibido la reseña
-    public function dejarResenas(Request $request)
+    public function dejarResenas(Request $request, $clienteID = null)
     {
-        // Obtener el cliente autenticado
-        $clienteID = Auth::id();
+        // Si no se proporciona un clienteID, usa el ID del usuario autenticado
+        if (!$clienteID) {
+            $clienteID = Auth::id();
+        }
 
         // Filtrar hoteles de reservas donde el cliente aún no ha dejado una reseña
         $hotelesSinResena = Hotel::select('hoteles.*', DB::raw('(SELECT imagen FROM imagenes_hoteles WHERE hotelID = hoteles.hotelID AND imagen LIKE "images/portadas/portada%" LIMIT 1) as imagen_url'))
@@ -36,12 +39,11 @@ class ResenasControlador extends Controller
             })
             ->get();
 
-
         // Cuenta el número total de hoteles sin reseña
         $totalHoteles = $hotelesSinResena->count();
 
         // Define los parámetros de paginación
-        $registros_por_pagina = 5; // Muestra 1 registro por página
+        $registros_por_pagina = 5; // Muestra 5 registros por página
         $pagina_actual = $request->input('pagina', 1);
         $total_paginas = ceil($totalHoteles / $registros_por_pagina);
 
@@ -66,11 +68,14 @@ class ResenasControlador extends Controller
             'hotelesSinResena' => $hotelesSinResena
         ];
 
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json($parametros);
+        }
+
         return view('dejaresena', $parametros);
     }
-
     //Método para mostrar el formulario de escribir reseñas
-    public function escribirResenasForm($hotelID)
+    public function escribirResenasForm(Request $request, $hotelID)
     {
         // Obtener el hotel específico por ID
         $hotel = DB::table('hoteles')->where('hotelID', $hotelID)->first();
@@ -80,18 +85,23 @@ class ResenasControlador extends Controller
 
         $parametros = [
             "mensajes" => [],
-            "hotel" => $hotel, 
-            "fechaHoy" => $fechaHoy, 
+            "hotel" => $hotel,
+            "fechaHoy" => $fechaHoy,
         ];
+
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json($parametros);
+        }
 
         return view('escribirresena', $parametros);
     }
 
     //Método para guardar los datos del formulario
-    public function guardarResena(Request $request)
+    public function guardarResena(Request $request, $hotelID)
     {
         // Validar los datos 
         $request->validate([
+            'clienteID' => 'required|exists:users,id',
             'hotelID' => 'required|exists:hoteles,hotelID',
             'fecha' => 'required|date',
             'resena' => 'required|string',
@@ -99,9 +109,8 @@ class ResenasControlador extends Controller
         ]);
 
         $fechaHoy = Carbon::now()->format('Y-m-d');
-        $clienteID = Auth::id();
-        $cliente = Auth::user()->name;
-
+        $clienteID = $request->input('clienteID');
+        $cliente = User::find($clienteID)->name;
 
         // Obtener los datos del formulario
         $hotelID = $request->input('hotelID');
@@ -117,6 +126,13 @@ class ResenasControlador extends Controller
         $resena->texto = $texto;
         $resena->puntuacion = $puntuacion;
         $resena->save();
+
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json([
+                'status' => 'Reseña registrada exitosamente.',
+                'resena' => $resena
+            ]);
+        }
 
         return redirect()->route('dejarResenas')->with('success', 'Reseña registrada exitosamente.');
     }
@@ -143,7 +159,7 @@ class ResenasControlador extends Controller
         $totalHoteles = $resenas->count();
 
         // Define los parámetros de paginación
-        $registros_por_pagina = 5; 
+        $registros_por_pagina = 5;
         $pagina_actual = $request->input('pagina', 1);
         $total_paginas = ceil($totalHoteles / $registros_por_pagina);
 
@@ -167,9 +183,14 @@ class ResenasControlador extends Controller
             "pagina_actual" => $pagina_actual,
             "total_paginas" => $total_paginas,
             "registros_por_pagina" => $registros_por_pagina,
-            "resenas" => $resenas, 
+            "resenas" => $resenas,
         ];
 
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json([
+                'resena' => $parametros
+            ]);
+        }
         return view('mostrarresenas', $parametros);
     }
 }

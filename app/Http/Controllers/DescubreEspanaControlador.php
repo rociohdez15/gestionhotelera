@@ -54,6 +54,10 @@ class DescubreEspanaControlador extends Controller
             "registros_por_pagina" => $registros_por_pagina,
         ];
 
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json($parametros);
+        }
+
         return view('descubreespana', $parametros); // Muestra la vista de descubre España
     }
 }

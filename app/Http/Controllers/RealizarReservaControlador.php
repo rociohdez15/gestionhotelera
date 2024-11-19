@@ -71,7 +71,12 @@ class RealizarReservaControlador extends Controller
             "resenas" => $resenas
         ];
 
-        return view('realizarreserva', $parametros); 
+        // Verificar si la solicitud es para JSON
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json($parametros);
+        }
+
+        return view('realizarreserva', $parametros);
     }
 
 
@@ -108,79 +113,109 @@ class RealizarReservaControlador extends Controller
         // Calcula el precio total
         $precioTotal = $precioHabitacion * $numNoches;
 
+        $reservas = [];
+        $serviciosReservados = [];
+
         // Hacemos la inserción en la tabla reservas
         foreach ($habitacionID as $id) {
-            $reserva = Reserva::create([
-                'fechainicio' => $fechaEntrada,
-                'fechafin' => $fechaSalida,
-                'estado' => $estado,
-                'preciototal' => $precioTotal,
-                'num_adultos' => $adultos,
-                'num_ninos' => $ninos,
-                'fecha_checkin' => $fechaEntrada,
-                'fecha_checkout' => $fechaSalida,
-                'clienteID' => $clienteID,
-                'habitacionID' => $id,
-            ]);
 
-            // Si hay niños, se guarda las edades en la tabla edadesninos
-            if (!empty($ninos) && !empty($edadesNinos)) {
-                foreach ($edadesNinos as $edad) {
-                    // Solo guarda si la edad es válida (Mayor o igual a 0 y menor o igual a 17)
-                    if (is_numeric($edad) && $edad > 0) {
-                        EdadNino::create([
-                            'edad' => $edad,
-                            'reservaID' => $reserva->reservaID,
-                        ]);
+            // Comprueba si ya existe una reserva para esta combinación
+            $reservaExistente = Reserva::where('fechainicio', $fechaEntrada)
+                ->where('fechafin', $fechaSalida)
+                ->where('clienteID', $clienteID)
+                ->where('habitacionID', $id)
+                ->first();
+
+            if ($reservaExistente) {
+                return response()->json([
+                    'status' => 'Error: Ya existe una reserva para este cliente en esta habitación y fecha.',
+                    'reservaExistente' => $reservaExistente
+                ], 400); // Código de estado 400 para indicar error del cliente
+            } else {
+
+                $reserva = Reserva::create([
+                    'fechainicio' => $fechaEntrada,
+                    'fechafin' => $fechaSalida,
+                    'estado' => $estado,
+                    'preciototal' => $precioTotal,
+                    'num_adultos' => $adultos,
+                    'num_ninos' => $ninos,
+                    'fecha_checkin' => $fechaEntrada,
+                    'fecha_checkout' => $fechaSalida,
+                    'clienteID' => $clienteID,
+                    'habitacionID' => $id,
+                ]);
+
+                $reservas[] = $reserva;
+
+                // Si hay niños, se guarda las edades en la tabla edadesninos
+                if (!empty($ninos) && !empty($edadesNinos)) {
+                    foreach ($edadesNinos as $edad) {
+                        // Solo guarda si la edad es válida (Mayor o igual a 0 y menor o igual a 17)
+                        if (is_numeric($edad) && $edad > 0) {
+                            EdadNino::create([
+                                'edad' => $edad,
+                                'reservaID' => $reserva->reservaID,
+                            ]);
+                        }
                     }
                 }
-            }
 
-            // Inserta servicios adicionales si las fechas son introducidas
-            $numPersonas = $adultos + $ninos;
-            $servicios = [];
+                // Inserta servicios adicionales si las fechas son introducidas
+                $numPersonas = $adultos + $ninos;
+                $servicios = [];
 
-            //Si se ha introducido fecha de restaurante, se inserta el servicio de restaurante
-            if (!empty($fechaRestaurante)) {
-                $servicios[] = [
-                    'nombre' => 'restaurante',
-                    'descripcion' => 'restaurante',
-                    'precio' => 20 * $numPersonas,
-                    'horario' => $fechaRestaurante,
-                ];
-            }
+                //Si se ha introducido fecha de restaurante, se inserta el servicio de restaurante
+                if (!empty($fechaRestaurante)) {
+                    $servicios[] = [
+                        'nombre' => 'restaurante',
+                        'descripcion' => 'restaurante',
+                        'precio' => 20 * $numPersonas,
+                        'horario' => $fechaRestaurante,
+                    ];
+                }
 
-            //Si se ha introducido fecha de spa, se inserta el servicio de spa
-            if (!empty($fechaSpa)) {
-                $servicios[] = [
-                    'nombre' => 'spa',
-                    'descripcion' => 'spa',
-                    'precio' => 25 * $numPersonas,
-                    'horario' => $fechaSpa,
-                ];
-            }
+                //Si se ha introducido fecha de spa, se inserta el servicio de spa
+                if (!empty($fechaSpa)) {
+                    $servicios[] = [
+                        'nombre' => 'spa',
+                        'descripcion' => 'spa',
+                        'precio' => 25 * $numPersonas,
+                        'horario' => $fechaSpa,
+                    ];
+                }
 
-            //Si se ha introducido fecha de tours, se inserta el servicio de tours
-            if (!empty($fechaTours)) {
-                $servicios[] = [
-                    'nombre' => 'tours',
-                    'descripcion' => 'tours',
-                    'precio' => 10 * $numPersonas,
-                    'horario' => $fechaTours,
-                ];
-            }
+                //Si se ha introducido fecha de tours, se inserta el servicio de tours
+                if (!empty($fechaTours)) {
+                    $servicios[] = [
+                        'nombre' => 'tours',
+                        'descripcion' => 'tours',
+                        'precio' => 10 * $numPersonas,
+                        'horario' => $fechaTours,
+                    ];
+                }
 
-            // Inserta los servicios y las relaciones en la tabla intermedia
-            foreach ($servicios as $servicioData) {
-                $servicio = Servicio::create($servicioData);
+                // Inserta los servicios y las relaciones en la tabla intermedia
+                foreach ($servicios as $servicioData) {
+                    $servicio = Servicio::create($servicioData);
+                    $serviciosReservados[] = $servicio;
 
-                // Relaciona el servicio con la reserva en la tabla intermedia
-                DB::table('reservas_servicios')->insert([
-                    'reservaID' => $reserva->reservaID,
-                    'servicioID' => $servicio->servicioID,
-                ]);
+                    // Relaciona el servicio con la reserva en la tabla intermedia
+                    DB::table('reservas_servicios')->insert([
+                        'reservaID' => $reserva->reservaID,
+                        'servicioID' => $servicio->servicioID,
+                    ]);
+                }
             }
         }
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json([
+                'status' => '¡Reserva realizada correctamente!',
+                'reservas' => $reservas,
+                'servicios' => $serviciosReservados
+            ]);
+        }
+
         return redirect()->route('exitoreserva');
     }
 

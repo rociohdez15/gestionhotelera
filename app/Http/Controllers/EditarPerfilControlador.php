@@ -21,50 +21,75 @@ class EditarPerfilControlador extends Controller
         $cliente = Cliente::find($clienteID);
         $usuario = Auth::user();
 
-        return view('editarperfil', compact('cliente','usuario'),  ['cliente' => $cliente], ['usuario' => $usuario]);
+        if (!$cliente) {
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['error' => 'Cliente no encontrado.'], 404);
+            }
+            return redirect()->back()->withErrors(['error' => 'Cliente no encontrado.']);
+        }
+
+        $parametros = [
+            'cliente' => $cliente
+        ];
+
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json($parametros);
+        }
+
+        return view('editarperfil', $parametros);
     }
 
     //Método que actualiza el perfil del usuario (cambia los datos antiguos por los nuevos introducidos)
-    public function editarPerfil(Request $request, $clienteID, $id)
-    {
-        // Validaciones de los campos
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellidos' => 'required|string|max:255',
-            'direccion' => 'required|string|max:255',
-            'telefono' => ['required', 'regex:/^[67]\d{8}$/'],
-            'dni' => ['required', 'regex:/^\d{8}[A-Za-z]$/'],
-            'email' => 'required|string|email|max:255|unique:clientes,email,' . $clienteID . ',clienteID'
 
-        ]);
+public function editarPerfil(Request $request, $clienteID, $id)
+{
+    // Validaciones de los campos
+    $request->validate([
+        'nombre' => 'required|string|max:255',
+        'apellidos' => 'required|string|max:255',
+        'direccion' => 'required|string|max:255',
+        'telefono' => ['required', 'regex:/^[67]\d{8}$/'],
+        'dni' => ['required', 'regex:/^\d{8}[A-Za-z]$/'],
+        'email' => 'required|string|email|max:255|unique:clientes,email,' . $clienteID . ',clienteID'
+    ]);
 
-        // Encuentra el cliente y el usuario por ID
-        $cliente = Cliente::find($clienteID);
-        $usuario = User::find($id);
+    // Encuentra el cliente y el usuario por ID
+    $cliente = Cliente::find($clienteID);
+    $usuario = User::find($id);
 
-        // Verifica si el cliente existe
-        if (!$cliente) {
-            return redirect()->route('editarperfil')->withErrors('El cliente no existe.');
+    // Verifica si el cliente existe
+    if (!$cliente) {
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json(['error' => 'El cliente no existe.'], 404);
         }
-
-        // Actualiza los datos del cliente
-        $cliente->nombre = $request->nombre;
-        $cliente->apellidos = $request->apellidos;
-        $cliente->direccion = $request->direccion;
-        $cliente->telefono = $request->telefono;
-        $cliente->dni = $request->dni;
-        $cliente->email = $request->email;
-
-        //Actualiza los datos del usuario
-        $usuario->name = $request->nombre;
-        $usuario->apellidos = $request->apellidos;
-        $usuario->email = $request->email;
-
-        // Guarda los cambios en ambas tablas
-        $cliente->save();
-        $usuario->save();
-
-        // Redirige con mensaje de éxito
-        return redirect()->route('editarperfil', ['clienteID' => $clienteID,'id' => $usuario->id ])->with('status', 'El perfil ha sido actualizado correctamente.');
+        return redirect()->route('editarperfil')->withErrors('El cliente no existe.');
     }
+
+    // Actualiza los datos del cliente
+    $cliente->nombre = $request->nombre;
+    $cliente->apellidos = $request->apellidos;
+    $cliente->direccion = $request->direccion;
+    $cliente->telefono = $request->telefono;
+    $cliente->dni = $request->dni;
+    $cliente->email = $request->email;
+
+    // Actualiza los datos del usuario
+    $usuario->name = $request->nombre;
+    $usuario->apellidos = $request->apellidos;
+    $usuario->email = $request->email;
+
+    // Guarda los cambios en ambas tablas
+    $cliente->save();
+    $usuario->save();
+
+    if ($request->wantsJson() || $request->is('api/*')) {
+        return response()->json([
+            'status' => 'El perfil ha sido actualizado correctamente.',
+            'cliente' => $cliente
+        ]);
+    }
+
+    // Redirige con mensaje de éxito
+    return redirect()->route('editarperfil', ['clienteID' => $clienteID, 'id' => $usuario->id])->with('status', 'El perfil ha sido actualizado correctamente.');
+}
 }

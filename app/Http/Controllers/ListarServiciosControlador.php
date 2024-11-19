@@ -51,33 +51,57 @@ class ListarServiciosControlador extends Controller
 
         $reservas = $query->skip($inicio)->take($registros_por_pagina)->get();
 
-        return view('listarservicios', [
+        $parametros = [
             'reservas' => $reservas,
             'total_paginas' => $total_paginas,
             'pagina_actual' => $pagina_actual,
             'registros_por_pagina' => $registros_por_pagina
-        ]);
+        ];
+
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json($parametros);
+        }
+
+        return view('listarservicios', $parametros);
     }
 
-    public function delServicio($servicioID)
+    public function delServicio(Request $request, $servicioID)
     {
         $servicio = Servicio::find($servicioID);
 
         if (!$servicio) {
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['message' => 'El servicio especificado no existe.'], 404);
+            }
             return back()->withError('El servicio especificado no existe.');
         }
 
+        // Eliminar el servicio de la tabla intermedia reservas_servicios
+        DB::table('reservas_servicios')->where('servicioID', $servicioID)->delete();
+
+        // Eliminar el servicio
         $servicio->delete();
+
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json([
+                'message' => 'El servicio se ha eliminado correctamente.',
+                'servicio' => $servicio
+            ]);
+        }
 
         return redirect()->route('listarServicios')->with('status', 'El servicio se ha eliminado correctamente.');
     }
 
-    public function mostrarServicio($servicioID)
+
+    public function mostrarServicio(Request $request, $servicioID)
     {
         // Obtener el servicio específico mediante el servicioID
         $servicio = DB::table('servicios')->where('servicioID', $servicioID)->first();
         if (!$servicio) {
-            return response()->json(['error' => 'Servicio no encontrado'], 404);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['error' => 'Servicio no encontrado'], 404);
+            }
+            return back()->withError('Servicio no encontrado');
         }
 
         // Separar la fecha y la hora del campo horario del servicio
@@ -93,7 +117,10 @@ class ListarServiciosControlador extends Controller
             ->first();
 
         if (!$reserva) {
-            return response()->json(['error' => 'Reserva no encontrada'], 404);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['error' => 'Reserva no encontrada'], 404);
+            }
+            return back()->withError('Reserva no encontrada');
         }
 
         // Obtener el cliente asociado a la reserva del servicio
@@ -105,13 +132,20 @@ class ListarServiciosControlador extends Controller
             ->first();
 
         if (!$cliente) {
-            return response()->json(['error' => 'Cliente no encontrado'], 404);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['error' => 'Cliente no encontrado'], 404);
+            }
+            return back()->withError('Cliente no encontrado');
         }
 
+        $parametros = compact('servicio', 'fecha', 'hora', 'reserva', 'cliente');
 
-        return view('editarservicio', compact('servicio', 'fecha', 'hora', 'reserva', 'cliente'));
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json($parametros);
+        }
+
+        return view('editarservicio', $parametros);
     }
-
 
     public function editarServicio(Request $request, $servicioID)
     {
@@ -119,7 +153,10 @@ class ListarServiciosControlador extends Controller
         $servicio = Servicio::find($servicioID);
         if (!$servicio) {
             Log::error('Servicio no encontrado', ['servicioID' => $servicioID]);
-            return response()->json(['message' => 'Servicio no encontrado'], 404);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['message' => 'Servicio no encontrado'], 404);
+            }
+            return back()->withError('Servicio no encontrado');
         }
 
         try {
@@ -138,12 +175,21 @@ class ListarServiciosControlador extends Controller
             $servicio->horario = $horarioCompleto;
             $servicio->save();
 
-            return response()->json(['message' => 'El servicio se ha editado correctamente.']);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'message' => 'El servicio se ha editado correctamente.',
+                    'servicio' => $servicio
+                ]);
+            }
+
+            return redirect()->route('listarServicios')->with('status', 'El servicio se ha editado correctamente.');
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error al editar el servicio', 'error' => $e->getMessage()], 500);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['message' => 'Error al editar el servicio', 'error' => $e->getMessage()], 500);
+            }
+            return back()->withError('Error al editar el servicio')->withInput();
         }
     }
-
     public function generarPDF($servicioID)
     {
         // Consulta para generar el pdf de la lista de servicios filtrado por servicioID
@@ -330,11 +376,14 @@ class ListarServiciosControlador extends Controller
         ], compact('reservas'));
     }
 
-
     public function anadirServicio(Request $request)
     {
         // Obtén todas las reservas desde la base de datos
         $reservas = Reserva::all();
+
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json(['reservas' => $reservas]);
+        }
 
         return view('anadirServicio', ['reservas' => $reservas]);
     }
@@ -353,7 +402,10 @@ class ListarServiciosControlador extends Controller
         $reserva = DB::table('reservas')->select('num_adultos', 'num_ninos')->where('reservaID', $reservaID)->first();
 
         if (!$reserva) {
-            return response()->json(['error' => 'Reserva no encontrada'], 404);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['error' => 'Reserva no encontrada'], 404);
+            }
+            return back()->withError('Reserva no encontrada');
         }
 
         // Calcular el número total de personas
@@ -386,7 +438,14 @@ class ListarServiciosControlador extends Controller
         $servicioreserva->servicioID = $servicio->servicioID;
         $servicioreserva->save();
 
-        // Redirigir con un mensaje de éxito
-        return response()->json(['message' => 'Servicio añadido correctamente'], 200);
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json([
+                'message' => 'Servicio añadido correctamente.',
+                'servicio' => $servicio,
+                'servicioreserva' => $servicioreserva
+            ]);
+        }
+
+        return redirect()->route('listarServicios')->with('status', 'Servicio añadido correctamente.');
     }
 }

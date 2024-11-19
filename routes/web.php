@@ -16,6 +16,7 @@ use App\Http\Controllers\ListadoCheckoutControlador;
 use App\Http\Controllers\ListadoCheckinControlador;
 use App\Http\Controllers\HabitacionesControlador;
 use App\Http\Controllers\ListarServiciosControlador;
+use App\Http\Controllers\ListarHotelesControlador;
 
 Route::get('/', function () {
     return view('inicio');
@@ -81,4 +82,10 @@ Route::middleware([
     Route::get('/buscar-servicio', [ListarServiciosControlador::class, 'buscarServicios'])->name('buscarServicios');
     Route::get('/anadir-servicio', [ListarServiciosControlador::class, 'anadirServicio'])->name('anadirServicio');
     Route::post('/guardarservicio', [ListarServiciosControlador::class, 'guardarServicio'])->name('guardarServicio');
+    Route::get('/gestionarhoteles', [ListarHotelesControlador::class, 'listarHoteles'])->name('listarHoteles');
+    Route::delete('/delhotel/{hotelID}', [ListarHotelesControlador::class, 'delHotel'])->name('delHotel');
+    Route::get('/mostrarhotel/{hotelID}', [ListarHotelesControlador::class, 'mostrarHotel'])->name('mostrarHotel');
+    Route::put('/editarhotel/{hotelID}', [ListarHotelesControlador::class, 'editarHotel'])->name('editarHotel');
+    Route::get('/gestionarHabitaciones', [ListarServiciosControlador::class, 'gestionarHabitaciones'])->name('gestionarHabitaciones');
+    Route::get('/altaUsuarios', [ListarServiciosControlador::class, 'altaUsuarios'])->name('altaUsuarios');
 });

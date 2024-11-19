@@ -61,14 +61,20 @@ class ListadoCheckoutControlador extends Controller
         // Obtener las reservas paginadas
         $reservas = $query->skip($inicio)->take($registros_por_pagina)->get();
 
-        return view('listadocheckout', [
+        $parametros = [
             'reservas' => $reservas,
             'total_paginas' => $total_paginas,
             'pagina_actual' => $pagina_actual,
             'registros_por_pagina' => $registros_por_pagina,
-            'fecha_actual' => $fecha_actual->toDateTimeString(), 
-            'query' => $queryParam 
-        ]);
+            'fecha_actual' => $fecha_actual->toDateTimeString(),
+            'query' => $queryParam
+        ];
+
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json($parametros);
+        }
+
+        return view('listadocheckout', $parametros);
     }
 
 
@@ -122,63 +128,94 @@ class ListadoCheckoutControlador extends Controller
         ]);
     }
 
-    public function mostrarCheckout($reservaID)
+    public function mostrarCheckout(Request $request, $reservaID)
     {
-
         $reserva = Reserva::find($reservaID);
 
         if (!$reserva) {
-            return response()->json(['error' => 'Reserva no encontrada'], 404);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['error' => 'Reserva no encontrada'], 404);
+            }
+            return back()->withError('Reserva no encontrada');
         }
 
         $edadesNinos = DB::table('edadesninos')->where('reservaID', $reservaID)->get();
 
         $habitacion = DB::table('habitaciones')->where('habitacionID', $reserva->habitacionID)->first();
         if (!$habitacion) {
-            return response()->json(['error' => 'Habitación no encontrada'], 404);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['error' => 'Habitación no encontrada'], 404);
+            }
+            return back()->withError('Habitación no encontrada');
         }
 
         $hotel = DB::table('hoteles')->where('hotelID', $habitacion->hotelID)->first();
         if (!$hotel) {
-            return response()->json(['error' => 'Hotel no encontrado'], 404);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['error' => 'Hotel no encontrado'], 404);
+            }
+            return back()->withError('Hotel no encontrado');
         }
 
         $cliente = DB::table('clientes')->where('clienteID', $reserva->clienteID)->first();
         if (!$cliente) {
-            return response()->json(['error' => 'Cliente no encontrado'], 404);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['error' => 'Cliente no encontrado'], 404);
+            }
+            return back()->withError('Cliente no encontrado');
         }
 
-        return view('registrarcheckout', compact('reserva', 'edadesNinos', 'hotel', 'cliente', 'habitacion'));
+        $parametros = compact('reserva', 'edadesNinos', 'hotel', 'cliente', 'habitacion');
+
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json($parametros);
+        }
+
+        return view('registrarcheckout', $parametros);
     }
 
     public function registrarCheckout(Request $request, $reservaID)
-{
-    $reserva = Reserva::find($reservaID);
-    if (!$reserva) {
-        Log::error('Reserva no encontrada', ['reservaID' => $reservaID]);
-        return response()->json(['message' => 'Reserva no encontrada'], 404);
-    }
-
-    try {
-        $validatedData = $request->validate([
-            'fechaCheckout' => 'required|date|after:fechainicio', // Verifica que sea una fecha válida y después de la fecha de entrada
-        ]);
-
-        $fechaCheckoutNueva = Carbon::parse($validatedData['fechaCheckout']);
-
-        // Comparar con la fecha de checkout actual, para actualizar solo si es necesario
-        if ($reserva->fecha_checkout !== $fechaCheckoutNueva->toDateString()) {
-            // Actualizar solo la fecha de checkout
-            $reserva->fecha_checkout = $fechaCheckoutNueva;
-            $reserva->fechafin = $fechaCheckoutNueva; // `fechafin` debe ser igual a `fecha_checkout`
-            $reserva->save();
+    {
+        $reserva = Reserva::find($reservaID);
+        if (!$reserva) {
+            Log::error('Reserva no encontrada', ['reservaID' => $reservaID]);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['message' => 'Reserva no encontrada'], 404);
+            }
+            return back()->withError('Reserva no encontrada');
         }
 
-        return response()->json(['message' => 'La fecha de checkout se ha actualizado correctamente.']);
-    } catch (\Exception $e) {
-        return response()->json(['message' => 'Error al actualizar la fecha de checkout', 'error' => $e->getMessage()], 500);
+
+        try {
+            $validatedData = $request->validate([
+                'fechaCheckout' => 'required|date|after:fechainicio', // Verifica que sea una fecha válida y después de la fecha de entrada
+            ]);
+
+            $fechaCheckoutNueva = Carbon::parse($validatedData['fechaCheckout']);
+
+            // Comparar con la fecha de checkout actual, para actualizar solo si es necesario
+            if ($reserva->fecha_checkout !== $fechaCheckoutNueva->toDateString()) {
+                // Actualizar solo la fecha de checkout
+                $reserva->fecha_checkout = $fechaCheckoutNueva;
+                $reserva->fechafin = $fechaCheckoutNueva; // `fechafin` debe ser igual a `fecha_checkout`
+                $reserva->save();
+            }
+
+            // Recargar la reserva para obtener los datos actualizados
+            $reserva->refresh();
+
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'message' => 'La fecha de checkout se ha actualizado correctamente.',
+                    'reserva' => $reserva
+                ]);
+            }
+            return redirect()->route('listarReservas')->with('status', 'La fecha de checkout se ha actualizado correctamente.');
+        } catch (\Exception $e) {
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['message' => 'Error al actualizar la fecha de checkout', 'error' => $e->getMessage()], 500);
+            }
+            return back()->withError('Error al actualizar la fecha de checkout')->withInput();
+        }
     }
-}
-
-
 }

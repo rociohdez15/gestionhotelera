@@ -19,7 +19,7 @@ class ListadoCheckinControlador extends Controller
     public function listadoCheckin(Request $request)
     {
         // Obtener el valor del query 
-        $queryParam = $request->input('query', ''); 
+        $queryParam = $request->input('query', '');
 
         // Obtener la fecha actual
         $fecha_actual = Carbon::now()->startOfDay();
@@ -61,14 +61,20 @@ class ListadoCheckinControlador extends Controller
         // Obtener las reservas paginadas
         $reservas = $query->skip($inicio)->take($registros_por_pagina)->get();
 
-        return view('listadocheckin', [
+        $parametros = [
             'reservas' => $reservas,
             'total_paginas' => $total_paginas,
             'pagina_actual' => $pagina_actual,
             'registros_por_pagina' => $registros_por_pagina,
-            'fecha_actual' => $fecha_actual->toDateTimeString(), 
-            'query' => $queryParam 
-        ]);
+            'fecha_actual' => $fecha_actual->toDateTimeString(),
+            'query' => $queryParam
+        ];
+
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json($parametros);
+        }
+
+        return view('listadocheckin', $parametros);
     }
 
 
@@ -117,46 +123,65 @@ class ListadoCheckinControlador extends Controller
             'total_paginas' => $total_paginas,
             'pagina_actual' => $pagina_actual,
             'registros_por_pagina' => $registros_por_pagina,
-            'fecha_actual' => $fecha_actual->toDateTimeString(), 
+            'fecha_actual' => $fecha_actual->toDateTimeString(),
             'query' => $query
         ]);
     }
 
-    public function mostrarCheckin($reservaID)
+    public function mostrarCheckin(Request $request, $reservaID)
     {
-
         $reserva = Reserva::find($reservaID);
 
         if (!$reserva) {
-            return response()->json(['error' => 'Reserva no encontrada'], 404);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['error' => 'Reserva no encontrada'], 404);
+            }
+            return back()->withError('Reserva no encontrada');
         }
 
         $edadesNinos = DB::table('edadesninos')->where('reservaID', $reservaID)->get();
 
         $habitacion = DB::table('habitaciones')->where('habitacionID', $reserva->habitacionID)->first();
         if (!$habitacion) {
-            return response()->json(['error' => 'Habitación no encontrada'], 404);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['error' => 'Habitación no encontrada'], 404);
+            }
+            return back()->withError('Habitación no encontrada');
         }
 
         $hotel = DB::table('hoteles')->where('hotelID', $habitacion->hotelID)->first();
         if (!$hotel) {
-            return response()->json(['error' => 'Hotel no encontrado'], 404);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['error' => 'Hotel no encontrado'], 404);
+            }
+            return back()->withError('Hotel no encontrado');
         }
 
         $cliente = DB::table('clientes')->where('clienteID', $reserva->clienteID)->first();
         if (!$cliente) {
-            return response()->json(['error' => 'Cliente no encontrado'], 404);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['error' => 'Cliente no encontrado'], 404);
+            }
+            return back()->withError('Cliente no encontrado');
         }
 
-        return view('registrarcheckin', compact('reserva', 'edadesNinos', 'hotel', 'cliente', 'habitacion'));
-    }
+        $parametros = compact('reserva', 'edadesNinos', 'hotel', 'cliente', 'habitacion');
 
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json($parametros);
+        }
+
+        return view('registrarcheckin', $parametros);
+    }
     public function registrarCheckin(Request $request, $reservaID)
     {
         $reserva = Reserva::find($reservaID);
         if (!$reserva) {
             Log::error('Reserva no encontrada', ['reservaID' => $reservaID]);
-            return response()->json(['message' => 'Reserva no encontrada'], 404);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['message' => 'Reserva no encontrada'], 404);
+            }
+            return back()->withError('Reserva no encontrada');
         }
 
         try {
@@ -166,17 +191,30 @@ class ListadoCheckinControlador extends Controller
 
             $fechaCheckinNueva = Carbon::parse($validatedData['fechaCheckin']);
 
-            // Comparar con la fecha de check-out actual, para actualizar solo si es necesario
+            // Comparar con la fecha de check-in actual, para actualizar solo si es necesario
             if ($reserva->fecha_checkin !== $fechaCheckinNueva->toDateString()) {
-                // Actualizar solo la fecha de check-out
+                // Actualizar solo la fecha de check-in
                 $reserva->fecha_checkin = $fechaCheckinNueva;
-                $reserva->fechainicio = $fechaCheckinNueva; // `fechafin` debe ser igual a `fecha_checkout`
+                $reserva->fechainicio = $fechaCheckinNueva; // `fechainicio` debe ser igual a `fecha_checkin`
                 $reserva->save();
             }
 
-            return response()->json(['message' => 'La fecha de checkout se ha actualizado correctamente.']);
+            // Recargar la reserva para obtener los datos actualizados
+            $reserva->refresh();
+
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'message' => 'La fecha de check-in se ha actualizado correctamente.',
+                    'reserva' => $reserva
+                ]);
+            }
+
+            return redirect()->route('listarReservas')->with('status', 'La fecha de check-in se ha actualizado correctamente.');
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error al actualizar la fecha de checkout', 'error' => $e->getMessage()], 500);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['message' => 'Error al actualizar la fecha de check-in', 'error' => $e->getMessage()], 500);
+            }
+            return back()->withError('Error al actualizar la fecha de check-in')->withInput();
         }
     }
 }

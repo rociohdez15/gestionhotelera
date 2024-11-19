@@ -160,6 +160,21 @@
                                 <i class="fa-solid fa-concierge-bell me-2"></i>Lista de servicios
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ route('listarHoteles') }}">
+                                <i class="fa-solid fa-hotel me-2"></i>Gestionar Hoteles
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ route('gestionarHabitaciones') }}">
+                                <i class="fa-solid fa-door-open me-2"></i>Gestionar Habitaciones
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ route('altaUsuarios') }}">
+                                <i class="fa-solid fa-user-plus me-2"></i>Alta de Usuarios
+                            </a>
+                        </li>
                     </ul>
                 </div>
 
