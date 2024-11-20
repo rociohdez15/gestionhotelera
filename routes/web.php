@@ -86,6 +86,11 @@ Route::middleware([
     Route::delete('/delhotel/{hotelID}', [ListarHotelesControlador::class, 'delHotel'])->name('delHotel');
     Route::get('/mostrarhotel/{hotelID}', [ListarHotelesControlador::class, 'mostrarHotel'])->name('mostrarHotel');
     Route::put('/editarhotel/{hotelID}', [ListarHotelesControlador::class, 'editarHotel'])->name('editarHotel');
+    Route::get('/generar-pdf-listar-hoteles/{hotelID}', [ListarHotelesControlador::class, 'generarPDF'])->name('generar_pdf_listar_hoteles');
+    Route::get('/generar-pdf-listar-hoteles-total', [ListarHotelesControlador::class, 'generarPDFTotal'])->name('generar_pdf_listar_hoteles_total');
+    Route::get('/buscar-hoteles', [ListarHotelesControlador::class, 'buscarHoteles'])->name('buscarHoteles');
+    Route::get('/mostrar-hoteles', [ListarHotelesControlador::class, 'mostrarHoteles'])->name('mostrarHoteles');
+    Route::post('/anadir-hoteles', [ListarHotelesControlador::class, 'anadirHotel'])->name('anadirHotel');
     Route::get('/gestionarHabitaciones', [ListarServiciosControlador::class, 'gestionarHabitaciones'])->name('gestionarHabitaciones');
     Route::get('/altaUsuarios', [ListarServiciosControlador::class, 'altaUsuarios'])->name('altaUsuarios');
 });

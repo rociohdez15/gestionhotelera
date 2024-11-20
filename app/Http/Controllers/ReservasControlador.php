@@ -30,7 +30,7 @@ public function mostrarMisReservas(Request $request, $clienteID  = null)
             'reservas.*', // Selecciona todas las columnas de la tabla 'reservas'
             'hoteles.nombre as hotel_nombre', //Selecciona el nombre del hotel
             'imagenes_hoteles.imagen as hotel_imagen', //Selecciona la imagen del hotel
-            DB::raw('GROUP_CONCAT(servicios.nombre, " -> ", servicios.horario SEPARATOR ", ") as servicio_detalles'), //Concatenar el nombre del servicio con el horario
+            DB::raw('GROUP_CONCAT(servicios.nombre, " -> ", DATE_FORMAT(servicios.horario, "%Y-%m-%d %H:%i") SEPARATOR ", ") as servicio_detalles'), //Concatenar el nombre del servicio con el horario
             'users.name as cliente_nombre' //Selecciona el nombre del cliente que ha hecho la reserva
         )
         ->where('reservas.clienteID', $clienteID) // Filtra las reservas para que solo incluya las que pertenecen al cliente

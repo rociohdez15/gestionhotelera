@@ -52,3 +52,9 @@ Route::get('/anadir-servicio', [ListarServiciosControlador::class, 'anadirServic
 Route::post('/guardarservicio', [ListarServiciosControlador::class, 'guardarServicio'])->name('guardarServicio');
 Route::get('/gestionarhoteles', [ListarHotelesControlador::class, 'listarHoteles'])->name('listarHoteles');
 Route::delete('/delhotel/{hotelID}', [ListarHotelesControlador::class, 'delHotel'])->name('delHotel');
+Route::get('/gestionarhoteles', [ListarHotelesControlador::class, 'listarHoteles'])->name('listarHoteles');
+Route::delete('/delhotel/{hotelID}', [ListarHotelesControlador::class, 'delHotel'])->name('delHotel');
+Route::get('/mostrarhotel/{hotelID}', [ListarHotelesControlador::class, 'mostrarHotel'])->name('mostrarHotel');
+Route::put('/editarhotel/{hotelID}', [ListarHotelesControlador::class, 'editarHotel'])->name('editarHotel');
+Route::get('/mostrar-hoteles', [ListarHotelesControlador::class, 'mostrarHoteles'])->name('mostrarHoteles');
+Route::post('/anadir-hoteles', [ListarHotelesControlador::class, 'anadirHotel'])->name('anadirHotel');

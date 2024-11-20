@@ -4,22 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlojaDirecto | Listado de Hoteles</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>AlojaDirecto | Añadir Hotel</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- CSS -->
-    <link rel="stylesheet" href="../../css/listar-reservas/styles.css">
+    <link rel="stylesheet" href="{{ asset('css/listar-reservas/styles.css') }}">
     <link rel="stylesheet" href="../../css/inicio/style.css">
     <!-- Favicon -->
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic%7CPoppins:300,400,500,700">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
     <link rel="icon" href="../../images/inicio/favicon.ico" type="image/x-icon">
-    <!-- Agrega Vue.js -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js"></script>
-    <!-- Agrega Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/vue@3.5.12/dist/vue.global.js"></script>
+    @vite('resources/css/app.css')
 </head>
 
 <body>
@@ -126,159 +125,14 @@
             </nav>
         </div>
     </header>
+
     <main>
-        <br>
-        <div class="container">
-            <!-- Contenido Principal -->
-            @if ($errors->any())
-            <div class="alert alert-danger ml-2" style="max-width: 400px; margin: 0 auto;">
-                @foreach ($errors->all() as $error)
-                {{ $error }}
-                @endforeach
-            </div>
-            <br>
-            @endif
-
-            @if(session('status'))
-            <div class="alert alert-success" style="max-width: 400px; margin: 0 auto;">
-                {{ session('status') }}
-            </div>
-            @endif
-
-            <!-- Mostrar mensaje de éxito si está presente en la URL -->
-            @if(request()->has('success'))
-            <div class="alert alert-success" id="success-message" style="text-align:center; max-width: 400px; margin: 0 auto;">
-                {{ request()->get('success') }}
-            </div>
-            @endif
-
-            <!-- Mostrar mensaje de error si está presente en la URL -->
-            @if(request()->has('error'))
-            <div class="alert alert-danger" id="error-message" style="text-align:center; max-width: 400px; margin: 0 auto;">
-                {{ request()->get('error') }}
-            </div>
-            @endif
-
-            <br>
-            <h3 class="text-center">LISTADO DE HOTELES</h3>
-
-            <br>
-            <!-- Buscador -->
-            <form action="{{ route('buscarHoteles') }}" method="GET" class="mb-3">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="query" placeholder="Buscar por nombre, ciudad o teléfono" aria-label="Buscar hoteles">
-                    <button class="btn btn-primary" type="submit">Buscar</button>
-                </div>
-            </form>
-
-            <!-- Muestra la tabla de hoteles -->
-            <div class="table-responsive mx-auto">
-                <table class="table table-bordered table-striped text-center">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Dirección</th>
-                            <th>Ciudad</th>
-                            <th>Teléfono</th>
-                            <th>Descripción</th>
-                            <th>Operaciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($hoteles as $hotel)
-                        <tr>
-                            <td>{{ $hotel->hotelID }}</td>
-                            <td>{{ $hotel->nombre }}</td>
-                            <td>{{ $hotel->direccion }}</td>
-                            <td>{{ $hotel->ciudad }}</td>
-                            <td>{{ $hotel->telefono }}</td>
-                            <td>{{ Str::limit($hotel->descripcion, 100, ' [...]') }}</td>
-                            <td class="d-flex justify-content-center gap-2">
-                                <!-- Botón para abrir el modal de eliminacion-->
-                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ $hotel->hotelID }}">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-
-                                <!-- Modal de confirmación de eliminación-->
-                                <div class="modal fade" id="confirmDeleteModal{{ $hotel->hotelID }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel{{ $hotel->hotelID }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="confirmDeleteModalLabel{{ $hotel->hotelID }}">Confirmar eliminación</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Estás seguro de que deseas eliminar este hotel?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form action="{{ route('delHotel', $hotel->hotelID) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
-                                                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Botón para abrir el modal de editar-->
-                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#confirmEditModal{{ $hotel->hotelID }}">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </button>
-                                <!-- Modal de confirmación de editar reserva-->
-                                <div class="modal fade" id="confirmEditModal{{ $hotel->hotelID }}" tabindex="-1" aria-labelledby="confirmEditModalLabel{{ $hotel->hotelID }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="confirmEditarModalLabel{{ $hotel->hotelID }}">Confirmar editar</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Estás seguro de que deseas editar este hotel?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form action="{{ route('mostrarHotel', $hotel->hotelID) }}" method="POST">
-                                                    @csrf
-                                                    @method('GET')
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
-                                                    <button type="submit" class="btn btn-danger">Editar</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <a href="{{ route('generar_pdf_listar_hoteles', $hotel->hotelID) }}" class="btn btn-success btn-sm">
-                                    <i class="fa-solid fa-file-pdf"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            <br>
-            <div class="text-center">
-                <a href="{{ route('mostrarHoteles') }}" class="btn btn-success btn-sm">
-                    Añadir hotel
-                </a>
-                <a href="{{ route('generar_pdf_listar_hoteles_total') }}" class="btn btn-primary btn-sm">
-                    Generar listado hoteles
-                </a>
-            </div>
-
-            <br>
-            <!-- Paginación -->
-            <div class="container text-center" style="color: black;">
-                <p>
-                    Página {{ $pagina_actual }} de {{ $total_paginas }} | Mostrar {{ $registros_por_pagina }} registros por página | Ir a página:
-                    @for ($i = 1; $i <= $total_paginas; $i++)
-                        <a href="{{ route('listarHoteles', array_merge(request()->except('pagina'), ['pagina' => $i])) }}">{{ $i }} </a>
-                        @endfor
-                </p>
-            </div>
+        <div id="app7">
+            <añadir-hotel></añadir-hotel>
         </div>
+        @vite('resources/js/app.js')
     </main>
+
     <footer class="page-footer text-left text-sm-left">
         <div class="shell-wide">
             <div class="page-footer-minimal">
@@ -349,41 +203,7 @@
         </div>
     </footer>
 </body>
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Incluye el archivo de Vue -->
-<script src="{{ asset('../../vue/panelrecepcionistas/panel1.js') }}"></script>
 <script src="{{ asset('js/inicio/core.min.js') }}"></script>
 <script src="{{ asset('js/inicio/script.js') }}"></script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const successMessage = document.getElementById('success-message');
-        if (successMessage) {
-            // Eliminar el parámetro de consulta 'success' de la URL
-            const url = new URL(window.location);
-            url.searchParams.delete('success');
-            window.history.replaceState({}, document.title, url);
-
-            // Ocultar el mensaje después de 5 segundos
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-            }, 2500);
-        }
-
-        const errorMessage = document.getElementById('error-message');
-        if (errorMessage) {
-            // Eliminar el parámetro de consulta 'error' de la URL
-            const url = new URL(window.location);
-            url.searchParams.delete('error');
-            window.history.replaceState({}, document.title, url);
-
-            // Ocultar el mensaje después de 5 segundos
-            setTimeout(() => {
-                errorMessage.style.display = 'none';
-            }, 2500);
-        }
-    });
-</script>
 
 </html>
