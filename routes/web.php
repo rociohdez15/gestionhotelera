@@ -17,6 +17,7 @@ use App\Http\Controllers\ListadoCheckinControlador;
 use App\Http\Controllers\HabitacionesControlador;
 use App\Http\Controllers\ListarServiciosControlador;
 use App\Http\Controllers\ListarHotelesControlador;
+use App\Http\Controllers\ListarHabitacionesControlador;
 
 Route::get('/', function () {
     return view('inicio');
@@ -88,9 +89,17 @@ Route::middleware([
     Route::put('/editarhotel/{hotelID}', [ListarHotelesControlador::class, 'editarHotel'])->name('editarHotel');
     Route::get('/generar-pdf-listar-hoteles/{hotelID}', [ListarHotelesControlador::class, 'generarPDF'])->name('generar_pdf_listar_hoteles');
     Route::get('/generar-pdf-listar-hoteles-total', [ListarHotelesControlador::class, 'generarPDFTotal'])->name('generar_pdf_listar_hoteles_total');
-    Route::get('/buscar-hoteles', [ListarHotelesControlador::class, 'buscarHoteles'])->name('buscarHoteles');
+    Route::get('/buscarhoteles', [ListarHotelesControlador::class, 'buscadorHoteles'])->name('buscadorHoteles');
     Route::get('/mostrar-hoteles', [ListarHotelesControlador::class, 'mostrarHoteles'])->name('mostrarHoteles');
     Route::post('/anadir-hoteles', [ListarHotelesControlador::class, 'anadirHotel'])->name('anadirHotel');
-    Route::get('/gestionarHabitaciones', [ListarServiciosControlador::class, 'gestionarHabitaciones'])->name('gestionarHabitaciones');
+    Route::get('/gestionarhabitaciones', [ListarHabitacionesControlador::class, 'listarHabitaciones'])->name('listarHabitaciones');
+    Route::get('/buscar-habitaciones', [ListarHabitacionesControlador::class, 'buscarHabitaciones'])->name('buscarHabitaciones');
+    Route::delete('/delhabitacion/{habitacionID}', [ListarHabitacionesControlador::class, 'delHabitacion'])->name('delHabitacion');
+    Route::get('/mostrar-habitaciones', [ListarHabitacionesControlador::class, 'mostrarHabitacion'])->name('mostrarHabitaciones');
+    Route::post('/anadir-habitaciones', [ListarHabitacionesControlador::class, 'anadirHabitacion'])->name('anadirHabitacion');
+    Route::get('/generar-pdf-listar-habitaciones/{habitacionlID}', [ListarHabitacionesControlador::class, 'generarPDF'])->name('generar_pdf_listar_habitaciones');
+    Route::get('/generar-pdf-listar-habitaciones-total', [ListarHabitacionesControlador::class, 'generarPDFTotal'])->name('generar_pdf_listar_habitaciones_total');
+    Route::get('/mostrarhabitacion/{habitacionID}', [ListarHabitacionesControlador::class, 'mostrarHabitaciones'])->name('mostrarHabitacion');
+    Route::put('/editarhabitacion/{habitacionID}', [ListarHabitacionesControlador::class, 'editarHabitacion'])->name('editarHabitacion');
     Route::get('/altaUsuarios', [ListarServiciosControlador::class, 'altaUsuarios'])->name('altaUsuarios');
 });

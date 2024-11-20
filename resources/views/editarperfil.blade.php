@@ -50,10 +50,15 @@
                                     <a class="text-italic" href="{{ route('login') }}">Iniciar Sesión</a>
                                     @endguest
                                     @auth
+                                    @php
+                                    $rolUsuario = Auth::user()->rolID;
+                                    @endphp
+                                    @if ($rolUsuario !== 2)
                                     <a href="{{ route('informacionusuario') }}" class="btn btn-secondary user-name icono-user d-flex align-items-center" id="dropdownMenuButton" role="button" aria-expanded="false">
                                         {{ Auth::user()->name }} {{ Auth::user()->apellido }}
                                         <i class="fa-solid fa-user ms-2"></i>
                                     </a>
+                                    @endif
                                     <a href="{{ route('logout') }}" class="btn btn-secondary icono-user" role="button" aria-expanded="false">
                                         <i class="fa-solid fa-right-from-bracket"></i>
                                     </a>
@@ -124,7 +129,7 @@
             <form action="{{ route('editarPerfil', ['clienteID' => $cliente->clienteID, 'id' => $usuario->id]) }}" method="post" class="needs-validation hotel-booking-form" novalidate style="max-width: 600px; margin: 0 auto;">
 
                 @csrf
-                
+
                 <h3 class="text-center">Editar Perfil</h3>
                 <br>
                 <!-- clienteID (campo oculto) -->

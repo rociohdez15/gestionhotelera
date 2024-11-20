@@ -56,10 +56,15 @@
                                     <a class="text-italic" href="{{ route('login') }}">Iniciar Sesión</a>
                                     @endguest
                                     @auth
+                                    @php
+                                    $rolUsuario = Auth::user()->rolID;
+                                    @endphp
+                                    @if ($rolUsuario !== 2)
                                     <a href="{{ route('informacionusuario') }}" class="btn btn-secondary user-name icono-user d-flex align-items-center" id="dropdownMenuButton" role="button" aria-expanded="false">
                                         {{ Auth::user()->name }} {{ Auth::user()->apellido }}
                                         <i class="fa-solid fa-user ms-2"></i>
                                     </a>
+                                    @endif
                                     <a href="{{ route('logout') }}" class="btn btn-secondary icono-user" role="button" aria-expanded="false">
                                         <i class="fa-solid fa-right-from-bracket"></i>
                                     </a>
@@ -164,7 +169,7 @@
 
             <br>
             <!-- Buscador -->
-            <form action="{{ route('buscarHoteles') }}" method="GET" class="mb-3">
+            <form action="{{ route('buscadorHoteles') }}" method="GET" class="mb-3">
                 <div class="input-group">
                     <input type="text" class="form-control" name="query" placeholder="Buscar por nombre, ciudad o teléfono" aria-label="Buscar hoteles">
                     <button class="btn btn-primary" type="submit">Buscar</button>

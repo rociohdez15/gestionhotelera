@@ -23,7 +23,7 @@
 
 <body>
     <!-- Page Header-->
-   <header class="page-header" style="padding-bottom: 24px">
+    <header class="page-header" style="padding-bottom: 24px">
         <!-- RD Navbar-->
         <div class="rd-navbar-wrap">
             <nav class="rd-navbar rd-navbar-default-with-top-panel" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fullwidth" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-fullwidth" data-lg-device-layout="rd-navbar-fullwidth" data-md-stick-up-offset="90px" data-lg-stick-up-offset="150px" data-stick-up="true" data-sm-stick-up="true" data-md-stick-up="true" data-lg-stick-up="true">
@@ -55,10 +55,15 @@
                                     <a class="text-italic" href="{{ route('login') }}">Iniciar Sesión</a>
                                     @endguest
                                     @auth
+                                    @php
+                                    $rolUsuario = Auth::user()->rolID;
+                                    @endphp
+                                    @if ($rolUsuario !== 2)
                                     <a href="{{ route('informacionusuario') }}" class="btn btn-secondary user-name icono-user d-flex align-items-center" id="dropdownMenuButton" role="button" aria-expanded="false">
                                         {{ Auth::user()->name }} {{ Auth::user()->apellido }}
                                         <i class="fa-solid fa-user ms-2"></i>
                                     </a>
+                                    @endif
                                     <a href="{{ route('logout') }}" class="btn btn-secondary icono-user" role="button" aria-expanded="false">
                                         <i class="fa-solid fa-right-from-bracket"></i>
                                     </a>
@@ -127,13 +132,13 @@
     </header>
 
     <main>
-    <div id="app2" 
-             data-reserva="{{ json_encode($reserva) }}" 
-             data-edades-ninos="{{ json_encode($edadesNinos) }}" 
-             data-hotel="{{ json_encode($hotel) }}"
-             data-cliente="{{ json_encode($cliente) }}"
-             data-habitacion="{{ json_encode($habitacion) }}"
-             data-reserva-id="{{ $reserva->reservaID }}">
+        <div id="app2"
+            data-reserva="{{ json_encode($reserva) }}"
+            data-edades-ninos="{{ json_encode($edadesNinos) }}"
+            data-hotel="{{ json_encode($hotel) }}"
+            data-cliente="{{ json_encode($cliente) }}"
+            data-habitacion="{{ json_encode($habitacion) }}"
+            data-reserva-id="{{ $reserva->reservaID }}">
         </div>
         @vite('resources/js/app.js')
     </main>
@@ -210,4 +215,5 @@
 </body>
 <script src="{{ asset('js/inicio/core.min.js') }}"></script>
 <script src="{{ asset('js/inicio/script.js') }}"></script>
+
 </html>

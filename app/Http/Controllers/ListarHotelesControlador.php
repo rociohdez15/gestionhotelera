@@ -302,7 +302,7 @@ class ListarHotelesControlador extends Controller
         $pdf->Output($filename, 'D');
     }
 
-    public function buscarHoteles(Request $request)
+    public function buscadorHoteles(Request $request)
     {
         $query = $request->input('query');
 

@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlojaDirecto | Panel de Recepcionista</title>
+    <title>AlojaDirecto | Listado de Habitaciones</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- CSS -->
-    <link rel="stylesheet" href="../../css/editar-perfil/styles.css">
+    <link rel="stylesheet" href="../../css/listar-reservas/styles.css">
     <link rel="stylesheet" href="../../css/inicio/style.css">
     <!-- Favicon -->
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic%7CPoppins:300,400,500,700">
@@ -131,104 +131,157 @@
             </nav>
         </div>
     </header>
+    <main>
+        <br>
+        <div class="container">
+            <!-- Contenido Principal -->
+            @if ($errors->any())
+            <div class="alert alert-danger ml-2" style="max-width: 400px; margin: 0 auto;">
+                @foreach ($errors->all() as $error)
+                {{ $error }}
+                @endforeach
+            </div>
+            <br>
+            @endif
 
-    <main id="app">
-        <div class="container-fluid">
-            <div class="row">
-                <!-- Menú Vertical Izquierdo -->
-                <div class="col-md-3 col-lg-2 d-flex flex-column align-items-start border-end menu-opciones" style="height: 100vh; overflow-y: auto;">
-                    <br>
-                    <h4 class="mt-4 txt-opciones text-center w-100">PANEL DE OPCIONES</h4>
-                    <ul class="nav flex-column w-100 txt-listado">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('listarReservas') }}">
-                                <i class="fa-solid fa-list me-2"></i>Lista de reservas
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('listadoCheckin') }}">
-                                <i class="fa-solid fa-check me-2"></i>Realizar Check-In
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('listadoCheckout') }}">
-                                <i class="fa-solid fa-check-double me-2"></i>Realizar Check-Out
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('dispHabitaciones') }}">
-                                <i class="fa-solid fa-chart-bar me-2"></i>Estadísticas
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('listarServicios') }}">
-                                <i class="fa-solid fa-concierge-bell me-2"></i>Lista de servicios
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('listarHoteles') }}">
-                                <i class="fa-solid fa-hotel me-2"></i>Gestionar Hoteles
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('listarHabitaciones') }}">
-                                <i class="fa-solid fa-door-open me-2"></i>Gestionar Habitaciones
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('altaUsuarios') }}">
-                                <i class="fa-solid fa-user-plus me-2"></i>Alta de Usuarios
-                            </a>
-                        </li>
-                    </ul>
+            @if(session('status'))
+            <div class="alert alert-success" style="max-width: 400px; margin: 0 auto;">
+                {{ session('status') }}
+            </div>
+            @endif
+
+            <!-- Mostrar mensaje de éxito si está presente en la URL -->
+            @if(request()->has('success'))
+            <div class="alert alert-success" id="success-message" style="text-align:center; max-width: 400px; margin: 0 auto;">
+                {{ request()->get('success') }}
+            </div>
+            @endif
+
+            <!-- Mostrar mensaje de error si está presente en la URL -->
+            @if(request()->has('error'))
+            <div class="alert alert-danger" id="error-message" style="text-align:center; max-width: 400px; margin: 0 auto;">
+                {{ request()->get('error') }}
+            </div>
+            @endif
+
+            <br>
+            <h3 class="text-center">LISTADO DE HABITACIONES</h3>
+
+            <br>
+            <!-- Buscador -->
+            <form action="{{ route('buscarHabitaciones') }}" method="GET" class="mb-3">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="query" placeholder="Buscar por número de habitación, tipo o precio" aria-label="Buscar habitaciones">
+                    <button class="btn btn-primary" type="submit">Buscar</button>
                 </div>
+            </form>
 
-                <!-- Contenido Principal -->
-                <div class="col-md-9 col-lg-10 grafica">
-                    <br>
-                    @if ($errors->any())
-                    <div class="alert alert-danger ml-2" style="max-width: 400px; margin: 0 auto;">
-                        @foreach ($errors->all() as $error)
-                        {{ $error }}
+            <!-- Muestra la tabla de habitaciones -->
+            <div class="table-responsive mx-auto">
+                <table class="table table-bordered table-striped text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nº de Habitación</th>
+                            <th>Nº Huéspedes por Habitación</th>
+                            <th>Precio</th>
+                            <th>ID Hotel</th>
+                            <th>Operaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($habitaciones as $habitacion)
+                        <tr>
+                            <td>{{ $habitacion->habitacionID }}</td>
+                            <td>{{ $habitacion->numhabitacion }}</td>
+                            <td>{{ $habitacion->tipohabitacion }}</td>
+                            <td>{{ $habitacion->precio }} €</td>
+                            <td>{{ $habitacion->hotelID }}</td>
+                            <td class="d-flex justify-content-center gap-2">
+                                <!-- Botón para abrir el modal de eliminacion-->
+                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ $habitacion->habitacionID }}">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+
+                                <!-- Modal de confirmación de eliminación-->
+                                <div class="modal fade" id="confirmDeleteModal{{ $habitacion->habitacionID }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel{{ $habitacion->habitacionID }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="confirmDeleteModalLabel{{ $habitacion->habitacionID }}">Confirmar eliminación</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Estás seguro de que deseas eliminar esta habitación?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form action="{{ route('delHabitacion', $habitacion->habitacionID) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
+                                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Botón para abrir el modal de editar-->
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#confirmEditModal{{ $habitacion->habitacionID }}">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <!-- Modal de confirmación de editar habitación-->
+                                <div class="modal fade" id="confirmEditModal{{ $habitacion->habitacionID }}" tabindex="-1" aria-labelledby="confirmEditModalLabel{{ $habitacion->habitacionID }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="confirmEditarModalLabel{{ $habitacion->habitacionID }}">Confirmar editar</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Estás seguro de que deseas editar esta habitación?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form action="{{ route('mostrarHabitacion', $habitacion->habitacionID) }}" method="POST">
+                                                    @csrf
+                                                    @method('GET')
+                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
+                                                    <button type="submit" class="btn btn-danger">Editar</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="{{ route('generar_pdf_listar_habitaciones', $habitacion->habitacionID) }}" class="btn btn-success btn-sm">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </a>
+                            </td>
+                        </tr>
                         @endforeach
-                    </div>
-                    <br>
-                    @endif
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <div class="text-center">
+                <a href="{{ route('mostrarHabitaciones') }}" class="btn btn-success btn-sm">
+                    Añadir habitación
+                </a>
+                <a href="{{ route('generar_pdf_listar_habitaciones_total') }}" class="btn btn-primary btn-sm">
+                    Generar listado habitaciones
+                </a>
+            </div>
 
-                    @if(session('status'))
-                    <div class="alert alert-success" style="max-width: 400px; margin: 0 auto;">
-                        {{ session('status') }}
-                    </div>
-                    @endif
-
-                    <br>
-                    <h3 class="text-center">PANEL DE ADMINISTRACIÓN</h3>
-
-                    <!-- Gráfica de reservas -->
-                    <div class="container my-4 d-flex justify-content-center">
-                        <div class="card" style="width: 100%; max-width: 900px;">
-                            <div class="card-header">
-                                <h5 class="mb-0 text-center">Dashboard de reservas</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="mesSelect">Selecciona un mes o por año (anual):</label>
-                                    <select id="mesSelect" class="form-select" v-model="mesSeleccionado" @change="manejarCambioMes">
-                                        <option value="-1">Anual</option>
-                                        <option v-for="(label, index) in labels" :value="index">@{{ label }}</option>
-                                    </select>
-                                </div>
-                                <div style="position: relative; height: 400px;">
-                                    <canvas id="graficaReservas"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <br>
+            <!-- Paginación -->
+            <div class="container text-center" style="color: black;">
+                <p>
+                    Página {{ $pagina_actual }} de {{ $total_paginas }} | Mostrar {{ $registros_por_pagina }} registros por página | Ir a página:
+                    @for ($i = 1; $i <= $total_paginas; $i++)
+                        <a href="{{ route('listarHabitaciones', array_merge(request()->except('pagina'), ['pagina' => $i])) }}">{{ $i }} </a>
+                        @endfor
+                </p>
             </div>
         </div>
     </main>
-
     <footer class="page-footer text-left text-sm-left">
         <div class="shell-wide">
             <div class="page-footer-minimal">
@@ -298,16 +351,41 @@
             </div>
         </div>
     </footer>
-
-    <script>
-        window.chartData = <?php echo json_encode($data); ?>;
-    </script>
 </body>
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Incluye el archivo de Vue -->
 <script src="{{ asset('../../vue/panelrecepcionistas/panel1.js') }}"></script>
 <script src="{{ asset('js/inicio/core.min.js') }}"></script>
 <script src="{{ asset('js/inicio/script.js') }}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const successMessage = document.getElementById('success-message');
+        if (successMessage) {
+            // Eliminar el parámetro de consulta 'success' de la URL
+            const url = new URL(window.location);
+            url.searchParams.delete('success');
+            window.history.replaceState({}, document.title, url);
+
+            // Ocultar el mensaje después de 5 segundos
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 2500);
+        }
+
+        const errorMessage = document.getElementById('error-message');
+        if (errorMessage) {
+            // Eliminar el parámetro de consulta 'error' de la URL
+            const url = new URL(window.location);
+            url.searchParams.delete('error');
+            window.history.replaceState({}, document.title, url);
+
+            // Ocultar el mensaje después de 5 segundos
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 2500);
+        }
+    });
+</script>
 
 </html>
