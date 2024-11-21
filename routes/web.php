@@ -102,4 +102,5 @@ Route::middleware([
     Route::get('/mostrarhabitacion/{habitacionID}', [ListarHabitacionesControlador::class, 'mostrarHabitaciones'])->name('mostrarHabitacion');
     Route::put('/editarhabitacion/{habitacionID}', [ListarHabitacionesControlador::class, 'editarHabitacion'])->name('editarHabitacion');
     Route::get('/altaUsuarios', [ListarServiciosControlador::class, 'altaUsuarios'])->name('altaUsuarios');
+    Route::get('/actualizar-reservas', [ListarReservasControlador::class, 'actualizarReservas'])->name('actualizarReservas');
 });

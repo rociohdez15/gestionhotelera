@@ -168,13 +168,6 @@
             <h3 class="text-center">LISTADO DE HOTELES</h3>
 
             <br>
-            <!-- Buscador -->
-            <form action="{{ route('buscadorHoteles') }}" method="GET" class="mb-3">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="query" placeholder="Buscar por nombre, ciudad o teléfono" aria-label="Buscar hoteles">
-                    <button class="btn btn-primary" type="submit">Buscar</button>
-                </div>
-            </form>
 
             <!-- Muestra la tabla de hoteles -->
             <div class="table-responsive mx-auto">
@@ -191,75 +184,131 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($hoteles as $hotel)
-                        <tr>
-                            <td>{{ $hotel->hotelID }}</td>
-                            <td>{{ $hotel->nombre }}</td>
-                            <td>{{ $hotel->direccion }}</td>
-                            <td>{{ $hotel->ciudad }}</td>
-                            <td>{{ $hotel->telefono }}</td>
-                            <td>{{ Str::limit($hotel->descripcion, 100, ' [...]') }}</td>
-                            <td class="d-flex justify-content-center gap-2">
-                                <!-- Botón para abrir el modal de eliminacion-->
-                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ $hotel->hotelID }}">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-
-                                <!-- Modal de confirmación de eliminación-->
-                                <div class="modal fade" id="confirmDeleteModal{{ $hotel->hotelID }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel{{ $hotel->hotelID }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="confirmDeleteModalLabel{{ $hotel->hotelID }}">Confirmar eliminación</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Estás seguro de que deseas eliminar este hotel?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form action="{{ route('delHotel', $hotel->hotelID) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
-                                                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Botón para abrir el modal de editar-->
-                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#confirmEditModal{{ $hotel->hotelID }}">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </button>
-                                <!-- Modal de confirmación de editar reserva-->
-                                <div class="modal fade" id="confirmEditModal{{ $hotel->hotelID }}" tabindex="-1" aria-labelledby="confirmEditModalLabel{{ $hotel->hotelID }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="confirmEditarModalLabel{{ $hotel->hotelID }}">Confirmar editar</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Estás seguro de que deseas editar este hotel?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form action="{{ route('mostrarHotel', $hotel->hotelID) }}" method="POST">
-                                                    @csrf
-                                                    @method('GET')
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
-                                                    <button type="submit" class="btn btn-danger">Editar</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <a href="{{ route('generar_pdf_listar_hoteles', $hotel->hotelID) }}" class="btn btn-success btn-sm">
-                                    <i class="fa-solid fa-file-pdf"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        @endforeach
+                    
                     </tbody>
+
+                    <script>
+    $(document).ready(function() {
+        var currentPage = 1;
+        var currentQuery = '';
+
+        function actualizarTabla(page = 1, query = '') {
+            $.ajax({
+                url: '{{ route("buscarHoteles") }}',
+                method: 'GET',
+                data: {
+                    page: page,
+                    query: query
+                },
+                success: function(response) {
+                    currentPage = page;
+                    currentQuery = query;
+
+                    var tabla = $('#tabla-hoteles tbody');
+                    tabla.empty();
+                    $.each(response.data, function(index, hotel) {
+                        var pdfUrl = '{{ route("generar_pdf_listar_hoteles", ":hotelID") }}';
+                        pdfUrl = pdfUrl.replace(':hotelID', hotel.hotelID);
+
+                        tabla.append(
+                            '<tr>' +
+                            '<td>' + hotel.hotelID + '</td>' +
+                            '<td>' + hotel.nombre + '</td>' +
+                            '<td>' + hotel.direccion + '</td>' +
+                            '<td>' + hotel.ciudad + '</td>' +
+                            '<td>' + hotel.telefono + '</td>' +
+                            '<td>' + hotel.descripcion + '</td>' +
+                            '<td class="d-flex justify-content-center gap-2">' +
+                            '<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal' + hotel.hotelID + '">' +
+                            '<i class="fa-solid fa-trash"></i>' +
+                            '</button>' +
+                            '<div class="modal fade" id="confirmDeleteModal' + hotel.hotelID + '" tabindex="-1" aria-labelledby="confirmDeleteModalLabel' + hotel.hotelID + '" aria-hidden="true">' +
+                            '<div class="modal-dialog">' +
+                            '<div class="modal-content">' +
+                            '<div class="modal-header">' +
+                            '<h5 class="modal-title" id="confirmDeleteModalLabel' + hotel.hotelID + '">Confirmar eliminación</h5>' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                            '</div>' +
+                            '<div class="modal-body">¿Estás seguro de que deseas eliminar este hotel?</div>' +
+                            '<div class="modal-footer">' +
+                            '<form action="{{ route("delHotel", "") }}/' + hotel.hotelID + '" method="POST">' +
+                            '@csrf' +
+                            '@method("DELETE")' +
+                            '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
+                            '<button type="submit" class="btn btn-danger">Eliminar</button>' +
+                            '</form>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#confirmEditModal' + hotel.hotelID + '">' +
+                            '<i class="fa-solid fa-pen-to-square"></i>' +
+                            '</button>' +
+                            '<div class="modal fade" id="confirmEditModal' + hotel.hotelID + '" tabindex="-1" aria-labelledby="confirmEditModalLabel' + hotel.hotelID + '" aria-hidden="true">' +
+                            '<div class="modal-dialog">' +
+                            '<div class="modal-content">' +
+                            '<div class="modal-header">' +
+                            '<h5 class="modal-title" id="confirmEditModalLabel' + hotel.hotelID + '">Confirmar editar</h5>' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                            '</div>' +
+                            '<div class="modal-body">¿Estás seguro de que deseas editar este hotel?</div>' +
+                            '<div class="modal-footer">' +
+                            '<form action="{{ route("mostrarHotel", "") }}/' + hotel.hotelID + '" method="POST">' +
+                            '@csrf' +
+                            '@method("GET")' +
+                            '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
+                            '<button type="submit" class="btn btn-danger">Editar</button>' +
+                            '</form>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<a href="' + pdfUrl + '" class="btn btn-success btn-sm">' +
+                            '<i class="fa-solid fa-file-pdf"></i>' +
+                            '</a>' +
+                            '</td>' +
+                            '</tr>'
+                        );
+                    });
+
+                    // Construir enlaces de paginación
+                    var enlacesPaginacion = $('#paginacion');
+                    enlacesPaginacion.empty();
+                    enlacesPaginacion.append(
+                        '<span>Página ' + response.current_page + ' de ' + response.last_page + ' | Mostrar ' + response.per_page + ' registros por página | Ir a página: </span>'
+                    );
+                    for (var i = 1; i <= response.last_page; i++) {
+                        enlacesPaginacion.append(
+                            '<a href="#" class="page-link" data-page="' + i + '" style="color: black; margin: 0 5px; display: inline-block;">' + i + '</a>'
+                        );
+                    }
+
+                    // Añadir evento click a los enlaces de paginación
+                    $('.page-link').click(function(e) {
+                        e.preventDefault();
+                        var page = $(this).data('page');
+                        actualizarTabla(page, currentQuery);
+                    });
+                }
+            });
+        }
+
+        // Llama a la función para actualizar la tabla inicialmente
+        actualizarTabla();
+
+        // Llama a la función para actualizar la tabla cada 5 segundos
+        setInterval(function() {
+            actualizarTabla(currentPage, currentQuery);
+        }, 5000);
+
+        // Manejar el evento de envío del formulario de búsqueda
+        $('form').submit(function(e) {
+            e.preventDefault();
+            var query = $('input[name="query"]').val();
+            actualizarTabla(1, query);
+        });
+    });
+</script>
                 </table>
             </div>
             <br>

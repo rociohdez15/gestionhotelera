@@ -20,6 +20,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js"></script>
     <!-- Agrega Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -56,15 +57,10 @@
                                     <a class="text-italic" href="{{ route('login') }}">Iniciar Sesión</a>
                                     @endguest
                                     @auth
-                                    @php
-                                    $rolUsuario = Auth::user()->rolID;
-                                    @endphp
-                                    @if ($rolUsuario !== 2)
                                     <a href="{{ route('informacionusuario') }}" class="btn btn-secondary user-name icono-user d-flex align-items-center" id="dropdownMenuButton" role="button" aria-expanded="false">
                                         {{ Auth::user()->name }} {{ Auth::user()->apellido }}
                                         <i class="fa-solid fa-user ms-2"></i>
                                     </a>
-                                    @endif
                                     <a href="{{ route('logout') }}" class="btn btn-secondary icono-user" role="button" aria-expanded="false">
                                         <i class="fa-solid fa-right-from-bracket"></i>
                                     </a>
@@ -178,7 +174,7 @@
 
             <!-- Muestra la tabla de reservas -->
             <div class="table-responsive mx-auto">
-                <table class="table table-bordered table-striped text-center">
+                <table class="table table-bordered table-striped text-center" id="tabla-reservas">
                     <thead class="table-dark">
                         <tr>
                             <th>ID</th>
@@ -194,79 +190,139 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($reservas as $reserva)
-                        <tr>
-                            <td>{{ $reserva->reservaID }}</td>
-                            <td>{{ $reserva->nombre }}, {{ $reserva->apellidos }}</td>
-                            <td>{{ $reserva->hotel_nombre }}</td>
-                            <td>{{ $reserva->fechainicio }}</td>
-                            <td>{{ $reserva->fechafin }}</td>
-                            <td>{{ $reserva->numhabitacion }}</td>
-                            <td>{{ $reserva->preciototal }}€</td>
-                            <td>{{ $reserva->num_adultos }}</td>
-                            <td>{{ $reserva->num_ninos }}</td>
-                            <td class="d-flex justify-content-center gap-2">
-                                <!-- Botón para abrir el modal de eliminacion-->
-                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ $reserva->reservaID }}">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
 
-                                <!-- Modal de confirmación de eliminación-->
-                                <div class="modal fade" id="confirmDeleteModal{{ $reserva->reservaID }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel{{ $reserva->reservaID }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="confirmDeleteModalLabel{{ $reserva->reservaID }}">Confirmar eliminación</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Estás seguro de que deseas eliminar esta reserva?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form action="{{ route('delReserva', $reserva->reservaID) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
-                                                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Botón para abrir el modal de editar-->
-                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#confirmEditModal{{ $reserva->reservaID }}">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </button>
-                                <!-- Modal de confirmación de editar reserva-->
-                                <div class="modal fade" id="confirmEditModal{{ $reserva->reservaID }}" tabindex="-1" aria-labelledby="confirmEditModalLabel{{ $reserva->reservaID }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="confirmEditarModalLabel{{ $reserva->reservaID }}">Confirmar editar</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Estás seguro de que deseas editar esta reserva?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form action="{{ route('mostrarReserva', $reserva->reservaID) }}" method="POST">
-                                                    @csrf
-                                                    @method('GET')
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
-                                                    <button type="submit" class="btn btn-danger">Editar</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <a href="{{ route('generar_pdf_listar_reservas', ['reservaID' => $reserva->reservaID]) }}" class="btn btn-success btn-sm">
-                                    <i class="fa-solid fa-file-pdf"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        @endforeach
                     </tbody>
+
                 </table>
+                <div id="paginacion" class="text-center" style="color: black; margin-top: 20px;">
+                    <!-- Los enlaces de paginación se agregarán aquí dinámicamente -->
+                </div>
+
+                <script>
+    $(document).ready(function() {
+        var currentPage = 1;
+        var currentQuery = '';
+
+        function actualizarTabla(page = 1, query = '') {
+            $.ajax({
+                url: '{{ route("buscarReservas") }}',
+                method: 'GET',
+                data: {
+                    page: page,
+                    query: query
+                },
+                success: function(response) {
+                    currentPage = page;
+                    currentQuery = query;
+
+                    var tabla = $('#tabla-reservas tbody');
+                    tabla.empty();
+                    $.each(response.data, function(index, reserva) {
+                        var pdfUrl = '{{ route("generar_pdf_listar_reservas", ":reservaID") }}';
+                        pdfUrl = pdfUrl.replace(':reservaID', reserva.reservaID);
+
+                        tabla.append(
+                            '<tr>' +
+                            '<td>' + reserva.reservaID + '</td>' +
+                            '<td>' + reserva.nombre + ', ' + reserva.apellidos + '</td>' +
+                            '<td>' + reserva.hotel_nombre + '</td>' +
+                            '<td>' + reserva.fechainicio + '</td>' +
+                            '<td>' + reserva.fechafin + '</td>' +
+                            '<td>' + reserva.numhabitacion + '</td>' +
+                            '<td>' + reserva.preciototal + '€</td>' +
+                            '<td>' + reserva.num_adultos + '</td>' +
+                            '<td>' + reserva.num_ninos + '</td>' +
+                            '<td class="d-flex justify-content-center gap-2">' +
+                            '<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal' + reserva.reservaID + '">' +
+                            '<i class="fa-solid fa-trash"></i>' +
+                            '</button>' +
+                            '<div class="modal fade" id="confirmDeleteModal' + reserva.reservaID + '" tabindex="-1" aria-labelledby="confirmDeleteModalLabel' + reserva.reservaID + '" aria-hidden="true">' +
+                            '<div class="modal-dialog">' +
+                            '<div class="modal-content">' +
+                            '<div class="modal-header">' +
+                            '<h5 class="modal-title" id="confirmDeleteModalLabel' + reserva.reservaID + '">Confirmar eliminación</h5>' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                            '</div>' +
+                            '<div class="modal-body">¿Estás seguro de que deseas eliminar esta reserva?</div>' +
+                            '<div class="modal-footer">' +
+                            '<form action="{{ route("delReserva", "") }}/' + reserva.reservaID + '" method="POST">' +
+                            '@csrf' +
+                            '@method("DELETE")' +
+                            '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
+                            '<button type="submit" class="btn btn-danger">Eliminar</button>' +
+                            '</form>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#confirmEditModal' + reserva.reservaID + '">' +
+                            '<i class="fa-solid fa-pen-to-square"></i>' +
+                            '</button>' +
+                            '<div class="modal fade" id="confirmEditModal' + reserva.reservaID + '" tabindex="-1" aria-labelledby="confirmEditModalLabel' + reserva.reservaID + '" aria-hidden="true">' +
+                            '<div class="modal-dialog">' +
+                            '<div class="modal-content">' +
+                            '<div class="modal-header">' +
+                            '<h5 class="modal-title" id="confirmEditModalLabel' + reserva.reservaID + '">Confirmar editar</h5>' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                            '</div>' +
+                            '<div class="modal-body">¿Estás seguro de que deseas editar esta reserva?</div>' +
+                            '<div class="modal-footer">' +
+                            '<form action="{{ route("mostrarReserva", "") }}/' + reserva.reservaID + '" method="POST">' +
+                            '@csrf' +
+                            '@method("GET")' +
+                            '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
+                            '<button type="submit" class="btn btn-danger">Editar</button>' +
+                            '</form>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<a href="' + pdfUrl + '" class="btn btn-success btn-sm">' +
+                            '<i class="fa-solid fa-file-pdf"></i>' +
+                            '</a>' +
+                            '</td>' +
+                            '</tr>'
+                        );
+                    });
+
+                    // Construir enlaces de paginación
+                    var enlacesPaginacion = $('#paginacion');
+                    enlacesPaginacion.empty();
+                    enlacesPaginacion.append(
+                        '<span>Página ' + response.current_page + ' de ' + response.last_page + ' | Mostrar ' + response.per_page + ' registros por página | Ir a página: </span>'
+                    );
+                    for (var i = 1; i <= response.last_page; i++) {
+                        enlacesPaginacion.append(
+                            '<a href="#" class="page-link" data-page="' + i + '" style="color: black; margin: 0 5px; display: inline-block;">' + i + '</a>'
+                        );
+                    }
+
+                    // Añadir evento click a los enlaces de paginación
+                    $('.page-link').click(function(e) {
+                        e.preventDefault();
+                        var page = $(this).data('page');
+                        actualizarTabla(page, currentQuery);
+                    });
+                }
+            });
+        }
+
+        // Llama a la función para actualizar la tabla inicialmente
+        actualizarTabla();
+
+        // Llama a la función para actualizar la tabla cada 5 segundos
+        setInterval(function() {
+            actualizarTabla(currentPage, currentQuery);
+        }, 5000);
+
+        // Manejar el evento de envío del formulario de búsqueda
+        $('form').submit(function(e) {
+            e.preventDefault();
+            var query = $('input[name="query"]').val();
+            actualizarTabla(1, query);
+        });
+    });
+</script>
             </div>
             <br>
             <div class="text-center">
@@ -275,15 +331,6 @@
                 </a>
             </div>
             <br>
-            <!-- Paginación -->
-            <div class="container text-center" style="color: black;">
-                <p>
-                    Página {{ $pagina_actual }} de {{ $total_paginas }} | Mostrar {{ $registros_por_pagina }} registros por página | Ir a página:
-                    @for ($i = 1; $i <= $total_paginas; $i++)
-                        <a href="{{ route('listarReservas', array_merge(request()->except('pagina'), ['pagina' => $i])) }}">{{ $i }} </a>
-                        @endfor
-                </p>
-            </div>
         </div>
     </main>
     <footer class="page-footer text-left text-sm-left">
