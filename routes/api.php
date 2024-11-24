@@ -61,3 +61,7 @@ Route::get('/mostrar-hoteles', [ListarHotelesControlador::class, 'mostrarHoteles
 Route::post('/anadir-hoteles', [ListarHotelesControlador::class, 'anadirHotel'])->name('anadirHotel');
 Route::get('/gestionarhabitaciones', [ListarHabitacionesControlador::class, 'listarHabitaciones'])->name('listarHabitaciones');
 Route::delete('/delhabitacion/{habitacionID}', [ListarHabitacionesControlador::class, 'delHabitacion'])->name('delHabitacion');
+Route::get('/mostrar-habitaciones', [ListarHabitacionesControlador::class, 'mostrarHabitaciones'])->name('mostrarHabitaciones');
+Route::post('/anadir-habitaciones', [ListarHabitacionesControlador::class, 'anadirHabitacion'])->name('anadirHabitacion');
+Route::get('/mostrarhabitacion/{habitacionID}', [ListarHabitacionesControlador::class, 'mostrarHabitacion'])->name('mostrarHabitacion');
+Route::put('/editarhabitacion/{habitacionID}', [ListarHabitacionesControlador::class, 'editarHabitacion'])->name('editarHabitacion');

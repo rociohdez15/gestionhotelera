@@ -47,6 +47,16 @@ class ListarHotelesControlador extends Controller
 
         return view('listarhoteles', $parametros);
     }
+
+    public function actualizarHoteles()
+    {
+        $hoteles = DB::table('hoteles')
+            ->select('hotelID', 'nombre', 'direccion', 'ciudad', 'telefono', 'descripcion')
+            ->paginate(5);
+
+        return response()->json($hoteles);
+    }
+
     public function delHotel($hotelID, Request $request)
     {
         // Buscar el hotel
@@ -177,14 +187,7 @@ class ListarHotelesControlador extends Controller
             $registros_por_pagina = 10; // Define la variable $registros_por_pagina
             $total_paginas = ceil($hoteles->count() / $registros_por_pagina); // Define la variable $total_paginas
 
-            // Redirigir a la vista con el mensaje de estado, la lista de hoteles, la página actual y el total de páginas
-            return view('listarhoteles')->with([
-                'status' => 'El hotel se ha editado correctamente.',
-                'hoteles' => $hoteles,
-                'pagina_actual' => $pagina_actual,
-                'total_paginas' => $total_paginas,
-                'registros_por_pagina' => $registros_por_pagina
-            ]);
+            return response()->json(['success' => 'El hotel se ha editado correctamente']);
         } catch (\Exception $e) {
             if ($request->wantsJson() || $request->is('api/*')) {
                 return response()->json(['message' => 'Error al editar el hotel', 'error' => $e->getMessage()], 500);
@@ -307,35 +310,25 @@ class ListarHotelesControlador extends Controller
         $query = $request->input('query');
 
         // Consulta para utilizar el buscador en el listado de hoteles
-        $consulta = Hotel::select('hoteles.*', DB::raw('COUNT(habitaciones.habitacionID) as num_habitaciones'))
-            ->join('habitaciones', 'hoteles.hotelID', '=', 'habitaciones.hotelID')
-            ->where('hoteles.hotelID', 'LIKE', "%$query%")
-            ->orWhere('hoteles.nombre', 'LIKE', "%$query%")
-            ->orWhere('hoteles.direccion', 'LIKE', "%$query%")
-            ->orWhere('hoteles.ciudad', 'LIKE', "%$query%")
-            ->orWhere('hoteles.telefono', 'LIKE', "%$query%")
-            ->orWhere('hoteles.descripcion', 'LIKE', "%$query%")
+        $consulta = Hotel::select('hoteles.*')
+            ->leftJoin('habitaciones', 'hoteles.hotelID', '=', 'habitaciones.hotelID')
+            ->where(function ($q) use ($query) {
+                $q->where('hoteles.hotelID', 'LIKE', "%$query%")
+                    ->orWhere('hoteles.nombre', 'LIKE', "%$query%")
+                    ->orWhere('hoteles.direccion', 'LIKE', "%$query%")
+                    ->orWhere('hoteles.ciudad', 'LIKE', "%$query%")
+                    ->orWhere('hoteles.telefono', 'LIKE', "%$query%")
+                    ->orWhere('hoteles.descripcion', 'LIKE', "%$query%");
+            })
             ->groupBy('hoteles.hotelID');
+            $hoteles = $consulta->orderBy('hoteles.hotelID', 'asc')->paginate(5);
 
-        $totalHoteles = $consulta->count();
 
-        $registros_por_pagina = 5;
-        $pagina_actual = $request->input('pagina', 1);
-        $total_paginas = ceil($totalHoteles / $registros_por_pagina);
+        if ($request->ajax()) {
+            return response()->json($hoteles);
+        }
 
-        if ($pagina_actual < 1) $pagina_actual = 1;
-        if ($pagina_actual > $total_paginas) $pagina_actual = $total_paginas;
-
-        $inicio = ($pagina_actual - 1) * $registros_por_pagina;
-
-        $hoteles = $consulta->skip($inicio)->take($registros_por_pagina)->get();
-
-        return view('listarhoteles', [
-            'hoteles' => $hoteles,
-            'total_paginas' => $total_paginas,
-            'pagina_actual' => $pagina_actual,
-            'registros_por_pagina' => $registros_por_pagina
-        ], compact('hoteles'));
+        return view('listarhoteles', compact('hoteles'));
     }
 
     public function mostrarHoteles(Request $request)
@@ -402,6 +395,9 @@ class ListarHotelesControlador extends Controller
             ]);
         }
 
-        return redirect()->route('listarHoteles')->with('success', 'Hotel añadido correctamente');
+        return response()->json([
+            'message' => 'Hotel añadido correctamente.',
+            'hotel' => $hotel
+        ]);
     }
 }

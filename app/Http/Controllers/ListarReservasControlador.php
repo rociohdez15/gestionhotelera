@@ -435,7 +435,7 @@ class ListarReservasControlador extends Controller
         $query = $request->input('query');
 
         // Consulta para utilizar el buscador en el listado de reservas
-        $reservas = Reserva::select('reservas.*', 'clientes.nombre', 'clientes.apellidos', 'habitaciones.numhabitacion', 'hoteles.nombre as hotel_nombre') // Selecciona todas las columnas de reservas
+        $consulta = Reserva::select('reservas.*', 'clientes.nombre', 'clientes.apellidos', 'habitaciones.numhabitacion', 'hoteles.nombre as hotel_nombre') // Selecciona todas las columnas de reservas
             ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID') // Une con la tabla de clientes
             ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID') // Une con la tabla de habitaciones
             ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID') // Une con la tabla de hoteles
@@ -444,8 +444,9 @@ class ListarReservasControlador extends Controller
             ->orWhere('clientes.apellidos', 'LIKE', "%$query%")
             ->orWhere('hoteles.nombre', 'LIKE', "%$query%")
             ->orWhere('reservas.num_adultos', 'LIKE', "%$query%")
-            ->orWhere('habitaciones.numhabitacion', 'LIKE', "%$query%")
-            ->paginate(5);
+            ->orWhere('habitaciones.numhabitacion', 'LIKE', "%$query%");
+
+            $reservas = $consulta->orderBy('reservas.reservaID', 'asc')->paginate(5);
 
             if ($request->ajax()) {
                 return response()->json($reservas);
