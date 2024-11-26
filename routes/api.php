@@ -14,7 +14,7 @@ use App\Http\Controllers\PanelRecepcionistaControlador;
 use App\Http\Controllers\ListarReservasControlador;
 use App\Http\Controllers\ListadoCheckoutControlador;
 use App\Http\Controllers\ListadoCheckinControlador;
-use App\Http\Controllers\HabitacionesControlador;
+use App\Http\Controllers\ListarUsuariosControlador;
 use App\Http\Controllers\ListarServiciosControlador;
 use App\Http\Controllers\ListarHotelesControlador;
 use App\Http\Controllers\ListarHabitacionesControlador;
@@ -65,3 +65,9 @@ Route::get('/mostrar-habitaciones', [ListarHabitacionesControlador::class, 'most
 Route::post('/anadir-habitaciones', [ListarHabitacionesControlador::class, 'anadirHabitacion'])->name('anadirHabitacion');
 Route::get('/mostrarhabitacion/{habitacionID}', [ListarHabitacionesControlador::class, 'mostrarHabitacion'])->name('mostrarHabitacion');
 Route::put('/editarhabitacion/{habitacionID}', [ListarHabitacionesControlador::class, 'editarHabitacion'])->name('editarHabitacion');
+Route::get('/listarusuarios', [ListarUsuariosControlador::class, 'listarUsuarios'])->name('listarUsuarios');
+Route::delete('/delusuario/{id}', [ListarUsuariosControlador::class, 'delUsuario'])->name('delUsuario');
+Route::get('/mostrarusuario/{id}', [ListarUsuariosControlador::class, 'mostrarUsuario'])->name('mostrarUsuario');
+Route::put('/editarusuario/{id}', [ListarUsuariosControlador::class, 'editarUsuario'])->name('editarUsuario');
+Route::get('/mostrar-usuarios', [ListarUsuariosControlador::class, 'mostrarUsuarios'])->name('mostrarUsuarios');
+Route::post('/anadir-usuarios', [ListarUsuariosControlador::class, 'anadirUsuario'])->name('anadirUsuario');

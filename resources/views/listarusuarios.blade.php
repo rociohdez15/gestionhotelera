@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlojaDirecto | Estadísticas</title>
+    <title>AlojaDirecto | Listado de Usuarios</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- CSS -->
-    <link rel="stylesheet" href="../../css/editar-perfil/styles.css">
+    <link rel="stylesheet" href="../../css/listar-reservas/styles.css">
     <link rel="stylesheet" href="../../css/inicio/style.css">
     <!-- Favicon -->
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic%7CPoppins:300,400,500,700">
@@ -18,10 +18,9 @@
     <link rel="icon" href="../../images/inicio/favicon.ico" type="image/x-icon">
     <!-- Agrega Vue.js -->
     <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/moment/locale/es.js"></script>
     <!-- Agrega Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -58,15 +57,10 @@
                                     <a class="text-italic" href="{{ route('login') }}">Iniciar Sesión</a>
                                     @endguest
                                     @auth
-                                    @php
-                                    $rolUsuario = Auth::user()->rolID;
-                                    @endphp
-                                    @if ($rolUsuario !== 2)
                                     <a href="{{ route('informacionusuario') }}" class="btn btn-secondary user-name icono-user d-flex align-items-center" id="dropdownMenuButton" role="button" aria-expanded="false">
                                         {{ Auth::user()->name }} {{ Auth::user()->apellido }}
                                         <i class="fa-solid fa-user ms-2"></i>
                                     </a>
-                                    @endif
                                     <a href="{{ route('logout') }}" class="btn btn-secondary icono-user" role="button" aria-expanded="false">
                                         <i class="fa-solid fa-right-from-bracket"></i>
                                     </a>
@@ -133,99 +127,210 @@
             </nav>
         </div>
     </header>
-
-
-    <main id="app">
-        <div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <main>
+        <br>
+        <div class="container">
             <!-- Contenido Principal -->
-            <div class="col-md-9 col-lg-8">
-                <br>
-                <h3 class="text-center">ESTADÍSTICAS</h3>
-
-                <div class="container my-4">
-                    <div class="row mb-4">
-                        <div class="col-md-3 d-flex justify-content-center">
-                            <div class="card text-white mb-3" style="max-width: 18rem; background-color: #28B463;">
-                                <div class="card-header">Número de Hoteles</div>
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">{{ $numeroHoteles }}</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 d-flex justify-content-center">
-                            <div class="card text-white mb-3" style="max-width: 18rem; background-color: #36A2EB;">
-                                <div class="card-header">Ingresos Anuales</div>
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">{{ number_format($totalIngresosAnuales, 2) }} €</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 d-flex justify-content-center">
-                            <div class="card text-white mb-3" style="max-width: 18rem; background-color: #FFCE56;">
-                                <div class="card-header">Total de Reservas</div>
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">{{ $numeroReservasAnuales }}</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 d-flex justify-content-center">
-                            <div class="card text-white mb-3" style="max-width: 18rem; background-color: #9966FF;">
-                                <div class="card-header">Número de Usuarios</div>
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">{{ $numeroUsuarios }}</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 d-flex justify-content-center">
-                            <div class="card" style="width: 100%; max-width: 450px;">
-                                <div class="card-header text-center">
-                                    <h5 class="mb-0">DISPONIBILIDAD DE HABITACIONES POR HOTELES</h5>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="graficaHabitacionesDisponibles"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 d-flex justify-content-center">
-                            <div class="card" style="width: 100%; max-width: 450px;">
-                                <div class="card-header text-center">
-                                    <h5 class="mb-0">INGRESOS TOTALES POR MESES</h5>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="graficaIngresosPorMes"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-md-6 d-flex justify-content-center">
-                            <div class="card" style="width: 100%; max-width: 450px;">
-                                <div class="card-header text-center">
-                                    <h5 class="mb-0">CLIENTES REGISTRADOS POR MESES</h5>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="graficaClientesPorMes"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 d-flex justify-content-center">
-                            <div class="card" style="width: 100%; max-width: 450px;">
-                                <div class="card-header text-center">
-                                    <h5 class="mb-0">SERVICIOS ADICIONALES POR CATEGORÍA</h5>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="graficaServiciosPorCategoria"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            @if ($errors->any())
+            <div class="alert alert-danger ml-2" style="max-width: 400px; margin: 0 auto;">
+                @foreach ($errors->all() as $error)
+                {{ $error }}
+                @endforeach
             </div>
+            <br>
+            @endif
+
+            @if(session('status'))
+            <div class="alert alert-success" style="max-width: 400px; margin: 0 auto;">
+                {{ session('status') }}
+            </div>
+            @endif
+
+            <!-- Mostrar mensaje de éxito si está presente en la URL -->
+            @if(request()->has('success'))
+            <div class="alert alert-success" id="success-message" style="text-align:center; max-width: 400px; margin: 0 auto;">
+                {{ request()->get('success') }}
+            </div>
+            @endif
+
+            <!-- Mostrar mensaje de error si está presente en la URL -->
+            @if(request()->has('error'))
+            <div class="alert alert-danger" id="error-message" style="text-align:center; max-width: 400px; margin: 0 auto;">
+                {{ request()->get('error') }}
+            </div>
+            @endif
+
+            <br>
+            <h3 class="text-center">LISTADO DE USUARIOS</h3>
+
+            <br>
+            <!-- Buscador -->
+            <form action="{{ route('buscarUsuarios') }}" method="GET" class="mb-3">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="query" placeholder="Buscar por ID, nombre, apellidos o email" aria-label="Buscar usuarios">
+                    <button class="btn btn-primary" type="submit">Buscar</button>
+                </div>
+            </form>
+
+            <!-- Muestra la tabla de usuarios -->
+            <div class="table-responsive mx-auto">
+                <table class="table table-bordered table-striped text-center" id="tabla-usuarios">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre Completo</th>
+                            <th>Email</th>
+                            <th>Rol ID</th>
+                            <th>Operaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+
+                </table>
+                <div id="paginacion" class="text-center" style="color: black; margin-top: 20px;">
+                    <!-- Los enlaces de paginación se agregarán aquí dinámicamente -->
+                </div>
+
+                <script>
+                    $(document).ready(function() {
+                        var currentPage = 1;
+                        var currentQuery = '';
+
+                        function actualizarTabla(page = 1, query = '') {
+                            $.ajax({
+                                url: '{{ route("buscarUsuarios") }}',
+                                method: 'GET',
+                                data: {
+                                    page: page,
+                                    query: query
+                                },
+                                success: function(response) {
+                                    currentPage = page;
+                                    currentQuery = query;
+
+                                    var tabla = $('#tabla-usuarios tbody');
+                                    tabla.empty();
+                                    $.each(response.data, function(index, usuario) {
+                                        var pdfUrl = '{{ route("generar_pdf_listar_usuarios", ":id") }}';
+                                        pdfUrl = pdfUrl.replace(':id', usuario.id);
+                                        var row =
+                                            '<tr>' +
+                                            '<td>' + usuario.id + '</td>' +
+                                            '<td>' + usuario.nombre_completo + '</td>' +
+                                            '<td>' + usuario.email + '</td>' +
+                                            '<td>' + usuario.rolID + '</td>' +
+                                            '<td class="d-flex justify-content-center gap-2">' +
+                                            '<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal' + usuario.id + '">' +
+                                            '<i class="fa-solid fa-trash"></i>' +
+                                            '</button>' +
+                                            '<div class="modal fade" id="confirmDeleteModal' + usuario.id + '" tabindex="-1" aria-labelledby="confirmDeleteModalLabel' + usuario.id + '" aria-hidden="true">' +
+                                            '<div class="modal-dialog">' +
+                                            '<div class="modal-content">' +
+                                            '<div class="modal-header">' +
+                                            '<h5 class="modal-title" id="confirmDeleteModalLabel' + usuario.id + '">Confirmar eliminación</h5>' +
+                                            '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                                            '</div>' +
+                                            '<div class="modal-body">¿Estás seguro de que deseas eliminar este usuario?</div>' +
+                                            '<div class="modal-footer">' +
+                                            '<form action="{{ route("delUsuario", "") }}/' + usuario.id + '" method="POST">' +
+                                            '@csrf' +
+                                            '@method("DELETE")' +
+                                            '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
+                                            '<button type="submit" class="btn btn-danger">Eliminar</button>' +
+                                            '</form>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '<button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#confirmEditModal' + usuario.id + '">' +
+                                            '<i class="fa-solid fa-pen-to-square"></i>' +
+                                            '</button>' +
+                                            '<div class="modal fade" id="confirmEditModal' + usuario.id + '" tabindex="-1" aria-labelledby="confirmEditModalLabel' + usuario.id + '" aria-hidden="true">' +
+                                            '<div class="modal-dialog">' +
+                                            '<div class="modal-content">' +
+                                            '<div class="modal-header">' +
+                                            '<h5 class="modal-title" id="confirmEditModalLabel' + usuario.id + '">Confirmar editar</h5>' +
+                                            '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                                            '</div>' +
+                                            '<div class="modal-body">¿Estás seguro de que deseas editar este usuario?</div>' +
+                                            '<div class="modal-footer">' +
+                                            '<form action="{{ route("mostrarUsuario", "") }}/' + usuario.id + '" method="POST">' +
+                                            '@csrf' +
+                                            '@method("GET")' +
+                                            '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
+                                            '<button type="submit" class="btn btn-danger">Editar</button>' +
+                                            '</form>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '<a href="' + pdfUrl + '" class="btn btn-success btn-sm">' +
+                                            '<i class="fa-solid fa-file-pdf"></i>' +
+                                            '</a>' +
+                                            '</td>' +
+                                            '</tr>'
+
+                                        tabla.append(row);
+                                    });
+
+                                    // Construir enlaces de paginación
+                                    var enlacesPaginacion = $('#paginacion');
+                                    enlacesPaginacion.empty();
+                                    enlacesPaginacion.append(
+                                        '<span>Página ' + response.current_page + ' de ' + response.last_page + ' | Mostrar ' + response.per_page + ' registros por página | Ir a página: </span>'
+                                    );
+                                    for (var i = 1; i <= response.last_page; i++) {
+                                        enlacesPaginacion.append(
+                                            '<a href="#" class="page-link" data-page="' + i + '" style="color: black; margin: 0 5px; display: inline-block;">' + i + '</a>'
+                                        );
+                                    }
+
+                                    // Añadir evento click a los enlaces de paginación
+                                    $('.page-link').click(function(e) {
+                                        e.preventDefault();
+                                        var page = $(this).data('page');
+                                        actualizarTabla(page, currentQuery);
+                                    });
+                                },
+                                error: function(xhr) {
+                                    console.error("Error al cargar los datos:", xhr.responseText);
+                                }
+                            });
+                        }
+
+                        // Llama a la función para actualizar la tabla inicialmente
+                        actualizarTabla();
+
+                        // Llama a la función para actualizar la tabla cada 5 segundos
+                        setInterval(function() {
+                            if ($('.modal.show').length === 0) {
+                                actualizarTabla(currentPage, currentQuery);
+                            }
+                        }, 5000);
+
+                        // Manejar el evento de envío del formulario de búsqueda
+                        $('form').submit(function(e) {
+                            e.preventDefault();
+                            var query = $('input[name="query"]').val();
+                            actualizarTabla(1, query);
+                        });
+                    });
+                </script>
+            </div>
+            <br>
+            <div class="text-center">
+                <a href="{{ route('mostrarUsuarios') }}" class="btn btn-success btn-sm">
+                    Añadir usuario
+                </a>
+                <a href="{{ route('generar_pdf_listar_usuarios_total') }}" class="btn btn-primary btn-sm">
+                    Generar listado usuarios
+                </a>
+            </div>
+            <br>
         </div>
     </main>
-
     <footer class="page-footer text-left text-sm-left">
         <div class="shell-wide">
             <div class="page-footer-minimal">
@@ -264,7 +369,6 @@
                         <div class="cell-sm-8 cell-md-4 wow fadeInUp" data-wow-delay=".3s">
                             <div class="page-footer-minimal-inner-subscribe">
                                 <h4>Suscríbete a nuestra Newsletter</h4>
-                                <!-- RD Mailform-->
                                 <form class="rd-mailform rd-mailform-inline form-center" data-form-output="form-output-global" data-form-type="subscribe" method="post" action="#">
                                     <div class="form-wrap">
                                         <input class="form-input" id="subscribe-email" type="email" name="email">
@@ -295,25 +399,42 @@
             </div>
         </div>
     </footer>
-
-    <script>
-        window.hotelNames = <?php echo json_encode(array_keys($data)); ?>;
-        window.availableRooms = <?php echo json_encode(array_values($data)); ?>;
-        window.ingresosMeses = <?php echo json_encode(array_keys($ingresos)); ?>;
-        window.ingresosTotales = <?php echo json_encode(array_values($ingresos)); ?>;
-        window.ingresosServiciosTotales = <?php echo json_encode(array_values($ingresosServicios)); ?>;
-        window.clientesMeses = <?php echo json_encode(array_keys($clientes)); ?>;
-        window.clientesTotales = <?php echo json_encode(array_values($clientes)); ?>;
-        window.serviciosCategorias = <?php echo json_encode(array_keys($servicios)); ?>;
-        window.serviciosTotales = <?php echo json_encode(array_values($servicios)); ?>;
-    </script>
-
 </body>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Incluye el archivo de Vue -->
-<script src="{{ asset('../../vue/habitaciones/disponibilidad.js') }}"></script>
+<script src="{{ asset('../../vue/panelrecepcionistas/panel1.js') }}"></script>
 <script src="{{ asset('js/inicio/core.min.js') }}"></script>
 <script src="{{ asset('js/inicio/script.js') }}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const successMessage = document.getElementById('success-message');
+        if (successMessage) {
+            // Eliminar el parámetro de consulta 'success' de la URL
+            const url = new URL(window.location);
+            url.searchParams.delete('success');
+            window.history.replaceState({}, document.title, url);
+
+            // Ocultar el mensaje después de 5 segundos
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 2500);
+        }
+
+        const errorMessage = document.getElementById('error-message');
+        if (errorMessage) {
+            // Eliminar el parámetro de consulta 'error' de la URL
+            const url = new URL(window.location);
+            url.searchParams.delete('error');
+            window.history.replaceState({}, document.title, url);
+
+            // Ocultar el mensaje después de 5 segundos
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 2500);
+        }
+    });
+</script>
 
 </html>

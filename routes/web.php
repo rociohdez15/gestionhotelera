@@ -18,6 +18,7 @@ use App\Http\Controllers\HabitacionesControlador;
 use App\Http\Controllers\ListarServiciosControlador;
 use App\Http\Controllers\ListarHotelesControlador;
 use App\Http\Controllers\ListarHabitacionesControlador;
+use App\Http\Controllers\ListarUsuariosControlador;
 
 Route::get('/', function () {
     return view('inicio');
@@ -101,7 +102,16 @@ Route::middleware([
     Route::get('/generar-pdf-listar-habitaciones-total', [ListarHabitacionesControlador::class, 'generarPDFTotal'])->name('generar_pdf_listar_habitaciones_total');
     Route::get('/mostrarhabitacion/{habitacionID}', [ListarHabitacionesControlador::class, 'mostrarHabitacion'])->name('mostrarHabitacion');
     Route::put('/editarhabitacion/{habitacionID}', [ListarHabitacionesControlador::class, 'editarHabitacion'])->name('editarHabitacion');
-    Route::get('/altaUsuarios', [ListarServiciosControlador::class, 'altaUsuarios'])->name('altaUsuarios');
+    Route::get('/listarusuarios', [ListarUsuariosControlador::class, 'listarUsuarios'])->name('listarUsuarios');
+    Route::get('/buscar-usuarios', [ListarUsuariosControlador::class, 'buscarUsuarios'])->name('buscarUsuarios');
+    Route::delete('/delusuario/{id}', [ListarUsuariosControlador::class, 'delUsuario'])->name('delUsuario');
+    Route::get('/mostrarusuario/{id}', [ListarUsuariosControlador::class, 'mostrarUsuario'])->name('mostrarUsuario');
+    Route::put('/editarusuario/{id}', [ListarUsuariosControlador::class, 'editarUsuario'])->name('editarUsuario');
+    Route::get('/mostrar-usuarios', [ListarUsuariosControlador::class, 'mostrarUsuarios'])->name('mostrarUsuarios');
+    Route::post('/anadir-usuarios', [ListarUsuariosControlador::class, 'anadirUsuario'])->name('anadirUsuario');
+    Route::get('/generar-pdf-listar-usuarios/{id}', [ListarUsuariosControlador::class, 'generarPDF'])->name('generar_pdf_listar_usuarios');
+    Route::get('/generar-pdf-listar-usuarios-total', [ListarUsuariosControlador::class, 'generarPDFTotal'])->name('generar_pdf_listar_usuarios_total');
+    Route::get('/comprobar-email', [ListarUsuariosControlador::class, 'comprobarEmail']);
     Route::get('/actualizar-reservas', [ListarReservasControlador::class, 'actualizarReservas'])->name('actualizarReservas');
     Route::get('/actualizar-hoteles', [ListarHotelesControlador::class, 'actualizarHoteles'])->name('actualizarHoteles');
     Route::get('/actualizar-habitaciones', [ListarHabitacionesControlador::class, 'actualizarHabitaciones'])->name('actualizarHabitacions');

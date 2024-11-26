@@ -4,24 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlojaDirecto | Estadísticas</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>AlojaDirecto | Añadir Usuario</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- CSS -->
-    <link rel="stylesheet" href="../../css/editar-perfil/styles.css">
+    <link rel="stylesheet" href="{{ asset('css/listar-reservas/styles.css') }}">
     <link rel="stylesheet" href="../../css/inicio/style.css">
     <!-- Favicon -->
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic%7CPoppins:300,400,500,700">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
     <link rel="icon" href="../../images/inicio/favicon.ico" type="image/x-icon">
-    <!-- Agrega Vue.js -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/moment/locale/es.js"></script>
-    <!-- Agrega Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/vue@3.5.12/dist/vue.global.js"></script>
+    @vite('resources/css/app.css')
 </head>
 
 <body>
@@ -134,96 +131,11 @@
         </div>
     </header>
 
-
-    <main id="app">
-        <div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-            <!-- Contenido Principal -->
-            <div class="col-md-9 col-lg-8">
-                <br>
-                <h3 class="text-center">ESTADÍSTICAS</h3>
-
-                <div class="container my-4">
-                    <div class="row mb-4">
-                        <div class="col-md-3 d-flex justify-content-center">
-                            <div class="card text-white mb-3" style="max-width: 18rem; background-color: #28B463;">
-                                <div class="card-header">Número de Hoteles</div>
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">{{ $numeroHoteles }}</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 d-flex justify-content-center">
-                            <div class="card text-white mb-3" style="max-width: 18rem; background-color: #36A2EB;">
-                                <div class="card-header">Ingresos Anuales</div>
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">{{ number_format($totalIngresosAnuales, 2) }} €</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 d-flex justify-content-center">
-                            <div class="card text-white mb-3" style="max-width: 18rem; background-color: #FFCE56;">
-                                <div class="card-header">Total de Reservas</div>
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">{{ $numeroReservasAnuales }}</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 d-flex justify-content-center">
-                            <div class="card text-white mb-3" style="max-width: 18rem; background-color: #9966FF;">
-                                <div class="card-header">Número de Usuarios</div>
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">{{ $numeroUsuarios }}</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 d-flex justify-content-center">
-                            <div class="card" style="width: 100%; max-width: 450px;">
-                                <div class="card-header text-center">
-                                    <h5 class="mb-0">DISPONIBILIDAD DE HABITACIONES POR HOTELES</h5>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="graficaHabitacionesDisponibles"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 d-flex justify-content-center">
-                            <div class="card" style="width: 100%; max-width: 450px;">
-                                <div class="card-header text-center">
-                                    <h5 class="mb-0">INGRESOS TOTALES POR MESES</h5>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="graficaIngresosPorMes"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-md-6 d-flex justify-content-center">
-                            <div class="card" style="width: 100%; max-width: 450px;">
-                                <div class="card-header text-center">
-                                    <h5 class="mb-0">CLIENTES REGISTRADOS POR MESES</h5>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="graficaClientesPorMes"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 d-flex justify-content-center">
-                            <div class="card" style="width: 100%; max-width: 450px;">
-                                <div class="card-header text-center">
-                                    <h5 class="mb-0">SERVICIOS ADICIONALES POR CATEGORÍA</h5>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="graficaServiciosPorCategoria"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <main>
+        <div id="app11">
+            <añadir-usuario></añadir-usuario>
         </div>
+        @vite('resources/js/app.js')
     </main>
 
     <footer class="page-footer text-left text-sm-left">
@@ -295,24 +207,7 @@
             </div>
         </div>
     </footer>
-
-    <script>
-        window.hotelNames = <?php echo json_encode(array_keys($data)); ?>;
-        window.availableRooms = <?php echo json_encode(array_values($data)); ?>;
-        window.ingresosMeses = <?php echo json_encode(array_keys($ingresos)); ?>;
-        window.ingresosTotales = <?php echo json_encode(array_values($ingresos)); ?>;
-        window.ingresosServiciosTotales = <?php echo json_encode(array_values($ingresosServicios)); ?>;
-        window.clientesMeses = <?php echo json_encode(array_keys($clientes)); ?>;
-        window.clientesTotales = <?php echo json_encode(array_values($clientes)); ?>;
-        window.serviciosCategorias = <?php echo json_encode(array_keys($servicios)); ?>;
-        window.serviciosTotales = <?php echo json_encode(array_values($servicios)); ?>;
-    </script>
-
 </body>
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Incluye el archivo de Vue -->
-<script src="{{ asset('../../vue/habitaciones/disponibilidad.js') }}"></script>
 <script src="{{ asset('js/inicio/core.min.js') }}"></script>
 <script src="{{ asset('js/inicio/script.js') }}"></script>
 

@@ -5,6 +5,7 @@ var app = Vue.createApp({
             datos: [], // Habitaciones disponibles por hotel para hoy
             etiquetasIngresos: [], // Meses
             datosIngresos: [], // Ingresos por mes
+            datosIngresosServicios: [], // Ingresos por servicios por mes
             etiquetasClientes: [], // Meses para clientes
             datosClientes: [], // Clientes registrados por mes
             etiquetasServicios: [], // Categorías de servicios
@@ -17,15 +18,17 @@ var app = Vue.createApp({
         this.datos = window.availableRooms; // Habitaciones disponibles desde el backend
         this.etiquetasIngresos = window.ingresosMeses; // Meses desde el backend
         this.datosIngresos = window.ingresosTotales; // Ingresos desde el backend
+        this.datosIngresosServicios = window.ingresosServiciosTotales; // Ingresos por servicios desde el backend
         this.etiquetasClientes = window.clientesMeses; // Meses para clientes desde el backend
         this.datosClientes = window.clientesTotales; // Clientes registrados desde el backend
         this.etiquetasServicios = window.serviciosCategorias; // Categorías de servicios desde el backend
-        this.datosServicios = window.serviciosTotales; // Servicios por categoría desde el backend
+        this.datosServicios = window.serviciosTotales; // Servicios por categoría
     
         console.log('Nombres de Hoteles:', this.etiquetas);
         console.log('Habitaciones Disponibles:', this.datos);
         console.log('Meses de Ingresos:', this.etiquetasIngresos);
         console.log('Ingresos Totales:', this.datosIngresos);
+        console.log('Ingresos por Servicios:', this.datosIngresosServicios);
         console.log('Meses de Clientes:', this.etiquetasClientes);
         console.log('Clientes Totales:', this.datosClientes);
         console.log('Categorías de Servicios:', this.etiquetasServicios);
@@ -79,12 +82,20 @@ var app = Vue.createApp({
                 type: 'bar', 
                 data: {
                     labels: this.etiquetasIngresos, // Usa los meses
-                    datasets: [{
-                        label: 'Ingresos totales por mes', 
-                        data: this.datosIngresos, 
-                        backgroundColor: '#36A2EB', 
-                        hoverOffset: 4
-                    }]
+                    datasets: [
+                        {
+                            label: 'Ingresos totales por mes (Reservas)', 
+                            data: this.datosIngresos, 
+                            backgroundColor: '#36A2EB', 
+                            hoverOffset: 4
+                        },
+                        {
+                            label: 'Ingresos totales por mes (Servicios)', 
+                            data: this.datosIngresosServicios, 
+                            backgroundColor: '#FFCE56', 
+                            hoverOffset: 4
+                        }
+                    ]
                 },
                 options: {
                     responsive: true, 
@@ -97,7 +108,7 @@ var app = Vue.createApp({
                             callbacks: {
                                 label: (tooltipItem) => {
                                     var mes = this.etiquetasIngresos[tooltipItem.dataIndex];
-                                    var ingresos = this.datosIngresos[tooltipItem.dataIndex];
+                                    var ingresos = tooltipItem.datasetIndex === 0 ? this.datosIngresos[tooltipItem.dataIndex] : this.datosIngresosServicios[tooltipItem.dataIndex];
                                     return `${mes}: ${ingresos} €`;
                                 }
                             }

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Habitacion;
-use App\Models\Cliente;
+use App\Models\User;
 use App\Models\EdadNino;
 use App\Models\Reserva;
 use Carbon\Carbon;
@@ -264,36 +264,53 @@ class ListarHabitacionesControlador extends Controller
         return view('anadirhabitacion', ['habitaciones' => $habitaciones]);
     }
 
-    public function anadirHabitacion(Request $request)
-    {
+
+public function anadirUsuario(Request $request)
+{
+    // Registrar la URL y los datos de la solicitud
+    Log::info('URL de la solicitud: ' . $request->fullUrl());
+    Log::info('Datos de la solicitud: ', $request->all());
+
+    try {
         $validatedData = $request->validate([
-            'numhabitacion' => 'required|regex:/^[0-9]+$/', 
-            'tipohabitacion' => 'required|integer|min:1', 
-            'precio' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            'hotelID' => 'required|integer|exists:hoteles,hotelID',
+            'name' => 'required|string|max:255',
+            'apellidos' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+            'password' => 'required|string|min:6',
+            'rolID' => 'required|integer|exists:roles,rolID',
         ]);
 
-        $habitacion = new Habitacion();
-        $habitacion->numhabitacion = $validatedData['numhabitacion'];
-        $habitacion->tipohabitacion = $validatedData['tipohabitacion'];
-        $habitacion->precio = $validatedData['precio'];
-        $habitacion->hotelID = $validatedData['hotelID'];
-        $habitacion->save();
+        Log::info('Datos validados: ', $validatedData);
 
-        
-        $habitacion->refresh();
+        $usuario = new User();
+        $usuario->name = $validatedData['name'];
+        $usuario->apellidos = $validatedData['apellidos'];
+        $usuario->email = $validatedData['email'];
+        $usuario->password = bcrypt($validatedData['password']); // Encriptar la contraseña
+        $usuario->rolID = 2; // Asignar un rol por defecto
+        $usuario->save();
 
+        Log::info('Usuario creado: ', $usuario->toArray());
+
+        $usuario->refresh();
 
         if ($request->wantsJson() || $request->is('api/*')) {
             return response()->json([
-                'message' => 'Habitacion añadida correctamente.',
-                'habitacion' => $habitacion
+                'message' => 'Usuario añadido correctamente.',
+                'usuario' => $usuario
             ]);
         }
 
         return response()->json([
-            'message' => 'Habitacion añadida correctamente.',
-            'habitacion' => $habitacion
+            'message' => 'Usuario añadido correctamente.',
+            'usuario' => $usuario
         ]);
+    } catch (\Exception $e) {
+        Log::error('Error al añadir el usuario: ' . $e->getMessage());
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json(['message' => 'Error al añadir el usuario', 'error' => $e->getMessage()], 500);
+        }
+        return back()->withError('Error al añadir el usuario')->withInput();
     }
+}
 }
