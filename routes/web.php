@@ -39,9 +39,6 @@ Route::get('/sobre-nosotros', [InicioControlador::class, 'cargarSobreNosotros'])
 Route::get('/contacto', [InicioControlador::class, 'cargarContacto'])->name('cargarContacto');
 
 Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
         return redirect('/');
