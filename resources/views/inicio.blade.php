@@ -97,8 +97,8 @@
                                             <li><a class="dropdown-item" href="{{ route('descubreEspana', ['ciudad' => 'Sevilla']) }}">Sevilla</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="about-us.html">Sobre Nosotros</a></li>
-                                    <li><a href="contacts.html">Contacto</a></li>
+                                    <li><a href="{{ route('cargarSobreNosotros') }}">Sobre Nosotros</a></li>
+                                    <li><a href="{{ route('cargarContacto') }}">Contacto</a></li>
                                 </ul>
                             </div>
                         </div>

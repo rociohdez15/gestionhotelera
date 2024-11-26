@@ -4,20 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlojaDirecto | Login</title>
+    <title>AlojaDirecto | Sobre Nosotros</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- CSS -->
-    <link rel="stylesheet" href="../../css/inicio/styles.css">
+    <link rel="stylesheet" href="../../css/listar-reservas/styles.css">
     <link rel="stylesheet" href="../../css/inicio/style.css">
     <!-- Favicon -->
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic%7CPoppins:300,400,500,700">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
     <link rel="icon" href="../../images/inicio/favicon.ico" type="image/x-icon">
+    <!-- Agrega Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js"></script>
+    <!-- Agrega Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-
 <body>
     <!-- Page Header-->
     <header class="page-header" style="padding-bottom: 24px">
@@ -124,120 +128,116 @@
         @endif
         @endauth
     </header>
-
     <main>
-    <div class="cell-lg-4 cell-xl-6 d-flex flex-column container">
-        <div class="container contenedor-titulos">
-            @if ($errors->any())
-            <div class="alert alert-danger ml-2">
-                @foreach ($errors->all() as $error)
-                {{ $error }}
-                @endforeach
-            </div>
-            <br>
-            @endif
-
-            <!-- Mostrar mensaje de éxito -->
-            @if(session('status'))
-            <div class="alert alert-success">
-                {{ session('status') }}
-            </div>
-            @endif
-
-            <br>
-            <h4 class="text-center">Iniciar sesión</h4>
-            <br>
-            <form action="{{ route('login') }}" method="post" class="needs-validation" novalidate style="max-width: 400px; margin: 0 auto;">
-                @csrf
-                <div class="row g-3">
-                    <div class="col-12">
-                        <div class="form-wrap">
-                            <label for="email" class="form-label text-start d-block">Correo electrónico:</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-                            <div class="invalid-feedback">Por favor ingresa tu correo electrónico.</div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-wrap">
-                            <label for="password" class="form-label text-start d-block">Contraseña:</label>
-                            <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password">
-                            <div class="invalid-feedback">Por favor ingresa tu contraseña.</div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div>
-                            <a href="{{ route('olvidoPassword') }}">¿Has olvidado tu contraseña?</a>
-                        </div>
-                    </div>
-                    <div class="col-12 d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary w-30 me-5">Entrar</button>
-                        <a href="{{ route('register') }}" class="btn btn-primary w-30">Registrarse</a>
+        <!-- Breadcrumbs & Page title-->
+        <section class="section-md text-center bg-image breadcrumbs-01 imagen">
+            <div class="shell shell-fluid">
+                <div class="range range-xs-center">
+                    <div class="cell-xs-12 cell-xl-11">
+                        <h2 class="text-white">Sobre Nosotros</h2>
+                        <ul class="breadcrumbs-custom">
+                            <li><a href="{{ route ('inicio') }}">Inicio</a></li>
+                            <li class="active">Sobre Nosotros</li>
+                        </ul>
                     </div>
                 </div>
-            </form>
-        </div>
-    </div>
-</main>
-    <!-- Footer -->
+            </div>
+        </section>
+
+        <section class="section section-md bg-secondary-4 text-center text-sm-left">
+            <div class="shell">
+                <div class="range range-50 range-md-justify range-sm-middle">
+                    <div class="cell-sm-6 wow fadeInUp" data-wow-delay=".1s">
+                        <div class="box-outline box-outline__mod-1">
+                            <figure><img src="{{ asset('images/inicio/sobre-nosotros2.jpg') }}" alt="" width="546" height="516" />
+                            </figure>
+                        </div>
+                    </div>
+                    <div class="cell-sm-6 cell-md-5 wow fadeInUp" data-wow-delay=".2s">
+                        <h3>Algunas palabras sobre nosotros</h3>
+                        <p style="color: black;">¿Cansado de la rutina diaria? ¿Busca un lugar para alojarse y descansar con su familia? ¡Está en el lugar correcto! Te ofrecemos alojamiento de lujo e histórico para viajeros. Combina el estilo y las comodidades modernas con los valores tradicionales.</p>
+                        <p style="color: black;">Todos nuestros alojamientos con las mejores instalaciones y comodidades, para el disfrute de huéspedes de todo tipo de edades.</p><a class="button button-primary button button-square button-effect-ujarak button-lg" href="#"><span>Leer mas</span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </main>
     <footer class="page-footer text-left text-sm-left">
         <div class="shell-wide">
-          <div class="page-footer-minimal">
-            <div class="shell-wide">
-              <div class="range range-50">
-                <div class="cell-sm-6 cell-md-3 cell-lg-4 wow fadeInUp" data-wow-delay=".1s">
-                  <div class="page-footer-minimal-inner">
-                    <h4>Copyright</h4>
-                    <ul class="list-unstyled">
-                      <li>
-                        <p class="rights"><span>&copy;&nbsp;</span><span>2024</span><span>&nbsp;</span><span class="copyright-year"></span>AlojaDirecto. Todos los derechos reservados. Diseñado por <a href="#">AlojaDirecto.com</a></p>
-                      </li>
-                    </ul>
-                  </div>
+            <div class="page-footer-minimal">
+                <div class="shell-wide">
+                    <div class="range range-50">
+                        <div class="cell-sm-6 cell-md-3 cell-lg-4 wow fadeInUp" data-wow-delay=".1s">
+                            <div class="page-footer-minimal-inner">
+                                <h4>Copyright</h4>
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <p class="rights"><span>&copy;&nbsp;</span><span>2024</span><span>&nbsp;</span><span class="copyright-year"></span>AlojaDirecto. Todos los derechos reservados. Diseñado por <a href="#">AlojaDirecto.com</a></p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="cell-sm-6 cell-md-5 cell-lg-4 wow fadeInUp" data-wow-delay=".2s">
+                            <div class="page-footer-minimal-inner">
+                                <h4>Dirección</h4>
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <dl class="list-desc">
+                                            <dt><span class="icon icon-sm mdi mdi-map-marker"></span></dt>
+                                            <dd><a class="link link-gray-darker" href="#">Villanueva de los Castillejos, Huelva, 21540 (España)</a></dd>
+                                        </dl>
+                                    </li>
+                                    <li>
+                                        <dl class="list-desc">
+                                            <dt><span class="icon icon-sm mdi mdi-phone"></span></dt>
+                                            <dd class="text-gray-darker">Llámanos: <a class="link link-gray-darker" href="tel:#">+34 612345678</a>
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="cell-sm-8 cell-md-4 wow fadeInUp" data-wow-delay=".3s">
+                            <div class="page-footer-minimal-inner-subscribe">
+                                <h4>Suscríbete a nuestra Newsletter</h4>
+                                <!-- RD Mailform-->
+                                <form class="rd-mailform rd-mailform-inline form-center" data-form-output="form-output-global" data-form-type="subscribe" method="post" action="#">
+                                    <div class="form-wrap">
+                                        <input class="form-input" id="subscribe-email" type="email" name="email">
+                                        <label class="form-label" for="subscribe-email">Introduce tu e-mail</label>
+                                    </div>
+                                    <button class="button button-primary-2 button-effect-ujarak button-square" type="submit"><span>Subscribirse</span></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="range range-50 text-center mt-4">
+                        <div class="cell-sm-12">
+                            <h4>Síguenos en</h4>
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    <a href="https://twitter.com" target="_blank" class="icon icon-lg mdi mdi-twitter"></a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="https://instagram.com" target="_blank" class="icon icon-lg mdi mdi-instagram"></a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="https://facebook.com" target="_blank" class="icon icon-lg mdi mdi-facebook"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="cell-sm-6 cell-md-5 cell-lg-4 wow fadeInUp" data-wow-delay=".2s">
-                  <div class="page-footer-minimal-inner">
-                    <h4>Dirección</h4>
-                    <ul class="list-unstyled">
-                      <li>
-                        <dl class="list-desc">
-                          <dt><span class="icon icon-sm mdi mdi-map-marker"></span></dt>
-                          <dd><a class="link link-gray-darker" href="#">Villanueva de los Castillejos, Huelva, 21540 (España)</a></dd>
-                        </dl>
-                      </li>
-                      <li>
-                        <dl class="list-desc">
-                          <dt><span class="icon icon-sm mdi mdi-phone"></span></dt>
-                          <dd class="text-gray-darker">Llámanos: <a class="link link-gray-darker" href="tel:#">+34 612345678</a>
-                          </dd>
-                        </dl>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="cell-sm-8 cell-md-4 wow fadeInUp" data-wow-delay=".3s">
-                  <div class="page-footer-minimal-inner-subscribe">
-                    <h4>Suscríbete a nuestra Newsletter</h4>
-                    <!-- RD Mailform-->
-                    <form class="rd-mailform rd-mailform-inline form-center" data-form-output="form-output-global" data-form-type="subscribe" method="post" action="#">
-                      <div class="form-wrap">
-                        <input class="form-input" id="subscribe-email" type="email" name="email">
-                        <label class="form-label" for="subscribe-email">Introduce tu e-mail</label>
-                      </div>
-                      <button class="button button-primary-2 button-effect-ujarak button-square" type="submit"><span>Subscribirse</span></button>
-                    </form>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
         </div>
-      </footer>
+    </footer>
 </body>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../../js/login/js.js"></script>
-<script src="../../js/inicio/core.min.js"></script>
-<script src="../../js/inicio/script.js"></script>
+<!-- Incluye el archivo de Vue -->
+<script src="{{ asset('../../vue/panelrecepcionistas/panel1.js') }}"></script>
+<script src="{{ asset('js/inicio/core.min.js') }}"></script>
+<script src="{{ asset('js/inicio/script.js') }}"></script>
 
-</html>
 </html>

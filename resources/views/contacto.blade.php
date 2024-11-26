@@ -4,18 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlojaDirecto | Informacion de usuario</title>
+    <title>AlojaDirecto | Contacto</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- CSS -->
-    <link rel="stylesheet" href="../../css/informacion-usuario/styles.css">
+    <link rel="stylesheet" href="../../css/listar-reservas/styles.css">
     <link rel="stylesheet" href="../../css/inicio/style.css">
     <!-- Favicon -->
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic%7CPoppins:300,400,500,700">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
     <link rel="icon" href="../../images/inicio/favicon.ico" type="image/x-icon">
+    <!-- Agrega Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js"></script>
+    <!-- Agrega Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -124,100 +129,97 @@
         @endif
         @endauth
     </header>
-
     <main>
-        <br>
-        <h3 class="text-center">INFORMACIÓN DEL USUARIO</h3>
-        <br>
-        <div class="container" style="max-width: 1200px;">
-            <div class="row">
-                <!-- Cuadro izquierdo -->
-                <div class="col-md-3 d-flex justify-content-center">
-                    <div class="p-3 border rounded bg-light w-100 h-100 d-flex flex-column flex-grow-1">
-                        <div class="text-center" style="line-height: 0 !important;">
-                            <i class="fas fa-user fa-2x mb-2"></i>
-                            <h5>{{ $cliente->apellidos }}, {{ $cliente->nombre }}</h5>
-                            <a href="{{ route('editarperfil', ['clienteID' => Auth::user()->id]) }}" class="btn btn-primary mt-2 mb-3 w-100">Editar perfil</a>
-                            <h6><strong>Información Personal</strong></h6>
-                            <p><strong>Correo:</strong> {{ $cliente->email }}</p>
-                            <p><strong>Domicilio:</strong> {{ $cliente->direccion }}</p>
-                            <p><strong>Teléfono:</strong> {{ $cliente->telefono }}</p>
-                            <p><strong>DNI:</strong> {{ $cliente->dni }}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Cuadros centrales -->
-                <div class="col-md-6 d-flex flex-column">
-                    <div class="p-3 border rounded bg-light mb-3 flex-grow-1" style="line-height: 0 !important;">
-                        <h5><strong>Detalles de usuario</strong></h5>
-                        <p><strong>Nombre:</strong> {{ $cliente->nombre }}</p>
-                        <p><strong>Apellidos:</strong> {{ $cliente->apellidos }}</p>
-                        <p><strong>Correo:</strong> {{ $cliente->email }}</p>
-                    </div>
-                    <div class="p-3 border rounded bg-light flex-grow-1">
-                        <h5><strong>Mis Reservas</strong></h5>
-                        @if($reservas->isEmpty())
-                        <p>No hay reservas para este cliente.</p>
-                        @else
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Check-IN</th>
-                                        <th>Check-OUT</th>
-                                        <th>Días</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($reservas as $reserva)
-                                    <tr>
-                                        <td>{{ $reserva->reservaID }}</td>
-                                        <td>{{ $reserva->fecha_checkin }}</td>
-                                        <td>{{ $reserva->fecha_checkout }}</td>
-                                        <td>{{ $reserva->num_dias }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        @endif
-                        <br>
-                        <a href="{{ route('mostrarMisReservas') }}" class="btn btn-primary mb-3 w-100">Ver Mis Reservas</a>
-                    </div>
-                </div>
-
-                <!-- Cuadro derecho -->
-                <div class="col-md-3 d-flex justify-content-center">
-                    <div class="p-3 border rounded bg-light w-100 h-100 d-flex flex-column flex-grow-1">
-                        <h5 class="text-center"><strong>Mis Reseñas</strong></h5>
-                        @if($resenas->isEmpty())
-                        <p>No hay reseñas de este cliente.</p>
-                        @else
-                        <div class="list-group flex-grow-1">
-                            @foreach ($resenas as $resena)
-                            <div class="list-group-item d-flex align-items-start">
-                                <img src="{{ asset($resena->imagen_portada) }}" alt="Imagen del hotel" class="img-thumbnail me-2" style="width: 50px;">
-                                <div>
-                                    <h6 class="mb-0">Hotel: {{ $resena->nombre }}</h6>
-                                    <p class="mb-0">{{ $resena->texto }}</p>
-                                </div>
-                            </div>
-                            <br>
-                            @endforeach
-                        </div>
-                        <a href="{{ route('mostrarResenas', ['clienteID' => Auth::id()]) }}" class="btn btn-primary mt-3 w-100">Ver Mis Reseñas</a>
-                        <a href="{{ route('dejarResenas') }}" class="btn btn-secondary mt-2 w-100">Dejar Reseña</a>
-                        @endif
+        <!-- Breadcrumbs & Page title-->
+        <section class="section-md text-center bg-image breadcrumbs-01 imagen-contacto">
+            <div class="shell shell-fluid">
+                <div class="range range-xs-center">
+                    <div class="cell-xs-12 cell-xl-11">
+                        <h2 class="text-white">Contacta con nosotros</h2>
+                        <ul class="breadcrumbs-custom">
+                            <li><a href="{{ route ('inicio') }}">Inicio</a></li>
+                            <li class="active">Contacto</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-        <br>
-    </main>
+        </section>
 
-    <!-- Footer -->
+        <section class="section section-md bg-white text-center">
+            <div class="shell">
+                <div class="range range-50 range-md-center">
+                    <div class="cell-sm-8">
+                        <div class="contact-box">
+                            <h3>Contáctenos</h3>
+                            <form class="rd-mailform" data-form-output="form-output-global" data-form-type="contact" method="post" action="bat/rd-mailform.php">
+                                <div class="range range-sm-bottom spacing-20">
+                                    <div class="cell-sm-6">
+                                        <div class="form-wrap">
+                                            <input class="form-input" id="contact-first-name" type="text" name="name">
+                                            <label class="form-label" for="contact-first-name">Nombre</label>
+                                        </div>
+                                    </div>
+                                    <div class="cell-sm-6">
+                                        <div class="form-wrap">
+                                            <input class="form-input" id="contact-last-name" type="text" name="phone">
+                                            <label class="form-label" for="contact-last-name">Teléfono</label>
+                                        </div>
+                                    </div>
+                                    <div class="cell-xs-12">
+                                        <div class="form-wrap">
+                                            <textarea class="form-input" id="contact-message" name="message"></textarea>
+                                            <label class="form-label" for="contact-message">Mensaje</label>
+                                        </div>
+                                    </div>
+                                    <div class="cell-sm-6">
+                                        <div class="form-wrap">
+                                            <input class="form-input" id="contact-email" type="email" name="email">
+                                            <label class="form-label" for="contact-email">E-mail</label>
+                                        </div>
+                                    </div>
+                                    <div class="cell-sm-6">
+                                        <button class="button button-primary button-square button-block button-effect-ujarak" type="submit"><span>Enviar mensaje</span></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="cell-sm-4">
+                        <aside class="contact-box-aside text-left">
+                            <div class="range range-50">
+                                <div class="cell-xs-6 cell-sm-12">
+                                    <p class="aside-title">Redes Sociales</p>
+                                    <hr class="divider divider-left divider-custom">
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item"><a class="icon icon-sm icon-gray-3 fa fa-instagram" href="#"></a></li>
+                                        <li class="list-inline-item"><a class="icon icon-sm icon-gray-3 fa fa-facebook" href="#"></a></li>
+                                        <li class="list-inline-item"><a class="icon icon-sm icon-gray-3 fa fa-twitter" href="#"></a></li>
+                                        <li class="list-inline-item"><a class="icon icon-sm icon-gray-3 fa fa-youtube" href="#"></a></li>
+                                    </ul>
+                                </div>
+                                <div class="cell-xs-6 cell-sm-12">
+                                    <p class="aside-title">Teléfono</p>
+                                    <hr class="divider divider-left divider-custom">
+                                    <div class="unit unit-middle unit-horizontal unit-spacing-xs unit-xs-top">
+                                        <div class="unit__left"><span class="text-middle icon icon-sm mdi mdi-phone icon-primary"></span></div>
+                                        <div class="unit__body"><a class="text-middle link link-gray-dark" href="tel:#">959999999</a></div>
+                                    </div>
+                                </div>
+                                <div class="cell-xs-6 cell-sm-12">
+                                    <p class="aside-title"> Dirección </p>
+                                    <hr class="divider divider-left divider-custom">
+                                    <div class="unit unit-middle unit-horizontal unit-spacing-xs unit-xs-top">
+                                        <div class="unit__left"><span class="text-middle icon icon-sm mdi mdi-map-marker icon-primary"></span></div>
+                                        <div class="unit__body"><a class="text-middle link link-gray-dark" href="contacts.html">Villanueva de los Castillejos, Huelva, 21540</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
     <footer class="page-footer text-left text-sm-left">
         <div class="shell-wide">
             <div class="page-footer-minimal">
@@ -290,7 +292,8 @@
 </body>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../../js/informacion-usuario/js.js"></script>
+<!-- Incluye el archivo de Vue -->
+<script src="{{ asset('../../vue/panelrecepcionistas/panel1.js') }}"></script>
 <script src="{{ asset('js/inicio/core.min.js') }}"></script>
 <script src="{{ asset('js/inicio/script.js') }}"></script>
 

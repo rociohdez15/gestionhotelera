@@ -98,6 +98,14 @@ class InicioControlador extends Controller{
         Auth::logout();
         return Redirect::to('/');
     }
+
+    public function cargarSobreNosotros(){
+        return view('sobre-nosotros');
+    }
+
+    public function cargarContacto(){
+        return view('contacto');
+    }
 }
 
 ?>

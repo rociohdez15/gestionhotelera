@@ -28,7 +28,7 @@
                         <div class="left-side">
                             <div class="group d-flex align-items-center">
                                 <span class="icon icon-sm icon-secondary-5 fa fa-user-shield me-2"></span>
-                                <a href="{{ route('panelrecepcionista') }}" class="text-italic">Acceso a administración</a>
+                                <a href="{{ route('login') }}" class="text-italic">Acceso a administración</a>
                             </div>
                         </div>
                         @endguest
@@ -36,7 +36,7 @@
                             <!-- RD Navbar Brand-->
                             <div class="rd-navbar-brand fullwidth-brand">
                                 <a class="brand-name" href="{{ route('inicio') }}">
-                                    <img class="brand-logo img-fluid" src="{{ asset('images/inicio/logo.png') }}" alt="Aloja Directo">
+                                    <img class="brand-logo img-fluid" src="../../images/inicio/logo.png" alt="Aloja Directo">
                                 </a>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                         <!-- RD Navbar collapse toggle-->
                         <button class="rd-navbar-collapse-toggle" data-rd-navbar-toggle=".rd-navbar-collapse"><span></span></button>
                         <!-- RD Navbar Brand-->
-                        <div class="rd-navbar-brand mobile-brand"><a class="brand-name" href="{{ route('inicio') }}"><img src="{{ asset('images/inicio/logo.png') }}" alt="" width="314" height="48" /></a></div>
+                        <div class="rd-navbar-brand mobile-brand"><a class="brand-name" href="index.html"><img src="../../images/inicio/logo.png" alt="" width="314" height="48" /></a></div>
                     </div>
                     <div class="rd-navbar-aside-right">
                         <div class="rd-navbar-nav-wrap">
@@ -94,8 +94,8 @@
                                             <li><a class="dropdown-item" href="{{ route('descubreEspana', ['ciudad' => 'Sevilla']) }}">Sevilla</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="{{ asset('about-us.html') }}">Sobre Nosotros</a></li>
-                                    <li><a href="{{ asset('contacts.html') }}">Contacto</a></li>
+                                    <li><a href="{{ route('cargarSobreNosotros') }}">Sobre Nosotros</a></li>
+                                    <li><a href="{{ route('cargarContacto') }}">Contacto</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -103,6 +103,24 @@
                 </div>
             </nav>
         </div>
+
+        @auth
+        @php
+        $rolUsuario = Auth::user()->rolID; // Suponiendo que 'rolID' es el campo que contiene el rol
+        @endphp
+
+        @if ($rolUsuario === 2) <!-- Si el rol del usuario es recepcionista -->
+        <script>
+            // Redirigir al panel de recepcionista
+            window.location.href = "{{ route('panelrecepcionista') }}";
+        </script>
+        @else <!-- Si el rol del usuario es otro -->
+        <script>
+            // Redirigir al inicio
+            window.location.href = "#";
+        </script>
+        @endif
+        @endauth
     </header>
 
     <main>

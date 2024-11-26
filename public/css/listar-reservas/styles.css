@@ -1,91 +1,89 @@
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     width: 100%;
-    overflow-x: hidden; 
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
 }
 
 body {
-    flex: 1; 
+    flex: 1;
     min-height: 100vh;
 }
 
 main {
-    flex: 1; 
+    flex: 1;
 }
-
 
 .logo-cabecera {
     width: 200px;
-    height: 100px; 
-    
+    height: 100px;
 }
 
-.btn-secondary:hover{
+.btn-secondary:hover {
     background-color: transparent;
     border-color: transparent;
     color: black;
 }
 
-.dropdown-toggle:hover,.dropdown-toggle:active, .dropdown-toggle:focus, .dropdown-toggle:enabled{
-    background-color: transparent; 
+.dropdown-toggle:hover,
+.dropdown-toggle:active,
+.dropdown-toggle:focus,
+.dropdown-toggle:enabled {
+    background-color: transparent;
     border-color: transparent;
     color: black;
 }
 
-#dropdownMenuButton:active, #dropdownMenuButton:focus {
-    background-color: transparent; 
+#dropdownMenuButton:active,
+#dropdownMenuButton:focus {
+    background-color: transparent;
     border-color: transparent;
     color: black;
 }
-
 
 .btn-secondary.icono-user {
-    background-color: transparent; 
-    border: none; 
-    color: inherit; 
-    outline: none; 
-    text-decoration: none; 
+    background-color: transparent;
+    border: none;
+    color: inherit;
+    outline: none;
+    text-decoration: none;
 }
-
 
 .btn-secondary.icono-user i {
-    color: inherit; 
+    color: inherit;
 }
-
 
 .btn-secondary.icono-user:active {
-    background-color: transparent; 
-    color: inherit; 
+    background-color: transparent;
+    color: inherit;
 }
-
 
 .btn-secondary.icono-user:focus {
-    background-color: transparent; 
-    box-shadow: none; 
-    color: inherit; 
+    background-color: transparent;
+    box-shadow: none;
+    color: inherit;
 }
-
 
 .btn-secondary.icono-user:hover {
-    background-color: transparent; 
-    color: inherit; 
+    background-color: transparent;
+    color: inherit;
 }
-
 
 .btn-secondary.icono-user:active i {
-    color: inherit; 
+    color: inherit;
 }
-
 
 .contenedor-titulos {
     position: relative;
-    background: url('../../images/inicio/fondo-body.jpg') no-repeat center center, #D4AF37;
+    background: url("../../images/inicio/fondo-body.jpg") no-repeat center
+            center,
+        #d4af37;
     background-size: cover;
-    width: 100%; 
-    padding: 100px 0; 
+    width: 100%;
+    padding: 100px 0;
     text-align: center;
 }
 
@@ -125,11 +123,11 @@ main {
     background-color: #ccc;
 }
 .img-ciudades {
-    width: 200px; 
-    height: 150px; 
-    object-fit: cover; 
-    border-radius: 15px; 
-    display: block; 
+    width: 200px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 15px;
+    display: block;
     margin: 0 auto;
 }
 .img-ciudades:hover {
@@ -139,7 +137,20 @@ main {
     font-size: 1.2rem;
 }
 
-.campo-edad{
+.imagen {
+    background-image: url("../../images/inicio/sobre-nosotros.jpg") !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+.imagen-contacto {
+    background-image: url("../../images/inicio/contacto.jpg") !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+
+.campo-edad {
     margin-top: 10px;
 }
 
@@ -148,16 +159,16 @@ main {
 }
 
 .form-group label {
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
 }
 
-.mundo{
+.mundo {
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
 }
-.texto-mundo{
+.texto-mundo {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -199,16 +210,16 @@ main {
     width: 100%;
     height: 197px;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     border: 3px solid #3c3c3c;
-    margin: 0; 
+    margin: 0;
     border-radius: 5px;
     position: relative;
-    padding: 15px; 
-    box-sizing: border-box; 
+    padding: 15px;
+    box-sizing: border-box;
 }
 
-.centros{
+.centros {
     padding-left: 0;
     padding-right: 0;
     margin-left: 0;
@@ -217,22 +228,25 @@ main {
 .icono-user2 {
     font-size: 2.5rem;
     text-align: center;
-    margin-bottom: 100px; 
+    margin-bottom: 100px;
     padding: 0;
 }
 
-.boton-perfil{
+.boton-perfil {
     font-size: 10px;
     margin-top: -40px;
 }
 
-.informacion-personal{
+.informacion-personal {
     text-decoration: underline;
     font-size: 15px;
     margin-top: -10px;
 }
 
-.email,.domicilio,.dni,.tlf{
+.email,
+.domicilio,
+.dni,
+.tlf {
     text-align: left;
     margin-left: 20px;
     font-size: 13px;
@@ -241,187 +255,181 @@ main {
 .detalles-usuario {
     text-decoration: underline;
     font-size: 15px;
-    text-align: left; 
-    margin: 0; 
-    padding: 0; 
-    width: 100%; 
-    box-sizing: border-box; 
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .nombre {
     font-size: 13px;
-    text-align: left; 
-    margin-top: 5px; 
-    padding: 0; 
-    width: 100%; 
-    box-sizing: border-box; 
+    text-align: left;
+    margin-top: 5px;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
-.apellidos{
+.apellidos {
     font-size: 13px;
-    text-align: left; 
-    padding: 0; 
-    width: 100%; 
-    box-sizing: border-box; 
+    text-align: left;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
-.email2{
+.email2 {
     font-size: 13px;
-    text-align: left; 
-    padding: 0; 
-    width: 100%; 
-    box-sizing: border-box; 
+    text-align: left;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .enlace-perfil {
     position: absolute;
-    top: 10px; 
-    right: 10px; 
-    text-decoration: none; 
-    color: #007bff; 
-    font-size: 14px; 
+    top: 10px;
+    right: 10px;
+    text-decoration: none;
+    color: #007bff;
+    font-size: 14px;
 }
 
 .tabla-reservas {
-    width: 100%; 
-    border-collapse: collapse; 
-    margin: 20px auto; 
-    font-size: 12px; 
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px auto;
+    font-size: 12px;
     height: 100px;
     border-radius: 5px;
 }
 
 .table-responsive {
-
     border-radius: 10px !important;
     font-size: 15px;
 }
 
 table {
-    border-collapse: separate !important; 
-    border-spacing: 0; 
-    border-radius: 10px !important; 
-    overflow: hidden; 
+    border-collapse: separate !important;
+    border-spacing: 0;
+    border-radius: 10px !important;
+    overflow: hidden;
 }
-
 
 .resenas {
     text-decoration: underline;
     font-size: 15px;
-    text-align: left; 
-    margin: 0; 
-    padding: 0; 
-    width: 100%; 
-    box-sizing: border-box; 
-    position: absolute; 
-    top: 10px; 
-    left: 10px; 
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+    position: absolute;
+    top: 10px;
+    left: 10px;
 }
 
 .cuadrado {
-    position: relative; 
-    padding: 20px; 
-    border-radius: 5px; 
+    position: relative;
+    padding: 20px;
+    border-radius: 5px;
 }
 
 .reseñas-container {
-    display: flex; 
-    flex-wrap: wrap; 
-    justify-content: center; 
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     padding: 0;
     box-sizing: border-box;
-    margin: 0; 
-    width: 100%; 
+    margin: 0;
+    width: 100%;
     margin-right: 0px;
     margin-bottom: 40px;
 }
 
 .contenedor-resena {
-    display: flex; 
-    align-items: center; 
-    border: 3px solid #3c3c3c; 
+    display: flex;
+    align-items: center;
+    border: 3px solid #3c3c3c;
     border-radius: 5px;
-    border-radius: 5px; 
-    padding: 10px; 
-    width: 300px; 
-    margin: 10px; 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
-    box-sizing: border-box; 
+    border-radius: 5px;
+    padding: 10px;
+    width: 300px;
+    margin: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
 }
 
-
 .imagen-resena {
-    width: 50px; 
-    height: 50px; 
-    object-fit: cover; 
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
     border-radius: 5px;
-    margin-right: 10px; 
+    margin-right: 10px;
 }
 
 .nombre-hotel {
-    margin: 0; 
+    margin: 0;
     font-size: 14px;
     font-weight: bold;
 }
 
 .texto-resena {
-    font-size: 12px; 
+    font-size: 12px;
 }
 
 .menu-izquierda {
-    position: absolute; 
-    top: 10px; 
-    left: 40px; 
+    position: absolute;
+    top: 10px;
+    left: 40px;
     margin-top: 40px;
     overflow-x: auto;
 }
 
 .menu-izquierda ul {
-    display: flex; 
-    flex-wrap: nowrap; 
+    display: flex;
+    flex-wrap: nowrap;
 }
 
 .menu-izquierda a {
-    text-decoration: none; 
+    text-decoration: none;
     color: black;
 }
 
 .menu-izquierda li {
-    margin: 0 5px; 
+    margin: 0 5px;
 }
 
-
-
-@media (max-width: 992px){
-    .menu-izquierda{
+@media (max-width: 992px) {
+    .menu-izquierda {
         margin-top: 20px;
     }
     .menu-izquierda ul {
-        flex-direction: column; 
-        align-items: flex-start; 
+        flex-direction: column;
+        align-items: flex-start;
         font-size: 10px;
-        
     }
 
     .menu-izquierda .divider {
-        display: none; 
+        display: none;
     }
 
     .menu-izquierda li {
-        margin-bottom: 5px; 
+        margin-bottom: 5px;
     }
 }
 
 @media (max-width: 992px) {
-    .reseñas-container{
+    .reseñas-container {
         margin-top: 100px;
     }
     .contenedor-resena {
-        width: 100%; 
-        flex-direction: column; 
-        align-items: flex-start; 
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
         font-size: 10px;
     }
 
-    .enlace-resena{
+    .enlace-resena {
         margin-top: 20px;
         margin-right: 70px;
     }
@@ -429,13 +437,14 @@ table {
     .imagen-resena {
         width: 20px;
         height: 20px;
-        margin-bottom: 0px; 
+        margin-bottom: 0px;
     }
 
     .resenas {
-        font-size: 14px; 
+        font-size: 14px;
     }
-    .nombre-hotel,.texto-resena{
+    .nombre-hotel,
+    .texto-resena {
         font-size: 12px;
     }
 }
@@ -445,17 +454,17 @@ table {
         margin-left: 100px;
     }
 
-    .enlace-resena{
+    .enlace-resena {
         margin-top: 0px;
         margin-right: 0px;
     }
-    
+
     .fa-right-from-bracket {
-        font-size: 14px; 
+        font-size: 14px;
     }
-    
+
     .icono-user {
-        padding: 5px 10px; 
+        padding: 5px 10px;
     }
 }
 
@@ -464,21 +473,23 @@ table {
     height: auto !important;
 }
 
-.menu-opciones{
+.menu-opciones {
     background-color: #3c3c3c;
     color: white;
 }
 
-.txt-opciones{
+.txt-opciones {
     font-size: 20px;
     text-decoration: underline;
 }
 
-.txt-listado, .nav-link{
+.txt-listado,
+.nav-link {
     color: white;
 }
 
-.nav-link:hover, .nav-link:focus{
+.nav-link:hover,
+.nav-link:focus {
     color: white;
 }
 
@@ -487,23 +498,20 @@ table {
         margin-left: 100px;
     }
 
-    .enlace-resena{
+    .enlace-resena {
         margin-top: 0px;
         margin-right: 0px;
     }
-    
+
     .fa-right-from-bracket {
-        font-size: 14px; 
-    }
-    
-    .icono-user {
-        padding: 10px 0px; 
+        font-size: 14px;
     }
 
-    .nav-link{
+    .icono-user {
+        padding: 10px 0px;
+    }
+
+    .nav-link {
         text-align: center;
     }
-
-
-    
 }
