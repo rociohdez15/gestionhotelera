@@ -24,8 +24,8 @@
 </head>
 
 <body>
-    <!-- Page Header-->
-    <header class="page-header" style="padding-bottom: 24px">
+   <!-- Page Header-->
+   <header class="page-header" style="padding-bottom: 24px">
         <!-- RD Navbar-->
         <div class="rd-navbar-wrap">
             <nav class="rd-navbar rd-navbar-default-with-top-panel" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fullwidth" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-fullwidth" data-lg-device-layout="rd-navbar-fullwidth" data-md-stick-up-offset="90px" data-lg-stick-up-offset="150px" data-stick-up="true" data-sm-stick-up="true" data-md-stick-up="true" data-lg-stick-up="true">
@@ -57,10 +57,15 @@
                                     <a class="text-italic" href="{{ route('login') }}">Iniciar Sesión</a>
                                     @endguest
                                     @auth
+                                    @php
+                                    $rolUsuario = Auth::user()->rolID;
+                                    @endphp
+                                    @if ($rolUsuario !== 2)
                                     <a href="{{ route('informacionusuario') }}" class="btn btn-secondary user-name icono-user d-flex align-items-center" id="dropdownMenuButton" role="button" aria-expanded="false">
                                         {{ Auth::user()->name }} {{ Auth::user()->apellido }}
                                         <i class="fa-solid fa-user ms-2"></i>
                                     </a>
+                                    @endif
                                     <a href="{{ route('logout') }}" class="btn btn-secondary icono-user" role="button" aria-expanded="false">
                                         <i class="fa-solid fa-right-from-bracket"></i>
                                     </a>
@@ -102,6 +107,9 @@
                                     </li>
                                     <li><a href="{{ route('dispHabitaciones') }}">Estadísticas</a></li>
                                     <li><a href="{{ route('listarServicios') }}">Servicios</a></li>
+                                    <li><a href="{{ route('listarHoteles') }}">Hoteles</a></li>
+                                    <li><a href="{{ route('listarHabitaciones') }}">Habitaciones</a></li>
+                                    <li><a href="{{ route('listarUsuarios') }}">Usuarios</a></li>
                                     @else
                                     <li><a href="{{ route('inicio') }}">Inicio</a></li>
                                     <li class="nav-item dropdown">

@@ -106,6 +106,9 @@
                                     </li>
                                     <li><a href="{{ route('dispHabitaciones') }}">Estadísticas</a></li>
                                     <li><a href="{{ route('listarServicios') }}">Servicios</a></li>
+                                    <li><a href="{{ route('listarHoteles') }}">Hoteles</a></li>
+                                    <li><a href="{{ route('listarHabitaciones') }}">Habitaciones</a></li>
+                                    <li><a href="{{ route('listarUsuarios') }}">Usuarios</a></li>
                                     @else
                                     <li><a href="{{ route('inicio') }}">Inicio</a></li>
                                     <li class="nav-item dropdown">

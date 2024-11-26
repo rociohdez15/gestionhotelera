@@ -98,12 +98,16 @@
                                             Reservas
                                         </a>
                                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <li><a class="dropdown-item" href="{{ route('listarReservas') }}">Lista de reservas</a></li>
                                             <li><a class="dropdown-item" href="{{ route('listadoCheckin') }}">Realizar Check-In</a></li>
                                             <li><a class="dropdown-item" href="{{ route('listadoCheckout') }}">Realizar Check-Out</a></li>
                                         </ul>
                                     </li>
                                     <li><a href="{{ route('dispHabitaciones') }}">Estadísticas</a></li>
                                     <li><a href="{{ route('listarServicios') }}">Servicios</a></li>
+                                    <li><a href="{{ route('listarHoteles') }}">Hoteles</a></li>
+                                    <li><a href="{{ route('listarHabitaciones') }}">Habitaciones</a></li>
+                                    <li><a href="{{ route('listarUsuarios') }}">Usuarios</a></li>
                                     @else
                                     <li><a href="{{ route('inicio') }}">Inicio</a></li>
                                     <li class="nav-item dropdown">
