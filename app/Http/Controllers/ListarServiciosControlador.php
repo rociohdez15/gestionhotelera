@@ -65,6 +65,30 @@ class ListarServiciosControlador extends Controller
         return view('listarservicios', $parametros);
     }
 
+    public function actualizarServicio()
+    {
+        $hoteles = DB::table('reservas')
+            ->join('habitaciones', 'habitaciones.habitacionID', '=', 'reservas.habitacionID')
+            ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID')
+            ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID')
+            ->join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID') // Unión con la tabla intermedia
+            ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID') // Unión con la tabla de servicios a través de la intermedia
+            ->select(
+                'reservas.*',
+                'clientes.nombre',
+                'clientes.apellidos',
+                'habitaciones.numhabitacion',
+                'servicios.servicioID',
+                'hoteles.nombre as nombre_hotel',
+                'servicios.nombre as nombre_servicio',
+                DB::raw("SUBSTRING_INDEX(servicios.horario, ' ', 1) as dia_servicio"), // Separando el día del campo horario
+                DB::raw("DATE_FORMAT(servicios.horario, '%H:%i') as hora_servicio") // Separando la hora del campo horario
+            )
+            ->paginate(5);
+
+        return response()->json($hoteles);
+    }
+
     public function delServicio(Request $request, $servicioID)
     {
         $servicio = Servicio::find($servicioID);
@@ -326,6 +350,7 @@ class ListarServiciosControlador extends Controller
         $pdf->Output($filename, 'D');
     }
 
+
     public function buscarServicios(Request $request)
     {
         $query = $request->input('query');
@@ -347,33 +372,23 @@ class ListarServiciosControlador extends Controller
             ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID') // Une con la tabla de hoteles
             ->join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID') // Une con la tabla intermedia
             ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID') // Une con la tabla de servicios
-            ->where('reservas.reservaID', 'LIKE', "%$query%")
-            ->orWhere('clientes.nombre', 'LIKE', "%$query%")
-            ->orWhere('clientes.apellidos', 'LIKE', "%$query%")
-            ->orWhere('habitaciones.numhabitacion', 'LIKE', "%$query%")
-            ->orWhere('hoteles.nombre', 'LIKE', "%$query%")
-            ->orWhere('servicios.nombre', 'LIKE', "%$query%")
-            ->orWhere('servicios.servicioID', 'LIKE', "%$query%");
+            ->where(function ($q) use ($query) {
+                $q->where('reservas.reservaID', 'LIKE', "%$query%")
+                    ->orWhere('clientes.nombre', 'LIKE', "%$query%")
+                    ->orWhere('clientes.apellidos', 'LIKE', "%$query%")
+                    ->orWhere('habitaciones.numhabitacion', 'LIKE', "%$query%")
+                    ->orWhere('hoteles.nombre', 'LIKE', "%$query%")
+                    ->orWhere('servicios.nombre', 'LIKE', "%$query%")
+                    ->orWhere('servicios.servicioID', 'LIKE', "%$query%");
+            });
 
-        $totalReservas = $consulta->count();
+        $servicios = $consulta->orderBy('servicios.servicioID', 'asc')->paginate(5);
 
-        $registros_por_pagina = 5;
-        $pagina_actual = $request->input('pagina', 1);
-        $total_paginas = ceil($totalReservas / $registros_por_pagina);
+        if ($request->ajax()) {
+            return response()->json($servicios);
+        }
 
-        if ($pagina_actual < 1) $pagina_actual = 1;
-        if ($pagina_actual > $total_paginas) $pagina_actual = $total_paginas;
-
-        $inicio = ($pagina_actual - 1) * $registros_por_pagina;
-
-        $reservas = $consulta->skip($inicio)->take($registros_por_pagina)->get();
-
-        return view('listarservicios', [
-            'reserva' => $reservas,
-            'total_paginas' => $total_paginas,
-            'pagina_actual' => $pagina_actual,
-            'registros_por_pagina' => $registros_por_pagina
-        ], compact('reservas'));
+        return view('listarservicios', compact('servicios'));
     }
 
     public function anadirServicio(Request $request)
@@ -405,7 +420,22 @@ class ListarServiciosControlador extends Controller
             if ($request->wantsJson() || $request->is('api/*')) {
                 return response()->json(['error' => 'Reserva no encontrada'], 404);
             }
-            return back()->withError('Reserva no encontrada');
+            return back()->withErrors(['error' => 'Reserva no encontrada'])->withInput();
+        }
+
+        // Verificar si el servicio ya existe para el mismo usuario, servicio, día y hora
+        $servicioExistente = DB::table('reservas_servicios')
+            ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID')
+            ->where('reservas_servicios.reservaID', $reservaID)
+            ->where('servicios.nombre', $request->input('nombreServicio'))
+            ->where('servicios.horario', $request->input('fechaHora'))
+            ->first();
+
+        if ($servicioExistente) {
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['error' => 'El servicio ya existe para este usuario en la fecha y hora especificadas'], 409);
+            }
+            return back()->withErrors(['error' => 'El servicio ya existe para este usuario en la fecha y hora especificadas'])->withInput();
         }
 
         // Calcular el número total de personas

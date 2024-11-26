@@ -20,11 +20,12 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js"></script>
     <!-- Agrega Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
-   <!-- Page Header-->
-   <header class="page-header" style="padding-bottom: 24px">
+    <!-- Page Header-->
+    <header class="page-header" style="padding-bottom: 24px">
         <!-- RD Navbar-->
         <div class="rd-navbar-wrap">
             <nav class="rd-navbar rd-navbar-default-with-top-panel" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fullwidth" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-fullwidth" data-lg-device-layout="rd-navbar-fullwidth" data-md-stick-up-offset="90px" data-lg-stick-up-offset="150px" data-stick-up="true" data-sm-stick-up="true" data-md-stick-up="true" data-lg-stick-up="true">
@@ -108,7 +109,7 @@
                                     <li><a href="{{ route('listarServicios') }}">Servicios</a></li>
                                     <li><a href="{{ route('listarHoteles') }}">Hoteles</a></li>
                                     <li><a href="{{ route('listarHabitaciones') }}">Habitaciones</a></li>
-                                    <li><a href="{{ route('listarUsuarios') }}">Usuarios</a></li>
+                                    <li><a href="{{ route('listarUsuarios') }}">Administradores</a></li>
                                     @else
                                     <li><a href="{{ route('inicio') }}">Inicio</a></li>
                                     <li class="nav-item dropdown">
@@ -181,7 +182,7 @@
 
             <!-- Muestra la tabla de reservas -->
             <div class="table-responsive mx-auto">
-                <table class="table table-bordered table-striped text-center">
+                <table class="table table-bordered table-striped text-center" id="tabla-servicios">
                     <thead class="table-dark">
                         <tr>
                             <th>ID</th>
@@ -195,78 +196,142 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($reservas as $reserva)
-                        <tr>
-                            <td>{{ $reserva->servicioID }}</td>
-                            <td>{{ $reserva->nombre }}, {{ $reserva->apellidos }}</td>
-                            <td>{{ $reserva->numhabitacion }}</td>
-                            <td>{{ $reserva->nombre_hotel }}</td>
-                            <td>{{ $reserva->nombre_servicio }}</td>
-                            <td>{{ $reserva->dia_servicio }}</td>
-                            <td>{{ $reserva->hora_servicio }}</td>
-                            <td class="d-flex justify-content-center gap-2">
-                                <!-- Botón para abrir el modal de eliminacion-->
-                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ $reserva->servicioID }}">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-
-                                <!-- Modal de confirmación de eliminación-->
-                                <div class="modal fade" id="confirmDeleteModal{{ $reserva->servicioID }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel{{ $reserva->servicioID }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="confirmDeleteModalLabel{{ $reserva->servicioID }}">Confirmar eliminación</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Estás seguro de que deseas eliminar este servicio?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form action="{{ route('delServicio', $reserva->servicioID) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
-                                                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Botón para abrir el modal de editar-->
-                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#confirmEditModal{{ $reserva->reservaID }}">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </button>
-                                <!-- Modal de confirmación de editar reserva-->
-                                <div class="modal fade" id="confirmEditModal{{ $reserva->reservaID }}" tabindex="-1" aria-labelledby="confirmEditModalLabel{{ $reserva->reservaID }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="confirmEditarModalLabel{{ $reserva->reservaID }}">Confirmar editar</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Estás seguro de que deseas editar este servicio?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form action="{{ route('mostrarServicio', $reserva->servicioID) }}" method="POST">
-                                                    @csrf
-                                                    @method('GET')
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
-                                                    <button type="submit" class="btn btn-danger">Editar</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <a href="{{ route('generar_pdf_listar_servicios', ['servicioID' => $reserva->servicioID]) }}" class="btn btn-success btn-sm">
-                                    <i class="fa-solid fa-file-pdf"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        @endforeach
+                        <!-- Los datos se agregarán aquí dinámicamente -->
                     </tbody>
                 </table>
+                <div id="paginacion" class="text-center" style="color: black; margin-top: 20px;">
+                    <!-- Los enlaces de paginación se agregarán aquí dinámicamente -->
+                </div>
 
+                <script>
+                    $(document).ready(function() {
+                        var currentPage = 1;
+                        var currentQuery = '';
+
+                        function actualizarTabla(page = 1, query = '') {
+                            $.ajax({
+                                url: '{{ route("buscarServicios") }}',
+                                method: 'GET',
+                                data: {
+                                    page: page,
+                                    query: query
+                                },
+                                success: function(response) {
+                                    currentPage = page;
+                                    currentQuery = query;
+
+                                    var tabla = $('#tabla-servicios tbody');
+                                    tabla.empty();
+                                    $.each(response.data, function(index, servicio) {
+                                        var pdfUrl = '{{ route("generar_pdf_listar_servicios", ":servicioID") }}';
+                                        pdfUrl = pdfUrl.replace(':servicioID', servicio.servicioID);
+
+                                        var row =
+                                            '<tr>' +
+                                            '<td>' + servicio.servicioID + '</td>' +
+                                            '<td>' + servicio.nombre + ', ' + servicio.apellidos + '</td>' +
+                                            '<td>' + servicio.numhabitacion + '</td>' +
+                                            '<td>' + servicio.nombre_hotel + '</td>' +
+                                            '<td>' + servicio.nombre_servicio + '</td>' +
+                                            '<td>' + servicio.dia_servicio + '</td>' +
+                                            '<td>' + servicio.hora_servicio + '</td>' +
+                                            '<td class="d-flex justify-content-center gap-2">' +
+                                            '<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal' + servicio.servicioID + '">' +
+                                            '<i class="fa-solid fa-trash"></i>' +
+                                            '</button>' +
+                                            '<div class="modal fade" id="confirmDeleteModal' + servicio.servicioID + '" tabindex="-1" aria-labelledby="confirmDeleteModalLabel' + servicio.servicioID + '" aria-hidden="true">' +
+                                            '<div class="modal-dialog">' +
+                                            '<div class="modal-content">' +
+                                            '<div class="modal-header">' +
+                                            '<h5 class="modal-title" id="confirmDeleteModalLabel' + servicio.servicioID + '">Confirmar eliminación</h5>' +
+                                            '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                                            '</div>' +
+                                            '<div class="modal-body">¿Estás seguro de que deseas eliminar este servicio?</div>' +
+                                            '<div class="modal-footer">' +
+                                            '<form action="{{ route("delServicio", "") }}/' + servicio.servicioID + '" method="POST">' +
+                                            '@csrf' +
+                                            '@method("DELETE")' +
+                                            '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
+                                            '<button type="submit" class="btn btn-danger">Eliminar</button>' +
+                                            '</form>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '<button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#confirmEditModal' + servicio.servicioID + '">' +
+                                            '<i class="fa-solid fa-pen-to-square"></i>' +
+                                            '</button>' +
+                                            '<div class="modal fade" id="confirmEditModal' + servicio.servicioID + '" tabindex="-1" aria-labelledby="confirmEditModalLabel' + servicio.servicioID + '" aria-hidden="true">' +
+                                            '<div class="modal-dialog">' +
+                                            '<div class="modal-content">' +
+                                            '<div class="modal-header">' +
+                                            '<h5 class="modal-title" id="confirmEditModalLabel' + servicio.servicioID + '">Confirmar editar</h5>' +
+                                            '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                                            '</div>' +
+                                            '<div class="modal-body">¿Estás seguro de que deseas editar este servicio?</div>' +
+                                            '<div class="modal-footer">' +
+                                            '<form action="{{ route("mostrarServicio", "") }}/' + servicio.servicioID + '" method="POST">' +
+                                            '@csrf' +
+                                            '@method("GET")' +
+                                            '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
+                                            '<button type="submit" class="btn btn-danger">Editar</button>' +
+                                            '</form>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '<a href="' + pdfUrl + '" class="btn btn-success btn-sm">' +
+                                            '<i class="fa-solid fa-file-pdf"></i>' +
+                                            '</a>' +
+                                            '</td>' +
+                                            '</tr>';
+
+                                        tabla.append(row);
+                                    });
+
+                                    // Construir enlaces de paginación
+                                    var enlacesPaginacion = $('#paginacion');
+                                    enlacesPaginacion.empty();
+                                    enlacesPaginacion.append(
+                                        '<span>Página ' + response.current_page + ' de ' + response.last_page + ' | Mostrar ' + response.per_page + ' registros por página | Ir a página: </span>'
+                                    );
+                                    for (var i = 1; i <= response.last_page; i++) {
+                                        enlacesPaginacion.append(
+                                            '<a href="#" class="page-link" data-page="' + i + '" style="color: black; margin: 0 5px; display: inline-block;">' + i + '</a>'
+                                        );
+                                    }
+
+                                    // Añadir evento click a los enlaces de paginación
+                                    $('.page-link').click(function(e) {
+                                        e.preventDefault();
+                                        var page = $(this).data('page');
+                                        actualizarTabla(page, currentQuery);
+                                    });
+                                },
+                                error: function(xhr) {
+                                    console.error("Error al cargar los datos:", xhr.responseText);
+                                }
+                            });
+                        }
+
+                        // Llama a la función para actualizar la tabla inicialmente
+                        actualizarTabla();
+
+                        // Llama a la función para actualizar la tabla cada 5 segundos
+                        setInterval(function() {
+                            if ($('.modal.show').length === 0) {
+                                actualizarTabla(currentPage, currentQuery);
+                            }
+                        }, 5000);
+
+                        // Manejar el evento de envío del formulario de búsqueda
+                        $('form').submit(function(e) {
+                            e.preventDefault();
+                            var query = $('input[name="query"]').val();
+                            actualizarTabla(1, query);
+                        });
+                    });
+                </script>
             </div>
             <br>
             <div class="text-center">
@@ -277,19 +342,7 @@
                     Generar listado servicios
                 </a>
             </div>
-
             <br>
-            <!-- Paginación -->
-            <div class="container text-center" style="color: black;">
-                <p>
-                    Página {{ $pagina_actual }} de {{ $total_paginas }} | Mostrar {{ $registros_por_pagina }} registros por página | Ir a página:
-                    @for ($i = 1; $i <= $total_paginas; $i++)
-                        <a href="{{ route('listarServicios', array_merge(request()->except('pagina'), ['pagina' => $i])) }}">{{ $i }} </a>
-                        @endfor
-                </p>
-            </div>
-            <br>
-        </div>
     </main>
     <footer class="page-footer text-left text-sm-left">
         <div class="shell-wide">

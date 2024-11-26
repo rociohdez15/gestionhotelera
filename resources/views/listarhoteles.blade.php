@@ -109,7 +109,7 @@
                                     <li><a href="{{ route('listarServicios') }}">Servicios</a></li>
                                     <li><a href="{{ route('listarHoteles') }}">Hoteles</a></li>
                                     <li><a href="{{ route('listarHabitaciones') }}">Habitaciones</a></li>
-                                    <li><a href="{{ route('listarUsuarios') }}">Usuarios</a></li>
+                                    <li><a href="{{ route('listarUsuarios') }}">Administradores</a></li>
                                     @else
                                     <li><a href="{{ route('inicio') }}">Inicio</a></li>
                                     <li class="nav-item dropdown">
@@ -204,138 +204,138 @@
                 </div>
 
                 <script>
-    $(document).ready(function() {
-        var currentPage = 1;
-        var currentQuery = '';
+                    $(document).ready(function() {
+                        var currentPage = 1;
+                        var currentQuery = '';
 
-        function actualizarTabla(page = 1, query = '') {
-            $.ajax({
-                url: '{{ route("buscadorHoteles") }}',
-                method: 'GET',
-                data: {
-                    page: page,
-                    query: query
-                },
-                success: function(response) {
-                    currentPage = page;
-                    currentQuery = query;
+                        function actualizarTabla(page = 1, query = '') {
+                            $.ajax({
+                                url: '{{ route("buscadorHoteles") }}',
+                                method: 'GET',
+                                data: {
+                                    page: page,
+                                    query: query
+                                },
+                                success: function(response) {
+                                    currentPage = page;
+                                    currentQuery = query;
 
-                    var tabla = $('#tabla-reservas tbody');
-                    tabla.empty();
-                    $.each(response.data, function(index, hotel) {
-                        var pdfUrl = '{{ route("generar_pdf_listar_hoteles", ":hotelID") }}';
-                        pdfUrl = pdfUrl.replace(':hotelID', hotel.hotelID);
+                                    var tabla = $('#tabla-reservas tbody');
+                                    tabla.empty();
+                                    $.each(response.data, function(index, hotel) {
+                                        var pdfUrl = '{{ route("generar_pdf_listar_hoteles", ":hotelID") }}';
+                                        pdfUrl = pdfUrl.replace(':hotelID', hotel.hotelID);
 
-                        var descripcion = hotel.descripcion;
-                        if (descripcion.length > 100) {
-                            descripcion = descripcion.substring(0, 100) + ' [...]';
+                                        var descripcion = hotel.descripcion;
+                                        if (descripcion.length > 100) {
+                                            descripcion = descripcion.substring(0, 100) + ' [...]';
+                                        }
+
+                                        var row =
+                                            '<tr>' +
+                                            '<td>' + hotel.hotelID + '</td>' +
+                                            '<td>' + hotel.nombre + '</td>' +
+                                            '<td>' + hotel.direccion + '</td>' +
+                                            '<td>' + hotel.ciudad + '</td>' +
+                                            '<td>' + hotel.telefono + '</td>' +
+                                            '<td>' + descripcion + '</td>' +
+                                            '<td class="d-flex justify-content-center gap-2">' +
+                                            '<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal' + hotel.hotelID + '">' +
+                                            '<i class="fa-solid fa-trash"></i>' +
+                                            '</button>' +
+                                            '<div class="modal fade" id="confirmDeleteModal' + hotel.hotelID + '" tabindex="-1" aria-labelledby="confirmDeleteModalLabel' + hotel.hotelID + '" aria-hidden="true">' +
+                                            '<div class="modal-dialog">' +
+                                            '<div class="modal-content">' +
+                                            '<div class="modal-header">' +
+                                            '<h5 class="modal-title" id="confirmDeleteModalLabel' + hotel.hotelID + '">Confirmar eliminación</h5>' +
+                                            '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                                            '</div>' +
+                                            '<div class="modal-body">¿Estás seguro de que deseas eliminar esta hotel?</div>' +
+                                            '<div class="modal-footer">' +
+                                            '<form action="{{ route("delHotel", "") }}/' + hotel.hotelID + '" method="POST">' +
+                                            '@csrf' +
+                                            '@method("DELETE")' +
+                                            '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
+                                            '<button type="submit" class="btn btn-danger">Eliminar</button>' +
+                                            '</form>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '<button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#confirmEditModal' + hotel.hotelID + '">' +
+                                            '<i class="fa-solid fa-pen-to-square"></i>' +
+                                            '</button>' +
+                                            '<div class="modal fade" id="confirmEditModal' + hotel.hotelID + '" tabindex="-1" aria-labelledby="confirmEditModalLabel' + hotel.hotelID + '" aria-hidden="true">' +
+                                            '<div class="modal-dialog">' +
+                                            '<div class="modal-content">' +
+                                            '<div class="modal-header">' +
+                                            '<h5 class="modal-title" id="confirmEditModalLabel' + hotel.hotelID + '">Confirmar editar</h5>' +
+                                            '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                                            '</div>' +
+                                            '<div class="modal-body">¿Estás seguro de que deseas editar esta hotel?</div>' +
+                                            '<div class="modal-footer">' +
+                                            '<form action="{{ route("mostrarHotel", "") }}/' + hotel.hotelID + '" method="POST">' +
+                                            '@csrf' +
+                                            '@method("GET")' +
+                                            '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
+                                            '<button type="submit" class="btn btn-danger">Editar</button>' +
+                                            '</form>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '<a href="' + pdfUrl + '" class="btn btn-success btn-sm">' +
+                                            '<i class="fa-solid fa-file-pdf"></i>' +
+                                            '</a>' +
+                                            '</td>' +
+                                            '</tr>';
+
+                                        tabla.append(row);
+                                    });
+
+                                    // Construir enlaces de paginación
+                                    var enlacesPaginacion = $('#paginacion');
+                                    enlacesPaginacion.empty();
+                                    enlacesPaginacion.append(
+                                        '<span>Página ' + response.current_page + ' de ' + response.last_page + ' | Mostrar ' + response.per_page + ' registros por página | Ir a página: </span>'
+                                    );
+                                    for (var i = 1; i <= response.last_page; i++) {
+                                        enlacesPaginacion.append(
+                                            '<a href="#" class="page-link" data-page="' + i + '" style="color: black; margin: 0 5px; display: inline-block;">' + i + '</a>'
+                                        );
+                                    }
+
+                                    // Añadir evento click a los enlaces de paginación
+                                    $('.page-link').click(function(e) {
+                                        e.preventDefault();
+                                        var page = $(this).data('page');
+                                        actualizarTabla(page, currentQuery);
+                                    });
+                                },
+                                error: function(xhr) {
+                                    console.error("Error al cargar los datos:", xhr.responseText);
+                                }
+                            });
                         }
 
-                        var row = 
-                            '<tr>' +
-                            '<td>' + hotel.hotelID + '</td>' +
-                            '<td>' + hotel.nombre + '</td>' +
-                            '<td>' + hotel.direccion + '</td>' +
-                            '<td>' + hotel.ciudad + '</td>' +
-                            '<td>' + hotel.telefono + '</td>' +
-                            '<td>' + descripcion + '</td>' +
-                            '<td class="d-flex justify-content-center gap-2">' +
-                            '<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal' + hotel.hotelID + '">' +
-                            '<i class="fa-solid fa-trash"></i>' +
-                            '</button>' +
-                            '<div class="modal fade" id="confirmDeleteModal' + hotel.hotelID + '" tabindex="-1" aria-labelledby="confirmDeleteModalLabel' + hotel.hotelID + '" aria-hidden="true">' +
-                            '<div class="modal-dialog">' +
-                            '<div class="modal-content">' +
-                            '<div class="modal-header">' +
-                            '<h5 class="modal-title" id="confirmDeleteModalLabel' + hotel.hotelID + '">Confirmar eliminación</h5>' +
-                            '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
-                            '</div>' +
-                            '<div class="modal-body">¿Estás seguro de que deseas eliminar esta hotel?</div>' +
-                            '<div class="modal-footer">' +
-                            '<form action="{{ route("delHotel", "") }}/' + hotel.hotelID + '" method="POST">' +
-                            '@csrf' +
-                            '@method("DELETE")' +
-                            '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
-                            '<button type="submit" class="btn btn-danger">Eliminar</button>' +
-                            '</form>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>' +
-                            '<button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#confirmEditModal' + hotel.hotelID + '">' +
-                            '<i class="fa-solid fa-pen-to-square"></i>' +
-                            '</button>' +
-                            '<div class="modal fade" id="confirmEditModal' + hotel.hotelID + '" tabindex="-1" aria-labelledby="confirmEditModalLabel' + hotel.hotelID + '" aria-hidden="true">' +
-                            '<div class="modal-dialog">' +
-                            '<div class="modal-content">' +
-                            '<div class="modal-header">' +
-                            '<h5 class="modal-title" id="confirmEditModalLabel' + hotel.hotelID + '">Confirmar editar</h5>' +
-                            '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
-                            '</div>' +
-                            '<div class="modal-body">¿Estás seguro de que deseas editar esta hotel?</div>' +
-                            '<div class="modal-footer">' +
-                            '<form action="{{ route("mostrarHotel", "") }}/' + hotel.hotelID + '" method="POST">' +
-                            '@csrf' +
-                            '@method("GET")' +
-                            '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
-                            '<button type="submit" class="btn btn-danger">Editar</button>' +
-                            '</form>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>' +
-                            '<a href="' + pdfUrl + '" class="btn btn-success btn-sm">' +
-                            '<i class="fa-solid fa-file-pdf"></i>' +
-                            '</a>' +
-                            '</td>' +
-                            '</tr>';
+                        // Llama a la función para actualizar la tabla inicialmente
+                        actualizarTabla();
 
-                        tabla.append(row);
+                        // Llama a la función para actualizar la tabla cada 5 segundos
+                        setInterval(function() {
+                            if ($('.modal.show').length === 0) {
+                                actualizarTabla(currentPage, currentQuery);
+                            }
+                        }, 5000);
+
+                        // Manejar el evento de envío del formulario de búsqueda
+                        $('form').submit(function(e) {
+                            e.preventDefault();
+                            var query = $('input[name="query"]').val();
+                            actualizarTabla(1, query);
+                        });
                     });
-
-                    // Construir enlaces de paginación
-                    var enlacesPaginacion = $('#paginacion');
-                    enlacesPaginacion.empty();
-                    enlacesPaginacion.append(
-                        '<span>Página ' + response.current_page + ' de ' + response.last_page + ' | Mostrar ' + response.per_page + ' registros por página | Ir a página: </span>'
-                    );
-                    for (var i = 1; i <= response.last_page; i++) {
-                        enlacesPaginacion.append(
-                            '<a href="#" class="page-link" data-page="' + i + '" style="color: black; margin: 0 5px; display: inline-block;">' + i + '</a>'
-                        );
-                    }
-
-                    // Añadir evento click a los enlaces de paginación
-                    $('.page-link').click(function(e) {
-                        e.preventDefault();
-                        var page = $(this).data('page');
-                        actualizarTabla(page, currentQuery);
-                    });
-                },
-                error: function(xhr) {
-                    console.error("Error al cargar los datos:", xhr.responseText);
-                }
-            });
-        }
-
-        // Llama a la función para actualizar la tabla inicialmente
-        actualizarTabla();
-
-        // Llama a la función para actualizar la tabla cada 5 segundos
-        setInterval(function() {
-            if ($('.modal.show').length === 0) {
-                actualizarTabla(currentPage, currentQuery);
-            }
-        }, 5000);
-
-        // Manejar el evento de envío del formulario de búsqueda
-        $('form').submit(function(e) {
-            e.preventDefault();
-            var query = $('input[name="query"]').val();
-            actualizarTabla(1, query);
-        });
-    });
-</script>
+                </script>
             </div>
             <br>
             <div class="text-center">

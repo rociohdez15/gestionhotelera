@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlojaDirecto | Listado de Usuarios</title>
+    <title>AlojaDirecto | Listado de Administradores</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
@@ -109,7 +109,7 @@
                                     <li><a href="{{ route('listarServicios') }}">Servicios</a></li>
                                     <li><a href="{{ route('listarHoteles') }}">Hoteles</a></li>
                                     <li><a href="{{ route('listarHabitaciones') }}">Habitaciones</a></li>
-                                    <li><a href="{{ route('listarUsuarios') }}">Usuarios</a></li>
+                                    <li><a href="{{ route('listarUsuarios') }}">Administradores</a></li>
                                     @else
                                     <li><a href="{{ route('inicio') }}">Inicio</a></li>
                                     <li class="nav-item dropdown">
@@ -169,7 +169,7 @@
             @endif
 
             <br>
-            <h3 class="text-center">LISTADO DE USUARIOS</h3>
+            <h3 class="text-center">LISTADO DE ADMINISTRADORES</h3>
 
             <br>
             <!-- Buscador -->
