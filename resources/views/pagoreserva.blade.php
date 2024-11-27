@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $tituloventana }}</title>
+    <title>AlojaDirecto | Pago de Reserva</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
@@ -20,6 +20,17 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -129,137 +140,219 @@
         @endauth
     </header>
 
+    <br>
     <main>
-        <br>
-        <h3 class="text-center">Reservar ahora</h3>
-        <!-- Contenedor Principal -->
-        <div class="container mt-4">
-            <div class="row justify-content-center align-items-center">
-                <!-- Carrusel de Imágenes (más pequeño) -->
-                <div class="col-md-6">
-                    <div id="carouselImages" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-indicators">
-                            @foreach ($imagenes as $index => $imagen)
-                            <button type="button" data-bs-target="#carouselImages" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}" aria-current="{{ $index === 0 ? 'true' : 'false' }}" aria-label="Slide {{ $index + 1 }}"></button>
-                            @endforeach
-                        </div>
-                        <div class="carousel-inner">
-                            @foreach ($imagenes as $index => $imagen)
-                            <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                <img src="{{ asset($imagen) }}" class="d-block w-100" alt="Imagen del hotel">
+        <div class="cell-lg-4 cell-xl-6 d-flex flex-column mx-auto" style="max-width: 900px; padding: 0 15px;">
+            <div class="hotel-booking-form flex-grow-1">
+                <h3 class="text-center">Pago de la reserva</h3>
+                <form class="needs-validation" novalidate="" action="{{ route('exitoreserva', ['reservaIDs' => implode(',', $reservaIDsArray)]) }}">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="form-wrap">
+                                <label for="firstName">Nombre</label>
+                                <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
+                                <div class="invalid-feedback">
+                                    Se requiere un nombre válido.
+                                </div>
+                                @if (!empty($reservaIDs))
+                                <input type="hidden" id="reservaID" value="{{ is_array($reservaIDs) ? implode(',', $reservaIDs) : $reservaIDs }}">
+                                @endif
                             </div>
-                            @endforeach
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Anterior</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselImages" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Siguiente</span>
-                        </button>
-                    </div>
-                </div>
 
-                <!-- Carrusel de Reseñas y Mapa -->
-                <div class="col-md-4 d-flex flex-column" style="height: 100%;">
-                    <!-- Carrusel de Reseñas (mitad del alto del carrusel) -->
-                    <div id="carouselReviews" class="carousel slide mb-2" data-bs-ride="carousel" style="flex: 1;">
-                        <div class="carousel-inner">
-                            @foreach ($resenas as $index => $resena)
-                            <div class="carousel-item {{ $index === 0 ? 'active' : '' }} p-3 border rounded" style="background-color: #f9f9f9;">
-                                <h5 class="mb-1"><i class="fa-solid fa-user"></i> <strong>{{ $resena->nombre_cliente }}</strong></h5>
-                                <p class="mb-1" style="color: black;"><i class="fa-solid fa-comment"></i> "{{ $resena->texto }}"</p>
-                                <br>
-                                <p class="mb-1" style="color: black;"><strong>Puntuación: </strong>{{ $resena->puntuacion }}/10</p>
-                                <small class="text-muted">Fecha: {{ $resena->fecha }}</small>
+                        <div class="col-12">
+                            <div class="form-wrap">
+                                <label for="lastName">Apellido</label>
+                                <input type="text" class="form-control" id="lastName" placeholder="" value="" required="">
+                                <div class="invalid-feedback">
+                                    Se requiere apellido válido.
+                                </div>
                             </div>
-                            @endforeach
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselReviews" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Anterior</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselReviews" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Siguiente</span>
-                        </button>
-                    </div>
 
-                    <!-- Div del Mapa (mitad inferior) -->
-                    <div id="mapContainer" class="border rounded" style="flex: 1; background-color: #e9ecef; height: 400px;">
-                        <!-- Aquí puedes insertar el código del mapa, como Google Maps o OpenStreetMap -->
+                        <div class="col-12">
+                            <div class="form-wrap">
+                                <label for="username">Nombre de usuario</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text">@</span>
+                                    <input type="text" class="form-control" id="username" placeholder="Nombre de usuario" required="">
+                                    <div class="invalid-feedback">
+                                        Tu nombre de usuario es requerido.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-wrap">
+                                <label for="email">Email <span class="text-muted">(Opcional)</span></label>
+                                <input type="email" class="form-control" id="email" placeholder="tu@example.com">
+                                <div class="invalid-feedback">
+                                    Ingresa una dirección de correo electrónico válida para actualizaciones de envío.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-wrap">
+                                <label for="address">Dirección</label>
+                                <input type="text" class="form-control" id="address" placeholder="1234 Main St" required="">
+                                <div class="invalid-feedback">
+                                    Por favor introduce tu direccion de envio.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-wrap">
+                                <label for="address2">Dirección 2 <span class="text-muted">(Opcional)</span></label>
+                                <input type="text" class="form-control" id="address2" placeholder="Apartamento o suite">
+                            </div>
+                        </div>
+
+                        <div class="col-md-5">
+                            <div class="form-wrap">
+                                <label for="country">País</label>
+                                <select class="form-select" id="country" required="">
+                                    <option value="">Elige...</option>
+                                    <option>España</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Selecciona un país válido.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-wrap">
+                                <label for="state">Estado</label>
+                                <select class="form-select" id="state" required="">
+                                    <option value="">Elige...</option>
+                                    <option>Huelva</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Proporciona un estado válido.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-wrap">
+                                <label for="zip">Código postal</label>
+                                <input type="text" class="form-control" id="zip" placeholder="" required="">
+                                <div class="invalid-feedback">
+                                    Código postal requerido.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="same-address">
+                                <label class="form-check-label" for="same-address">La dirección de envío es la misma que mi dirección de facturación</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="save-info">
+                                <label class="form-check-label" for="save-info">Guardar esta información para la próxima vez</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <h4 class="mb-3">Pago</h4>
+                            <div class="my-3">
+                                <div class="form-check">
+                                    <input id="credit" name="paymentMethod" type="radio" class="form-check-input" checked="" required="">
+                                    <label class="form-check-label" for="credit">Tarjeta de crédito</label>
+                                </div>
+                                <div class="form-check">
+                                    <input id="debit" name="paymentMethod" type="radio" class="form-check-input" required="">
+                                    <label class="form-check-label" for="debit">Tarjeta de débito</label>
+                                </div>
+                                <div class="form-check">
+                                    <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" required="">
+                                    <label class="form-check-label" for="paypal">PayPal</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-wrap">
+                                <label for="cc-name">Nombre en la tarjeta</label>
+                                <input type="text" class="form-control" id="cc-name" placeholder="" required="">
+                                <small class="text-muted">Nombre completo como se muestra en la tarjeta</small>
+                                <div class="invalid-feedback">
+                                    Se requiere el nombre en la tarjeta
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-wrap">
+                                <label for="cc-number">Número de tarjeta de crédito</label>
+                                <input type="text" class="form-control" id="cc-number" placeholder="" required="">
+                                <div class="invalid-feedback">
+                                    Se requiere número de tarjeta de crédito
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-wrap">
+                                <label for="cc-expiration">Vencimiento</label>
+                                <input type="text" class="form-control" id="cc-expiration" placeholder="" required="">
+                                <div class="invalid-feedback">
+                                    Fecha de vencimiento requerida
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-wrap">
+                                <label for="cc-cvv">CVV</label>
+                                <input type="text" class="form-control" id="cc-cvv" placeholder="" required="">
+                                <div class="invalid-feedback">
+                                    Código de seguridad requerido
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <button class="btn btn-primary w-100" type="submit">Continuar con el pago</button>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
-        <br>
-        <form id="reservaForm" action="{{ route('guardarreserva') }}" method="POST" class="hotel-booking-form" style="max-width: 600px; margin: 0 auto;">
-            <p class="servicios"><strong>SERVICIOS ADICIONALES</strong></p>
-            <div class="container">
-                <div class="form-group">
-                    <div class="form-row">
-                        <p><strong>RESTAURANTE-> </strong> FECHA Y HORA:</p>
-                        <input type="datetime-local" id="fecha-restaurante" name="fecha-restaurante" class="form-control">
-                    </div>
-                    <div class="form-row">
-                        <p><strong>SPA-> </strong> FECHA Y HORA:</p>
-                        <input type="datetime-local" id="fecha-spa" name="fecha-spa" class="form-control">
-                    </div>
-                    <div class="form-row">
-                        <p><strong>TOURS-> </strong> FECHA Y HORA:</p>
-                        <input type="datetime-local" id="fecha-tours" name="fecha-tours" class="form-control">
-                    </div>
-                    <p id="mensaje-error" class="text-danger"></p>
-                    <button id="validar-fechas" type="button" class="btn btn-primary">Reservar servicios</button>
-                </div>
-            </div>
-            <br>
-            <p class="servicios"><strong>SERVICIOS POPULARES</strong></p>
-            <div class="container">
-                <div class="form-group">
-                    <div class="form-row">
-                        <p><strong>HORA CHECK-IN: </strong> 14:00h - 22:00h</p>
-                    </div>
-                    <div class="form-row">
-                        <p><strong>HORA CHECK-OUT: </strong> 09:00h - 12:00h</p>
-                    </div>
-                    <div class="form-row">
-                        <p><strong>GIMNASIO: </strong> 09:00h - 21:00h</p>
-                    </div>
-                    <div class="form-row">
-                        <p><strong>PISCINA: </strong> 10:00h - 20:30h (Solo en temporada de verano.)</p>
-                    </div>
-                    <div class="form-row">
-                        <p><strong>PARKING PRIVADO: </strong> 24h</p>
-                    </div>
-                    <div class="form-row">
-                        <p><strong>WIFI: </strong> 24h (Solicitar la password en recepción.)</p>
-                    </div>
 
-                    @csrf
-                    <input type="hidden" name="fechaEntrada" value="{{ $fechaEntrada }}">
-                    <input type="hidden" name="fechaSalida" value="{{ $fechaSalida }}">
-                    <input type="hidden" name="clienteID" value="{{ $clienteID }}">
-                    <input type="hidden" name="adultos" value="{{ $adultos }}">
-                    <input type="hidden" name="ninos" value="{{ $ninos }}">
+        <script>
+            (function() {
+                'use strict'
 
-                    @foreach($habitacionID as $id)
-                    <input type="hidden" name="habitacionID[]" value="{{ $id }}">
-                    @endforeach
-                    <input type="hidden" name="precioHabitacion" value="{{ $precioHabitacion }}">
 
-                    @foreach($edadesNinos as $edad)
-                    <input type="hidden" name="edadesNinos[]" value="{{ $edad }}">
-                    @endforeach
+                var forms = document.querySelectorAll('.needs-validation')
 
-                    <button type="submit" id="guardar-reserva" class="btn btn-primary mt-3">Realizar reserva</button>
+                Array.prototype.slice.call(forms)
+                    .forEach(function(form) {
+                        form.addEventListener('submit', function(event) {
+                            if (!form.checkValidity()) {
+                                event.preventDefault()
+                                event.stopPropagation()
+                            }
 
-                </div>
-            </div>
-        </form>
-        <br>
+                            form.classList.add('was-validated')
+                        }, false)
+                    })
+            })()
+        </script>
     </main>
+
+    <script src="/docs/5.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="form-validation.js"></script>
+    </main>
+
     <!-- Footer -->
     <footer class="page-footer text-left text-sm-left">
         <div class="shell-wide">
@@ -331,31 +424,11 @@
         </div>
     </footer>
 </body>
-<!-- Bootstrap JavaScript -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var map = L.map('mapContainer').setView([40.4168, -3.7038], 13); // Coordenadas de Madrid, España
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        L.marker([40.4168, -3.7038]).addTo(map) // Coordenadas de Madrid, España
-            .bindPopup('Ubicación en Madrid, España.')
-            .openPopup();
-
-        document.getElementById('reservaForm').addEventListener('submit', function(event) {
-            var submitButton = document.getElementById('guardar-reserva');
-            submitButton.disabled = true;
-            submitButton.innerText = 'Enviando...'; // Cambia el texto del botón para indicar que se está enviando
-        });
-    });
-</script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- JS -->
 <script src="{{ asset('js/realizar-reserva/js.js') }}"></script>
 <script src="{{ asset('js/inicio/core.min.js') }}"></script>
 <script src="{{ asset('js/inicio/script.js') }}"></script>
+
 
 </html>

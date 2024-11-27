@@ -1,0 +1,59 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Documentation",
+        "description": "Documentación de la API para el proyecto de gestión hotelera",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/olvido-password": {
+            "post": {
+                "tags": [
+                    "OlvidoPassword"
+                ],
+                "summary": "Olvido de contraseña",
+                "description": "Permite a los usuarios solicitar un enlace para restablecer su contraseña.",
+                "operationId": "78fe6850e6c7e82793238e567ad0da16",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Correo electrónico del usuario que solicita el restablecimiento de contraseña",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "email"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "Nueva contraseña para el usuario",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "password"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Solicitud de restablecimiento de contraseña enviada con éxito"
+                    },
+                    "400": {
+                        "description": "Solicitud inválida"
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "OlvidoPassword",
+            "description": "OlvidoPassword"
+        }
+    ]
+}

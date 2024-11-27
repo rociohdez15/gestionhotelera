@@ -221,6 +221,12 @@ class BuscarHotelesControlador extends Controller
 
     public function reserve(Request $request)
     {
+        if (!Auth::check()) {
+            // El usuario no está autenticado, guarda la URL actual y redirige al login
+            $request->session()->put('url.intended', $request->input('redirect_url', url()->previous()));
+            return redirect()->route('login'); // Redirige al login
+        }
+        
         // Obtiene los parámetros de la consulta
         $hotelID = $request->input('hotelID');
         $fecha_entrada = $request->input('fechaEntrada');

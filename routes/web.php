@@ -46,7 +46,9 @@ Route::middleware([
     Route::get('/realizarreserva', [RealizarReservaControlador::class, 'realizarreserva'])->name('realizarreserva');
     Route::get('/reservar', [BuscarHotelesControlador::class, 'reserve'])->name('reservar');
     Route::post('/guardarreserva', [RealizarReservaControlador::class, 'guardarreserva'])->name('guardarreserva');
-    Route::get('/exitoreserva', [RealizarReservaControlador::class, 'mostrarexito'])->name('exitoreserva');
+    Route::get('/pagoreserva/{reservaIDs}', [RealizarReservaControlador::class, 'pagoreserva'])->name('pagoreserva');
+    Route::get('/exitoreserva/{reservaIDs}', [RealizarReservaControlador::class, 'mostrarexito'])->name('exitoreserva');
+    Route::get('/factura/{reservaIDs}', [RealizarReservaControlador::class, 'factura'])->name('factura');
     Route::get('/informacionusuario', [InformacionUsuarioControlador::class, 'mostrarinformacion'])->name('informacionusuario');
     Route::get('/editarperfil/{clienteID}', [EditarPerfilControlador::class, 'mostrarPerfil'])->name('editarperfil');
     Route::post('/editarperfil/{clienteID}/{id}', [EditarPerfilControlador::class, 'editarPerfil'])->name('editarPerfil');

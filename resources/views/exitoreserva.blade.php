@@ -186,6 +186,10 @@
     <br>
 
     <div class="back-to-home text-center">
+        <a href="{{ route('factura', ['reservaIDs' => implode(',', $reservaIDsArray)]) }}" class="btn btn-primary">Descargar factura</a>
+    </div>
+    <br>
+    <div class="back-to-home text-center">
         <a href="{{ route('inicio') }}" class="btn btn-success">Volver al Inicio</a>
     </div>
 
