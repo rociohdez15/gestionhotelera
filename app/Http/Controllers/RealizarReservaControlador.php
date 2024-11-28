@@ -10,6 +10,7 @@ use App\Models\EdadNino;
 use App\Models\Servicio;
 use App\Models\Resena;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\Cliente;
 use Carbon\Carbon;
 use TCPDF;
@@ -239,6 +240,7 @@ class RealizarReservaControlador extends Controller
             abort(400, 'ReservaIDs son requeridos.');
         }
 
+        // Convertir la cadena de IDs en un array
         $reservaIDsArray = explode(',', $reservaIDs);
 
         // Obtener las reservas
@@ -247,7 +249,7 @@ class RealizarReservaControlador extends Controller
             abort(404, 'Reservas no encontradas.');
         }
 
-        // Obtener el cliente (se asume que todas las reservas son del mismo cliente)
+        // Obtener el cliente (asumiendo que todas las reservas son del mismo cliente)
         $cliente = Cliente::find($reservas->first()->clienteID);
         if (!$cliente) {
             abort(404, 'Cliente no encontrado.');
@@ -257,14 +259,47 @@ class RealizarReservaControlador extends Controller
         $habitacionesReservadas = DB::table('reservas')
             ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID')
             ->whereIn('reservas.reservaID', $reservaIDsArray)
-            ->select('habitaciones.numhabitacion', 'habitaciones.precio', 'reservas.reservaID')
+            ->select('habitaciones.numhabitacion', 'habitaciones.precio', 'reservas.reservaID', 'reservas.fechainicio', 'reservas.fechafin')
             ->get();
 
-        // Obtener los servicios reservados (si aplica)
+        if ($habitacionesReservadas->isEmpty()) {
+            abort(404, 'No se encontraron habitaciones reservadas para estas reservas.');
+        }
+
+        // Cálculo del precio total considerando todas las habitaciones y las noches
+        $precioTotalHabitaciones = 0;
+        foreach ($habitacionesReservadas as $habitacion) {
+            $fechaInicio = new \DateTime($habitacion->fechainicio);
+            $fechaFin = new \DateTime($habitacion->fechafin);
+            $noches = $fechaFin->diff($fechaInicio)->days;
+
+            $precioTotalHabitaciones += $habitacion->precio * $noches;
+        }
+
+        // Obtener los servicios reservados
         $serviciosReservados = DB::table('reservas_servicios')
             ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID')
             ->whereIn('reservas_servicios.reservaID', $reservaIDsArray)
+            ->select('servicios.nombre', 'servicios.precio')
             ->get();
+
+        // Cálculo del precio total de los servicios
+        $precioTotalServicios = 0;
+        foreach ($serviciosReservados as $servicio) {
+            $precioTotalServicios += $servicio->precio;
+        }
+
+        // Cálculo del total general (habitaciones + servicios)
+        $subtotal = $precioTotalHabitaciones + $precioTotalServicios;
+
+        // Calcular IVA (21%)
+        $iva = $subtotal * 0.21;
+
+        // Total final con IVA
+        $totalConIVA = $subtotal + $iva;
+
+        // Obtener los datos del hotel
+        $hotel = DB::table('hoteles')->first();
 
         // Crear una nueva instancia de TCPDF
         $pdf = new TCPDF();
@@ -289,107 +324,148 @@ class RealizarReservaControlador extends Controller
         // Encabezado
         $pdf->SetFont('helvetica', 'B', 14);
 
-        // Tabla de cliente
+        // Construcción del contenido HTML del PDF
         $html = '
-        <h1 style="text-align: center;">Factura</h1>
-        <h4>Datos del Cliente</h4>
-        <table border="1" style="font-size: 10px; width: 100%; border-collapse: collapse;">
-            <tr style="background-color: #f2f2f2; font-weight: bold;">
-                <th>Nombre</th>
-                <th>Apellidos</th>
-                <th>Email</th>
-                <th>Teléfono</th>
-                <th>DNI</th>
-                <th>Dirección</th>
-            </tr>
-            <tr>
-                <td>' . $cliente->nombre . '</td>
-                <td>' . $cliente->apellidos . '</td>
-                <td>' . $cliente->email . '</td>
-                <td>' . $cliente->telefono . '</td>
-                <td>' . $cliente->dni . '</td>
-                <td>' . $cliente->direccion . '</td>
-            </tr>
-        </table>';
+    <style>
+        table {
+            font-size: 10px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center; /* Centrar texto */
+        }
+        th {
+            background-color: #007BFF; /* Fondo azul */
+            color: white; /* Texto en blanco */
+            font-weight: bold;
+        }
+        h1, h4 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+    <h1>Factura</h1>
+    <h4>Datos del Hotel</h4>
+    <table>
+        <tr>
+            <th style="background-color: #007BFF; color: white;">Nombre</th>
+            <th style="background-color: #007BFF; color: white;">Dirección</th>
+            <th style="background-color: #007BFF; color: white;">Ciudad</th>
+            <th style="background-color: #007BFF; color: white;">Teléfono</th>
+        </tr>
+        <tr>
+            <td>' . $hotel->nombre . '</td>
+            <td>' . $hotel->direccion . '</td>
+            <td>' . $hotel->ciudad . '</td>
+            <td>' . $hotel->telefono . '</td>
+        </tr>
+    </table>
+    <h4>Datos del Cliente</h4>
+    <table>
+        <tr>
+            <th style="background-color: #007BFF; color: white;">Nombre</th>
+            <th style="background-color: #007BFF; color: white;">Apellidos</th>
+            <th style="background-color: #007BFF; color: white;">Email</th>
+            <th style="background-color: #007BFF; color: white;">Teléfono</th>
+            <th style="background-color: #007BFF; color: white;">DNI</th>
+            <th style="background-color: #007BFF; color: white;">Dirección</th>
+        </tr>
+        <tr>
+            <td>' . $cliente->nombre . '</td>
+            <td>' . $cliente->apellidos . '</td>
+            <td>' . $cliente->email . '</td>
+            <td>' . $cliente->telefono . '</td>
+            <td>' . $cliente->dni . '</td>
+            <td>' . $cliente->direccion . '</td>
+        </tr>
+    </table>
+    <h4>Detalles de las Reservas</h4>
+    <table>
+        <tr>
+            <th style="background-color: #007BFF; color: white;">Reserva ID</th>
+            <th style="background-color: #007BFF; color: white;">Número de Habitación</th>
+            <th style="background-color: #007BFF; color: white;">Check-in</th>
+            <th style="background-color: #007BFF; color: white;">Check-out</th>
+            <th style="background-color: #007BFF; color: white;">Precio por Noche</th>
+            <th style="background-color: #007BFF; color: white;">Número de Noches</th>
+            <th style="background-color: #007BFF; color: white;">Subtotal</th>
+        </tr>';
 
-        // Tabla de datos de la reserva
-        $reserva = $reservas->first();
-        $html .= '
-        <h4>Detalles de la Reserva</h4>
-        <table border="1" style="font-size: 10px; width: 100%; border-collapse: collapse;">
-            <tr style="background-color: #f2f2f2; font-weight: bold;">
-                <th>Fecha de Entrada</th>
-                <th>Fecha de Salida</th>
-                <th>Precio Total</th>
-            </tr>
-            <tr>
-                <td>' . $reserva->fechainicio . '</td>
-                <td>' . $reserva->fechafin . '</td>
-                <td>' . number_format($reserva->preciototal, 2) . ' €</td>
-            </tr>
-        </table>';
-
-        $html .= '
-        <h4>Horario entrada-salida</h4>
-        <table border="1" style="font-size: 10px; width: 100%; border-collapse: collapse;">
-            <tr style="background-color: #f2f2f2; font-weight: bold;">
-                <th>Hora de Check-in</th>
-                <th>Hora de Check-out</th>
-            </tr>
-            <tr>
-                <td>14:00h a 22:00h</td>
-                <td>9:00h a 12:00h</td>
-            </tr>
-        </table>';
-
-        // Tabla de habitaciones reservadas
-        $html .= '
-        <h4>Habitaciones Reservadas</h4>
-        <table border="1" style="font-size: 10px; width: 100%; border-collapse: collapse;">
-            <tr style="background-color: #f2f2f2; font-weight: bold;">
-                <th>Reserva ID</th>
-                <th>Número de Habitación</th>
-                <th>Precio</th>
-            </tr>';
         foreach ($habitacionesReservadas as $habitacion) {
+            $fechaInicio = new \DateTime($habitacion->fechainicio);
+            $fechaFin = new \DateTime($habitacion->fechafin);
+            $noches = $fechaFin->diff($fechaInicio)->days;
+
             $html .= '
-            <tr>
-                <td>' . $habitacion->reservaID . '</td>
-                <td>' . $habitacion->numhabitacion . '</td>
-                <td>' . number_format($habitacion->precio, 2) . ' €</td>
-            </tr>';
+        <tr>
+            <td>' . $habitacion->reservaID . '</td>
+            <td>' . $habitacion->numhabitacion . '</td>
+            <td>' . $fechaInicio->format('d-m-Y') . '</td>
+            <td>' . $fechaFin->format('d-m-Y') . '</td>
+            <td>' . number_format($habitacion->precio, 2) . ' €</td>
+            <td>' . $noches . '</td>
+            <td>' . number_format($habitacion->precio * $noches, 2) . ' €</td>
+        </tr>';
+        }
+
+        $html .= '
+    </table>
+    <h4>Horario entrada-salida</h4>
+    <table>
+        <tr>
+            <th style="background-color: #007BFF; color: white;">Horario check-in</th>
+            <th style="background-color: #007BFF; color: white;">Horario check-out</th>
+        </tr>
+        <tr>
+            <td> 14:00h a 22:00h </td>
+            <td> 09:00h a 12:00h </td>
+        </tr>
+    </table>
+    <h4>Servicios Reservados</h4>
+    <table style="font-size: 10px; width: 100%; border-collapse: collapse;">
+        <tr style="background-color: #007BFF; color: white; font-weight: bold;">
+            <th>Nombre del Servicio</th>
+            <th>Precio Unitario</th>
+            <th>Subtotal</th>
+        </tr>';
+        foreach ($serviciosReservados as $servicio) {
+            $html .= '
+        <tr>
+            <td>' . $servicio->nombre . '</td>
+            <td>' . number_format($servicio->precio, 2) . ' €</td>
+            <td>' . number_format($servicio->precio, 2) . ' €</td>
+        </tr>';
         }
         $html .= '</table>';
 
+        $html .= '
+    <h4>Resumen de la Factura</h4>
+    <table>
+        <tr>
+            <td style="background-color: #007BFF; color: white;">Subtotal Habitaciones:</td>
+            <td>' . number_format($precioTotalHabitaciones, 2) . ' €</td>
+        </tr>
+        <tr>
+            <td style="background-color: #007BFF; color: white;">Subtotal Servicios:</td>
+            <td>' . number_format($precioTotalServicios, 2) . ' €</td>
+        </tr>
+        <tr>
+            <td style="background-color: #007BFF; color: white;">IVA (21%):</td>
+            <td>' . number_format($iva, 2) . ' €</td>
+        </tr>
+        <tr>
+            <td style="background-color: #007BFF; color: white;">Total:</td>
+            <td style="background-color: green; color: white;">' . number_format($totalConIVA, 2) . ' €</td>
+        </tr>
+    </table>';
 
-
-        // Tabla de servicios reservados
-        if ($serviciosReservados->isNotEmpty()) {
-            $html .= '
-            <h2>Servicios Reservados</h2>
-            <table border="1" style="font-size: 10px; width: 100%; border-collapse: collapse;">
-                <tr style="background-color: #f2f2f2; font-weight: bold;">
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Precio</th>
-                    <th>Horario</th>
-                </tr>';
-            foreach ($serviciosReservados as $servicio) {
-                $html .= '
-                <tr>
-                    <td>' . $servicio->nombre . '</td>
-                    <td>' . $servicio->descripcion . '</td>
-                    <td>' . number_format($servicio->precio, 2) . ' €</td>
-                    <td>' . $servicio->horario . '</td>
-                </tr>';
-            }
-            $html .= '</table>';
-        }
-
-        // Escribir contenido HTML en el PDF
+        // Añadir contenido al PDF
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Cerrar y generar el PDF
-        $pdf->Output('factura.pdf', 'D');
+        // Salida del PDF
+        $pdf->Output('factura.pdf', 'I');
     }
 }

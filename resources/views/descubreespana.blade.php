@@ -212,10 +212,17 @@
                     @endif
                 </div>
 
+                <?php
+                $descripcion = $hotel->descripcion;
+                if (strlen($descripcion) > 200) {
+                    $descripcion = substr($descripcion, 0, 200) . ' [...]';
+                }
+                ?>
+
                 <!-- Información del hotel -->
                 <div class="col-12 col-md-8">
                     <h5>{{ $hotel->nombre }}</h5>
-                    <p>{{ $hotel->descripcion }}</p>
+                    <p>{{ $descripcion }}</p>
                     <p>{{ $hotel->direccion }}</p>
                 </div>
             </div>
