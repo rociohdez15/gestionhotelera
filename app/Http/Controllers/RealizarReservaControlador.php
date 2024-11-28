@@ -28,6 +28,7 @@ class RealizarReservaControlador extends Controller
         $ninos = $request->input('ninos');
         $clienteID = $request->input('clienteID');
         $precioHabitacion = $request->input('precioHabitacion');
+        $ubiacion = $request->input('ubicacion');
 
         // Convierte el habitacionID a un array si no lo es
         $habitacionID = $request->input('habitacionID');
@@ -72,6 +73,7 @@ class RealizarReservaControlador extends Controller
             "edadesNinos" => $edadesNinos,
             "habitacionID" => $habitacionID,
             "precioHabitacion" => $precioHabitacion,
+            "ubiacion" => $ubiacion,
             "resenas" => $resenas
         ];
 

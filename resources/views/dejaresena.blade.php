@@ -162,7 +162,13 @@
                 <div class="col-12 col-md-8" style="color: black;">
                     <h5>{{ $hotel->nombre }}</h5>
                     <p style="line-height: 0 !important;"><strong>Dirección:</strong> {{ $hotel->direccion }}</p>
-                    <p style="line-height: 0 !important;"><strong>Descripción:</strong> {{ $hotel->descripcion }}</p>
+                    <?php
+                     $descripcion = $hotel->descripcion;
+                     if (strlen($descripcion) > 100) {
+                         $descripcion = substr($descripcion, 0, 80) . ' [...]';
+                     }
+                     ?>
+                    <p style="line-height: 0 !important;"><strong>Descripción:</strong> {{ $descripcion }}</p>
                     <br>
                     <a href="{{ route('escribirResenasForm', ['hotelID' => $hotel->hotelID]) }}" class="btn btn-primary mt-2">Escribir Reseña</a>
                 </div>

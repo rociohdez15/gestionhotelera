@@ -137,7 +137,7 @@
             <div class="row justify-content-center align-items-center">
                 <!-- Carrusel de Imágenes (más pequeño) -->
                 <div class="col-md-6">
-                    <div id="carouselImages" class="carousel slide" data-bs-ride="carousel">
+                    <div id="carouselImages" class="carousel-container rounded border carousel slide">
                         <div class="carousel-indicators">
                             @foreach ($imagenes as $index => $imagen)
                             <button type="button" data-bs-target="#carouselImages" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}" aria-current="{{ $index === 0 ? 'true' : 'false' }}" aria-label="Slide {{ $index + 1 }}"></button>
@@ -188,7 +188,7 @@
 
                     <!-- Div del Mapa (mitad inferior) -->
                     <div id="mapContainer" class="border rounded" style="flex: 1; background-color: #e9ecef; height: 400px;">
-                        <!-- Aquí puedes insertar el código del mapa, como Google Maps o OpenStreetMap -->
+
                     </div>
                 </div>
             </div>
@@ -333,6 +333,21 @@
 </body>
 <!-- Bootstrap JavaScript -->
 <script>
+    function getCoordinates(cityName, callback) {
+        var url = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(cityName);
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    var coordinates = [data[0].lat, data[0].lon];
+                    callback(coordinates);
+                } else {
+                    console.error('No se encontraron coordenadas para la ciudad:', cityName);
+                }
+            })
+            .catch(error => console.error('Error al obtener las coordenadas:', error));
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         var map = L.map('mapContainer').setView([40.4168, -3.7038], 13); // Coordenadas de Madrid, España
 
@@ -340,10 +355,11 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        L.marker([40.4168, -3.7038]).addTo(map) // Coordenadas de Madrid, España
-            .bindPopup('Ubicación en Madrid, España.')
-            .openPopup();
-
+        getCoordinates('{{$ubiacion}}, España', function(coordinates) {
+            L.marker(coordinates).addTo(map)
+                .bindPopup('Ubicación en {{$ubiacion}}, España.')
+                .openPopup();
+        });
         document.getElementById('reservaForm').addEventListener('submit', function(event) {
             var submitButton = document.getElementById('guardar-reserva');
             submitButton.disabled = true;

@@ -235,6 +235,7 @@
                                 <input type="hidden" name="fechaSalida" value="{{ $fechaSalida }}">
                                 <input type="hidden" name="adultos" value="{{ $num_adultos }}">
                                 <input type="hidden" name="ninos" value="{{ $num_ninos }}">
+                                <input type="hidden" name="ubicacion" value="{{ $ubicacion }}">
                                 <input type="hidden" name="clienteID" value="{{ Auth::id() }}">
                                 @foreach($hotel->habitaciones as $habitacion)
                                 <input type="hidden" name="habitacionID[]" value="{{ $habitacion->habitacionID }}">
@@ -260,7 +261,7 @@
 
         <br>
         <!-- Paginación -->
-        <div class="container text-center">
+        <div class="container text-center" style="color: black;">
             <p>
                 Página {{ $pagina_actual }} de {{ $total_paginas }} | Mostrar {{ $registros_por_pagina }} registros por página | Ir a página:
                 @for ($i = 1; $i <= $total_paginas; $i++)

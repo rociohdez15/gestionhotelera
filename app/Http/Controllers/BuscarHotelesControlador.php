@@ -233,6 +233,7 @@ class BuscarHotelesControlador extends Controller
         $fecha_salida = $request->input('fechaSalida');
         $adultos = $request->input('adultos');
         $ninos = $request->input('ninos');
+        $ubicacion = $request->input('ubicacion');
         // Obtiene el clienteID del usuario autenticado
         $clienteID = Auth::user()->id;
         $habitacionIDs = (array) $request->input('habitacionID');
@@ -267,7 +268,7 @@ class BuscarHotelesControlador extends Controller
         // Verifica si el usuario está autenticado
         if (Auth::check()) {
             // El usuario está autenticado, redirige a la página de realizar reservas
-            return redirect()->to('/realizarreserva?hotelID=' . $hotelID . '&fechaEntrada=' . $fecha_entrada . '&fechaSalida=' . $fecha_salida . '&adultos=' . $adultos . '&ninos=' . $ninos . '&clienteID=' . $clienteID . '&' . $edadesNinosParams . '&habitacionID=' . implode(',', $habitacionIDs) .
+            return redirect()->to('/realizarreserva?hotelID=' . $hotelID . '&fechaEntrada=' . $fecha_entrada . '&fechaSalida=' . $fecha_salida .'&ubicacion=' . $ubicacion . '&adultos=' . $adultos . '&ninos=' . $ninos . '&clienteID=' . $clienteID . '&' . $edadesNinosParams . '&habitacionID=' . implode(',', $habitacionIDs) .
                               '&precioHabitacion=' . $precioHabitacion );
         }
 

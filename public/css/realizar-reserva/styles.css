@@ -232,6 +232,10 @@ main {
     padding: 20px; 
 }
 
+.carousel-container {
+    overflow: hidden;
+}
+
 
 
 .form-group {
