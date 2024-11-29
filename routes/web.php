@@ -56,7 +56,7 @@ Route::middleware([
     Route::post('/editarperfil/{clienteID}/{id}', [EditarPerfilControlador::class, 'editarPerfil'])->name('editarPerfil');
     Route::get('/dejarresena', [ResenasControlador::class, 'dejarResenas'])->name('dejarResenas');
     Route::get('/escribirresena/{hotelID}', [ResenasControlador::class, 'escribirResenasForm'])->name('escribirResenasForm');
-    Route::post('/escribirresena', [ResenasControlador::class, 'guardarResena'])->name('guardarResena');
+    Route::post('/escribirresena/{hotelID}', [ResenasControlador::class, 'guardarResena'])->name('guardarResena');
     Route::get('/mostrarresena/{clienteID}', [ResenasControlador::class, 'mostrarResenas'])->name('mostrarResenas');
     Route::get('/misreservas', [ReservasControlador::class, 'mostrarMisReservas'])->name('mostrarMisReservas');
     Route::middleware([CheckRole::class.':3'])->group(function () {

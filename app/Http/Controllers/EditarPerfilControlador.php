@@ -29,7 +29,8 @@ class EditarPerfilControlador extends Controller
         }
 
         $parametros = [
-            'cliente' => $cliente
+            'cliente' => $cliente,
+            'usuario' => $usuario
         ];
 
         if ($request->wantsJson() || $request->is('api/*')) {

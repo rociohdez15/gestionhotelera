@@ -15,7 +15,13 @@
     <!-- Favicon -->
     <link rel="icon" href="../../images/inicio/favicon.ico" type="image/x-icon">
 </head>
-
+<style>
+    .imagen-portada-alojamiento {
+    width: 100%; /* Ajusta el ancho al 100% del contenedor */
+    height: 200px; /* Establece una altura fija */
+    object-fit: cover; /* Asegura que la imagen se recorte para llenar el contenedor */
+}
+</style>
 <body>
     <!-- Page Header-->
     <header class="page-header" style="padding-bottom: 24px">

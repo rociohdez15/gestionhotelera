@@ -15,7 +15,13 @@
     <!-- Favicon -->
     <link rel="icon" href="../../images/inicio/favicon.ico" type="image/x-icon">
 </head>
-
+<style>
+    .imagen {
+    width: 100%; 
+    height: 130px;
+    object-fit: cover; 
+}
+</style>
 <body>
     <!-- Page Header-->
     <header class="page-header" style="padding-bottom: 24px">
@@ -143,7 +149,7 @@
                     @foreach($datos as $reserva)
                     <div class="{{ $col_class }} col-sm-12 mb-4">
                         <div class="p-3 border rounded bg-light w-100 h-100 d-flex flex-column flex-grow-1" style="color: black;">
-                            <img src="{{ asset($reserva->hotel_imagen) }}" class="card-img-top" alt="Imagen del hotel">
+                            <img src="{{ asset($reserva->hotel_imagen) }}" class="card-img-top imagen" alt="Imagen del hotel">
                             <div class="card-body">
                                 <h5 class="card-title text-center">{{ $reserva->hotel_nombre }}</h5>
                                 <p class="card-text"><strong>Huesped: </strong>{{ $reserva->cliente_nombre }}</p>

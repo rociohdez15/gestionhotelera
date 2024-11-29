@@ -129,6 +129,7 @@
                 @csrf
                 <h2 class="titulo text-center">Escribe tu reseña</h2>
                 <br>
+                <input type="hidden" name="hotelID" value="{{ $hotel->hotelID }}">
                 <input type="hidden" name="clienteID" value="{{ Auth::id() }}">
                 <input type="hidden" name="fecha" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
                 <input type="hidden" name="nombre_cliente" value="{{ Auth::user()->name }}">

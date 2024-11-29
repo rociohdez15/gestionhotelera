@@ -194,8 +194,8 @@ class RealizarReservaControlador extends Controller
                 //Si se ha introducido fecha de tours, se inserta el servicio de tours
                 if (!empty($fechaTours)) {
                     $servicios[] = [
-                        'nombre' => 'tours',
-                        'descripcion' => 'tours',
+                        'nombre' => 'tour',
+                        'descripcion' => 'tour',
                         'precio' => 10 * $numPersonas,
                         'horario' => $fechaTours,
                     ];
