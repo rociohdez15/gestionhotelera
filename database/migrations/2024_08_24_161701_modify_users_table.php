@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             // Agregar nuevos campos
             $table->string('apellidos')->nullable();
-            $table->unsignedBigInteger('rolID');
+            $table->unsignedBigInteger('rolID')->nullable()->change();
             
             $table->foreign('rolID')->references('rolID')->on('roles')->onDelete('set null');
         });
