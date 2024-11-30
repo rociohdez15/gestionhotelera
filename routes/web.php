@@ -35,7 +35,7 @@ Route::get('/buscar-hoteles', [BuscarHotelesControlador::class, 'buscarhoteles']
 Route::get('/descubreEspana/{ciudad}', [DescubreEspanaControlador::class, 'descubreEspana'])->name('descubreEspana');
 Route::get('/olvido-password', function () { return view('olvidopassword'); })->name('olvidoPassword');
 Route::post('/olvido-password', [OlvidoPasswordControlador::class, 'olvidoPass'])->name('olvidoPass');
-Route::get('/logout', [InicioControlador::class, 'logout'])->name('logout');
+Route::get('/logout', [InicioControlador::class, 'logout'])->name('cerrarsesion');
 Route::get('/sobre-nosotros', [InicioControlador::class, 'cargarSobreNosotros'])->name('cargarSobreNosotros');
 Route::get('/contacto', [InicioControlador::class, 'cargarContacto'])->name('cargarContacto');
 
