@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 
 class OlvidoPasswordControlador extends Controller
 {
-    public function olvidoPassword(Request $request)
+    public function olvidoPass(Request $request)
     {
         $email = $request->input('email');
         $password = $request->input('password');
@@ -47,6 +47,6 @@ class OlvidoPasswordControlador extends Controller
             ]);
         }
 
-        return redirect()->route('olvidoPassword')->with('status', '¡Contraseña actualizada exitosamente!');
+        return redirect()->route('olvidoPass')->with('status', '¡Contraseña actualizada exitosamente!');
     }
 }

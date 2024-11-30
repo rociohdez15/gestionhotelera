@@ -143,7 +143,7 @@
             <br>
             <h4 class="text-center">Restablecer contraseña</h4>
             <br>
-            <form action="{{ route('olvidoPassword') }}" method="post" class="needs-validation" novalidate style="max-width: 400px; margin: 0 auto;">
+            <form action="{{ route('olvidoPass') }}" method="post" class="needs-validation" novalidate style="max-width: 400px; margin: 0 auto;">
                 @csrf
                 <div class="col-12">
                     <div class="form-wrap">
