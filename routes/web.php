@@ -30,7 +30,7 @@ Route::get('/inicio', function () {
 })->name('inicio');
 
 Route::get('/buscarUbicaciones', [InicioControlador::class, 'buscarUbicaciones']);
-Route::get('/', [InicioControlador::class, 'contarHoteles']);
+Route::get('/contar-hoteles', [InicioControlador::class, 'contarHoteles']);
 Route::get('/buscar-hoteles', [BuscarHotelesControlador::class, 'buscarhoteles'])->name('buscarHoteles');
 Route::get('/descubreEspana/{ciudad}', [DescubreEspanaControlador::class, 'descubreEspana'])->name('descubreEspana');
 Route::get('/olvido-password', function () { return view('olvidopassword'); })->name('olvidoPassword');
