@@ -12,18 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Verificar si la columna 'apellidos' no existe antes de agregarla
-            if (!Schema::hasColumn('users', 'apellidos')) {
-                $table->string('apellidos')->nullable();
-            }
-
-            // Verificar si la columna 'rolID' no existe antes de agregarla
-            if (!Schema::hasColumn('users', 'rolID')) {
-                $table->unsignedBigInteger('rolID')->nullable();
-            } else {
-                // Si la columna ya existe, asegurarse de que permita valores NULL
-                $table->unsignedBigInteger('rolID')->nullable()->change();
-            }
+            // Agregar nuevos campos
+            $table->string('apellidos')->nullable();
+            $table->unsignedBigInteger('rolID');
+            
             $table->foreign('rolID')->references('rolID')->on('roles')->onDelete('set null');
         });
     }
