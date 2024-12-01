@@ -414,9 +414,9 @@
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Incluye el archivo de Vue -->
-<script src="{{ asset('../../vue/panelrecepcionistas/panel1.js') }}"></script>
-<script src="{{ asset('js/inicio/core.min.js') }}"></script>
-<script src="{{ asset('js/inicio/script.js') }}"></script>
+<script src="../../vue/panelrecepcionistas/panel1.js"></script>
+<script src="../../js/inicio/core.min.js"></script>
+<script src="../../js/inicio/script.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
