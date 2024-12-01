@@ -209,8 +209,7 @@
             </div>
         </div>
     </footer>
-</body>
-<script src="{{ asset('js/inicio/core.min.js') }}"></script>
-<script src="{{ asset('js/inicio/script.js') }}"></script>
+<script src="../../js/inicio/core.min.js"></script>
+<script src="../../js/inicio/script.js"></script>
 
 </html>

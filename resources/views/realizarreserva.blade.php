@@ -10,7 +10,7 @@
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- CSS -->
-    <link rel="stylesheet" href="{{ asset('css/realizar-reserva/styles.css') }}">
+    <link rel="stylesheet" href="../../css/realizar-reserva/styles.css">
     <link rel="stylesheet" href="../../css/inicio/style.css">
     <!-- Favicon -->
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic%7CPoppins:300,400,500,700">
@@ -370,8 +370,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- JS -->
-<script src="{{ asset('js/realizar-reserva/js.js') }}"></script>
-<script src="{{ asset('js/inicio/core.min.js') }}"></script>
-<script src="{{ asset('js/inicio/script.js') }}"></script>
+<script src="../../js/realizar-reserva/js.js"></script>
+<script src="../../js/inicio/core.min.js"></script>
+<script src="../../js/inicio/script.js"></script>
 
 </html>
