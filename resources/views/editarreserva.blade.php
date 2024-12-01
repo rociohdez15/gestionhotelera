@@ -18,7 +18,6 @@
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('images/inicio/favicon.ico') }}" type="image/x-icon">
     <script src="https://unpkg.com/vue@3.5.12/dist/vue.global.js"></script>
-    @vite('resources/css/app.css')
 </head>
 
 <body>
@@ -215,9 +214,9 @@
             </div>
         </div>
     </footer>
-
+    @vite('resources/css/app.css')
 </body>
-<script src="{{ asset('js/inicio/core.min.js') }}"></script>
-<script src="{{ asset('js/inicio/script.js') }}"></script>
+<script src="../../js/inicio/core.min.js"></script>
+<script src="../../js/inicio/script.js"></script>
 
 </html>
