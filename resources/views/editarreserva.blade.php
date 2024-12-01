@@ -142,7 +142,6 @@
             data-habitacion="{{ json_encode($habitacion) }}"
             data-reserva-id="{{ $reserva->reservaID }}">
         </div>
-        @vite('resources/js/app.js')
     </main>
 
     <footer class="page-footer text-left text-sm-left">
@@ -215,6 +214,7 @@
         </div>
     </footer>
     @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
 </body>
 <script src="../../js/inicio/core.min.js"></script>
 <script src="../../js/inicio/script.js"></script>
