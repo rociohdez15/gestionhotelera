@@ -17,7 +17,13 @@
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
     <link rel="icon" href="../../images/inicio/favicon.ico" type="image/x-icon">
 </head>
-
+<style>
+    @media (max-width: 767.98px) {
+        .hotel-booking-form {
+            margin-right: 30px; 
+        }
+    }
+</style>
 <body>
 
     <!-- Page Header-->
