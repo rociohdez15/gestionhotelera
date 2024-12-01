@@ -236,6 +236,12 @@ main {
     overflow: hidden;
 }
 
+@media (max-width: 576px) {
+    #reservaForm {
+        margin-top: 500px !important;
+    }
+}
+
 
 
 .form-group {
