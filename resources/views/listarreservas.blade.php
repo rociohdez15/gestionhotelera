@@ -229,7 +229,7 @@
                                     var tabla = $('#tabla-reservas tbody');
                                     tabla.empty();
                                     $.each(response.data, function(index, reserva) {
-                                        var pdfUrl = baseUrl + '{{ route("generar_pdf_listar_reservas", ":reservaID", false) }}';
+                                        var pdfUrl ='{{ route("generar_pdf_listar_reservas", ":reservaID", false) }}';
                                         pdfUrl = pdfUrl.replace(':reservaID', reserva.reservaID);
 
                                         tabla.append(
@@ -256,7 +256,7 @@
                                             '</div>' +
                                             '<div class="modal-body">¿Estás seguro de que deseas eliminar esta reserva?</div>' +
                                             '<div class="modal-footer">' +
-                                            '<form action="' + baseUrl + '{{ route("delReserva", "") }}/' + reserva.reservaID + '" method="POST">' +
+                                            '<form action="{{ route("delReserva", "") }}/' + reserva.reservaID + '" method="POST">' +
                                             '@csrf' +
                                             '@method("DELETE")' +
                                             '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
@@ -278,7 +278,7 @@
                                             '</div>' +
                                             '<div class="modal-body">¿Estás seguro de que deseas editar esta reserva?</div>' +
                                             '<div class="modal-footer">' +
-                                            '<form action="' + baseUrl + '{{ route("mostrarReserva", "") }}/' + reserva.reservaID + '" method="POST">' +
+                                            '<form action="{{ route("mostrarReserva", "") }}/' + reserva.reservaID + '" method="POST">' +
                                             '@csrf' +
                                             '@method("GET")' +
                                             '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
