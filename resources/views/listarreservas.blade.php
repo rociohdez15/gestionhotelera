@@ -211,9 +211,12 @@
                         var currentPage = 1;
                         var currentQuery = '';
 
+                        // Construir dinámicamente la URL base
+                        var baseUrl = window.location.protocol + '//' + window.location.host;
+
                         function actualizarTabla(page = 1, query = '') {
                             $.ajax({
-                                url: '{{ route("buscarReservas") }}',
+                                url: baseUrl + '{{ route("buscarReservas", [], false) }}',
                                 method: 'GET',
                                 data: {
                                     page: page,
@@ -226,7 +229,7 @@
                                     var tabla = $('#tabla-reservas tbody');
                                     tabla.empty();
                                     $.each(response.data, function(index, reserva) {
-                                        var pdfUrl = '{{ route("generar_pdf_listar_reservas", ":reservaID") }}';
+                                        var pdfUrl = baseUrl + '{{ route("generar_pdf_listar_reservas", ":reservaID", false) }}';
                                         pdfUrl = pdfUrl.replace(':reservaID', reserva.reservaID);
 
                                         tabla.append(
@@ -253,7 +256,7 @@
                                             '</div>' +
                                             '<div class="modal-body">¿Estás seguro de que deseas eliminar esta reserva?</div>' +
                                             '<div class="modal-footer">' +
-                                            '<form action="{{ route("delReserva", "") }}/' + reserva.reservaID + '" method="POST">' +
+                                            '<form action="' + baseUrl + '{{ route("delReserva", "") }}/' + reserva.reservaID + '" method="POST">' +
                                             '@csrf' +
                                             '@method("DELETE")' +
                                             '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
@@ -275,7 +278,7 @@
                                             '</div>' +
                                             '<div class="modal-body">¿Estás seguro de que deseas editar esta reserva?</div>' +
                                             '<div class="modal-footer">' +
-                                            '<form action="{{ route("mostrarReserva", "") }}/' + reserva.reservaID + '" method="POST">' +
+                                            '<form action="' + baseUrl + '{{ route("mostrarReserva", "") }}/' + reserva.reservaID + '" method="POST">' +
                                             '@csrf' +
                                             '@method("GET")' +
                                             '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
