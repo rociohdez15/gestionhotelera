@@ -122,7 +122,7 @@
             method: "POST",
             headers: {
               "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-              "X-HTTP-Method-Override": "PUT" // Sobrescribir el método HTTP a PUT
+              "X-HTTP-Method-Override": "PUT" 
             },
             body: formData,
           });

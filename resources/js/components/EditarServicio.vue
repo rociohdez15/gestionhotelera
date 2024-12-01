@@ -134,10 +134,10 @@
   
         try {
           const response = await fetch(`/editarservicio/${this.servicio.servicioID}`, {
-            method: "PUT",
+            method: "POST",
             headers: {
-              "Content-Type": "application/json",
               "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+              "X-HTTP-Method-Override": "PUT" 
             },
             body: JSON.stringify(servicioActualizado),
           });
