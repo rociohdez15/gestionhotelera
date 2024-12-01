@@ -200,7 +200,7 @@
                         </section>
                     </div>
                     <!-- Buscador de alojamientos -->
-                    <div class="cell-lg-4 cell-xl-6 d-flex flex-column" style="margin-left: 30px;">
+                    <div class="cell-lg-4 cell-xl-6 d-flex flex-column ml-lg-3 mr-3 mr-md-0" style="margin-left: 30px; margin-right: 30px;">
                         <div class="hotel-booking-form flex-grow-1">
                             <form action="{{ route('buscarHoteles') }}" method="GET" data-form-output="form-output-global" novalidate>
                                 <div class="row g-3">

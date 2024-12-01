@@ -208,9 +208,12 @@
                         var currentPage = 1;
                         var currentQuery = '';
 
+                        // Construir dinámicamente la URL base
+                        var baseUrl = window.location.protocol + '//' + window.location.host;
+
                         function actualizarTabla(page = 1, query = '') {
                             $.ajax({
-                                url: '{{ route("buscarServicios") }}',
+                                url: baseUrl + '{{ route("buscarServicios", [], false) }}',
                                 method: 'GET',
                                 data: {
                                     page: page,
@@ -223,7 +226,7 @@
                                     var tabla = $('#tabla-servicios tbody');
                                     tabla.empty();
                                     $.each(response.data, function(index, servicio) {
-                                        var pdfUrl = '{{ route("generar_pdf_listar_servicios", ":servicioID") }}';
+                                        var pdfUrl = '{{ route("generar_pdf_listar_servicios", ":servicioID", false) }}';
                                         pdfUrl = pdfUrl.replace(':servicioID', servicio.servicioID);
 
                                         var row =
@@ -248,7 +251,7 @@
                                             '</div>' +
                                             '<div class="modal-body">¿Estás seguro de que deseas eliminar este servicio?</div>' +
                                             '<div class="modal-footer">' +
-                                            '<form action="{{ route("delServicio", "") }}/' + servicio.servicioID + '" method="POST">' +
+                                            '<form action="' + baseUrl + '{{ route("delServicio", "") }}/' + servicio.servicioID + '" method="POST">' +
                                             '@csrf' +
                                             '@method("DELETE")' +
                                             '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
@@ -270,7 +273,7 @@
                                             '</div>' +
                                             '<div class="modal-body">¿Estás seguro de que deseas editar este servicio?</div>' +
                                             '<div class="modal-footer">' +
-                                            '<form action="{{ route("mostrarServicio", "") }}/' + servicio.servicioID + '" method="POST">' +
+                                            '<form action="' + baseUrl + '{{ route("mostrarServicio", "") }}/' + servicio.servicioID + '" method="POST">' +
                                             '@csrf' +
                                             '@method("GET")' +
                                             '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +

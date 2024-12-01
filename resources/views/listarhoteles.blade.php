@@ -208,9 +208,12 @@
                         var currentPage = 1;
                         var currentQuery = '';
 
+                        // Construir dinámicamente la URL base
+                        var baseUrl = window.location.protocol + '//' + window.location.host;
+
                         function actualizarTabla(page = 1, query = '') {
                             $.ajax({
-                                url: '{{ route("buscadorHoteles") }}',
+                                url: baseUrl + '{{ route("buscadorHoteles", [], false) }}',
                                 method: 'GET',
                                 data: {
                                     page: page,
@@ -223,7 +226,7 @@
                                     var tabla = $('#tabla-reservas tbody');
                                     tabla.empty();
                                     $.each(response.data, function(index, hotel) {
-                                        var pdfUrl = '{{ route("generar_pdf_listar_hoteles", ":hotelID") }}';
+                                        var pdfUrl = '{{ route("generar_pdf_listar_hoteles", ":hotelID", false) }}';
                                         pdfUrl = pdfUrl.replace(':hotelID', hotel.hotelID);
 
                                         var descripcion = hotel.descripcion;
@@ -250,9 +253,9 @@
                                             '<h5 class="modal-title" id="confirmDeleteModalLabel' + hotel.hotelID + '">Confirmar eliminación</h5>' +
                                             '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
                                             '</div>' +
-                                            '<div class="modal-body">¿Estás seguro de que deseas eliminar esta hotel?</div>' +
+                                            '<div class="modal-body">¿Estás seguro de que deseas eliminar este hotel?</div>' +
                                             '<div class="modal-footer">' +
-                                            '<form action="{{ route("delHotel", "") }}/' + hotel.hotelID + '" method="POST">' +
+                                            '<form action="' + baseUrl + '{{ route("delHotel", "") }}/' + hotel.hotelID + '" method="POST">' +
                                             '@csrf' +
                                             '@method("DELETE")' +
                                             '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
@@ -272,9 +275,9 @@
                                             '<h5 class="modal-title" id="confirmEditModalLabel' + hotel.hotelID + '">Confirmar editar</h5>' +
                                             '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
                                             '</div>' +
-                                            '<div class="modal-body">¿Estás seguro de que deseas editar esta hotel?</div>' +
+                                            '<div class="modal-body">¿Estás seguro de que deseas editar este hotel?</div>' +
                                             '<div class="modal-footer">' +
-                                            '<form action="{{ route("mostrarHotel", "") }}/' + hotel.hotelID + '" method="POST">' +
+                                            '<form action="' + baseUrl + '{{ route("mostrarHotel", "") }}/' + hotel.hotelID + '" method="POST">' +
                                             '@csrf' +
                                             '@method("GET")' +
                                             '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +

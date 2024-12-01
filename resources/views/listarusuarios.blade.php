@@ -24,8 +24,8 @@
 </head>
 
 <body>
-   <!-- Page Header-->
-   <header class="page-header" style="padding-bottom: 24px">
+    <!-- Page Header-->
+    <header class="page-header" style="padding-bottom: 24px">
         <!-- RD Navbar-->
         <div class="rd-navbar-wrap">
             <nav class="rd-navbar rd-navbar-default-with-top-panel" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fullwidth" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-fullwidth" data-lg-device-layout="rd-navbar-fullwidth" data-md-stick-up-offset="90px" data-lg-stick-up-offset="150px" data-stick-up="true" data-sm-stick-up="true" data-md-stick-up="true" data-lg-stick-up="true">
@@ -206,9 +206,12 @@
                         var currentPage = 1;
                         var currentQuery = '';
 
+                        // Construir dinámicamente la URL base
+                        var baseUrl = window.location.protocol + '//' + window.location.host;
+
                         function actualizarTabla(page = 1, query = '') {
                             $.ajax({
-                                url: '{{ route("buscarUsuarios") }}',
+                                url: baseUrl + '{{ route("buscarUsuarios", [], false) }}',
                                 method: 'GET',
                                 data: {
                                     page: page,
@@ -221,7 +224,7 @@
                                     var tabla = $('#tabla-usuarios tbody');
                                     tabla.empty();
                                     $.each(response.data, function(index, usuario) {
-                                        var pdfUrl = '{{ route("generar_pdf_listar_usuarios", ":id") }}';
+                                        var pdfUrl = '{{ route("generar_pdf_listar_usuarios", ":id", false) }}';
                                         pdfUrl = pdfUrl.replace(':id', usuario.id);
                                         var row =
                                             '<tr>' +
@@ -242,7 +245,7 @@
                                             '</div>' +
                                             '<div class="modal-body">¿Estás seguro de que deseas eliminar este usuario?</div>' +
                                             '<div class="modal-footer">' +
-                                            '<form action="{{ route("delUsuario", "") }}/' + usuario.id + '" method="POST">' +
+                                            '<form action="' + baseUrl + '{{ route("delUsuario", "") }}/' + usuario.id + '" method="POST">' +
                                             '@csrf' +
                                             '@method("DELETE")' +
                                             '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
@@ -264,7 +267,7 @@
                                             '</div>' +
                                             '<div class="modal-body">¿Estás seguro de que deseas editar este usuario?</div>' +
                                             '<div class="modal-footer">' +
-                                            '<form action="{{ route("mostrarUsuario", "") }}/' + usuario.id + '" method="POST">' +
+                                            '<form action="' + baseUrl + '{{ route("mostrarUsuario", "") }}/' + usuario.id + '" method="POST">' +
                                             '@csrf' +
                                             '@method("GET")' +
                                             '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
@@ -278,7 +281,7 @@
                                             '<i class="fa-solid fa-file-pdf"></i>' +
                                             '</a>' +
                                             '</td>' +
-                                            '</tr>'
+                                            '</tr>';
 
                                         tabla.append(row);
                                     });
