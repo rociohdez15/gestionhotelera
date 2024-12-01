@@ -234,9 +234,8 @@ export default {
         },
         async verificarHabitacionDisponible() {
             try {
-                var protocol = window.location.protocol;
                 var response = await fetch(
-                    `${protocol}//gestionhotelera-production.up.railway.app/verificar-habitacion/${this.hotelID}?numAdultos=${this.numAdultos}`
+                    `/verificar-habitacion/${this.hotelID}?numAdultos=${this.numAdultos}`
                 );
 
                 if (response.ok) {
@@ -246,33 +245,32 @@ export default {
                         this.habitacionID = disponible.habitacionID;
                     } else {
                         window.location.href =
-                            `${protocol}//gestionhotelera-production.up.railway.app/listarreservas?error=No hay habitaciones disponibles para el número de adultos especificado.`;
+                            "/listarreservas?error=No hay habitaciones disponibles para el número de adultos especificado.";
                         return false;
                     }
 
                     return disponible;
                 } else {
                     window.location.href =
-                        `${protocol}//gestionhotelera-production.up.railway.app/listarreservas?error=No hay habitaciones disponibles para el número de adultos especificado.`;
+                        "/listarreservas?error=No hay habitaciones disponibles para el número de adultos especificado.";
                     return false;
                 }
             } catch (error) {
                 window.location.href =
-                    `${protocol}//gestionhotelera-production.up.railway.app/listarreservas?error=Se produjo un error al verificar la disponibilidad de la habitación.`;
+                    "/listarreservas?error=Se produjo un error al verificar la disponibilidad de la habitación.";
                 return false;
             }
         },
         async actualizarReserva() {
             var entrada = new Date(this.fechaEntrada);
             var salida = new Date(this.fechaSalida);
-            var protocol = window.location.protocol;
 
             if (
                 this.fechaEntrada !== this.originalFechaEntrada ||
                 this.fechaSalida !== this.originalFechaSalida
             ) {
                 var response = await fetch(
-                    `${protocol}//gestionhotelera-production.up.railway.app/comprobar-reserva/${this.hotelID}`,
+                    `/comprobar-reserva/${this.hotelID}`,
                     {
                         method: "POST",
                         headers: {
@@ -292,12 +290,12 @@ export default {
                     var existeReserva = await response.json();
                     if (existeReserva) {
                         window.location.href =
-                            `${protocol}//gestionhotelera-production.up.railway.app/listarreservas?error=Ya existe una reserva en el hotel durante las fechas seleccionadas.`;
+                            "/listarreservas?error=Ya existe una reserva en el hotel durante las fechas seleccionadas.";
                         return;
                     }
                 } else {
                     window.location.href =
-                        `${protocol}//gestionhotelera-production.up.railway.app/listarreservas?error=Error al comprobar la disponibilidad.`;
+                        "/listarreservas?error=Error al comprobar la disponibilidad.";
                     return;
                 }
             }
@@ -319,7 +317,7 @@ export default {
 
             try {
                 var actualizarResponse = await fetch(
-                    `${protocol}//gestionhotelera-production.up.railway.app/editarreserva/${this.reservaID}`,
+                    `/editarreserva/${this.reservaID}`,
                     {
                         method: "PUT",
                         headers: {
@@ -336,22 +334,22 @@ export default {
                     var result = await actualizarResponse.json();
                     if (result.success) {
                         window.location.href =
-                            `${protocol}//gestionhotelera-production.up.railway.app/listarreservas?success=` +
+                            "/listarreservas?success=" +
                             encodeURIComponent(result.success);
                     } else {
                         window.location.href =
-                            `${protocol}//gestionhotelera-production.up.railway.app/listarreservas?error=` +
+                            "/listarreservas?error=" +
                             encodeURIComponent(result.error);
                     }
                 } else {
                     var errorText = await actualizarResponse.text();
-                    window.location.href = `${protocol}//gestionhotelera-production.up.railway.app/listarreservas?error=${encodeURIComponent(
+                    window.location.href = `/listarreservas?error=${encodeURIComponent(
                         errorText
                     )}`;
                 }
             } catch (e) {
                 window.location.href =
-                    `${protocol}//gestionhotelera-production.up.railway.app/listarreservas?error=Error al actualizar la reserva.`;
+                    "/listarreservas?error=Error al actualizar la reserva.";
             }
         },
     },
