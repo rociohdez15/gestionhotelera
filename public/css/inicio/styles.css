@@ -15,6 +15,12 @@ body {
 .buscador{
     margin-right: 30px !important;
 }
+@media (max-width: 576px) {
+    .buscador {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+}
 
 main {
     flex: 1; 

@@ -17,13 +17,6 @@
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
     <link rel="icon" href="../../images/inicio/favicon.ico" type="image/x-icon">
 </head>
-<style>
-    @media (max-width: 767.98px) {
-        .hotel-booking-form {
-            margin-right: 30px; 
-        }
-    }
-</style>
 <body>
 
     <!-- Page Header-->
@@ -206,7 +199,7 @@
                         </section>
                     </div>
                     <!-- Buscador de alojamientos -->
-                    <div class="cell-lg-4 cell-xl-6 d-flex flex-column ml-lg-3 mr-3 mr-md-0 buscador" style="margin-left: 30px;">
+                    <div class="cell-lg-4 cell-xl-6 d-flex flex-column mx-3 mx-sm-0 buscador" style="margin-left: 30px;">
                         <div class="hotel-booking-form flex-grow-1">
                             <form action="{{ route('buscarHoteles') }}" method="GET" data-form-output="form-output-global" novalidate>
                                 <div class="row g-3">
