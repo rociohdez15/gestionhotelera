@@ -245,7 +245,7 @@
                                             '</div>' +
                                             '<div class="modal-body">¿Estás seguro de que deseas eliminar este usuario?</div>' +
                                             '<div class="modal-footer">' +
-                                            '<form action="' + baseUrl + '{{ route("delUsuario", "") }}/' + usuario.id + '" method="POST">' +
+                                            '<form action="{{ route("delUsuario", "") }}/' + usuario.id + '" method="POST">' +
                                             '@csrf' +
                                             '@method("DELETE")' +
                                             '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
@@ -267,7 +267,7 @@
                                             '</div>' +
                                             '<div class="modal-body">¿Estás seguro de que deseas editar este usuario?</div>' +
                                             '<div class="modal-footer">' +
-                                            '<form action="' + baseUrl + '{{ route("mostrarUsuario", "") }}/' + usuario.id + '" method="POST">' +
+                                            '<form action="{{ route("mostrarUsuario", "") }}/' + usuario.id + '" method="POST">' +
                                             '@csrf' +
                                             '@method("GET")' +
                                             '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +

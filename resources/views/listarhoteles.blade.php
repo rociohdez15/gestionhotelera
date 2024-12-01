@@ -255,7 +255,7 @@
                                             '</div>' +
                                             '<div class="modal-body">¿Estás seguro de que deseas eliminar este hotel?</div>' +
                                             '<div class="modal-footer">' +
-                                            '<form action="' + baseUrl + '{{ route("delHotel", "") }}/' + hotel.hotelID + '" method="POST">' +
+                                            '<form action="{{ route("delHotel", "") }}/' + hotel.hotelID + '" method="POST">' +
                                             '@csrf' +
                                             '@method("DELETE")' +
                                             '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
@@ -277,7 +277,7 @@
                                             '</div>' +
                                             '<div class="modal-body">¿Estás seguro de que deseas editar este hotel?</div>' +
                                             '<div class="modal-footer">' +
-                                            '<form action="' + baseUrl + '{{ route("mostrarHotel", "") }}/' + hotel.hotelID + '" method="POST">' +
+                                            '<form action="{{ route("mostrarHotel", "") }}/' + hotel.hotelID + '" method="POST">' +
                                             '@csrf' +
                                             '@method("GET")' +
                                             '<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>' +
