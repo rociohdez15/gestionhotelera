@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
     <link rel="icon" href="../../images/inicio/favicon.ico" type="image/x-icon">
     <script src="https://unpkg.com/vue@3.5.12/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="../../build/assets/app-CKHYatVJ.css">
     @vite('resources/css/app.css')
 </head>
 
