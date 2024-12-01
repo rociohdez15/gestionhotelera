@@ -16,8 +16,6 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic%7CPoppins:300,400,500,700">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
     <link rel="icon" href="../../images/inicio/favicon.ico" type="image/x-icon">
-    <!-- Favicon -->
-    <link rel="icon" href="{{ asset('images/inicio/favicon.ico') }}" type="image/x-icon">
     <!-- Agrega Vue.js -->
     <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js"></script>
     <!-- Agrega Chart.js -->
@@ -302,7 +300,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Incluye el archivo de Vue -->
 <script src="{{ asset('../../vue/panelrecepcionistas/panel1.js') }}"></script>
-<script src="{{ asset('js/inicio/core.min.js') }}"></script>
-<script src="{{ asset('js/inicio/script.js') }}"></script>
+<script src="../../js/inicio/core.min.js"></script>
+<script src="../../js/inicio/script.js"></script>
 
 </html>
