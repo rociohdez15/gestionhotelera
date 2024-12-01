@@ -12,6 +12,10 @@ body {
     min-height: 100vh;
 }
 
+.buscador{
+    margin-right: 30px !important;
+}
+
 main {
     flex: 1; 
 }
