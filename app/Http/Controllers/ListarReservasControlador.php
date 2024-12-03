@@ -249,9 +249,6 @@ class ListarReservasControlador extends Controller
         }
     }
 
-
-
-
     public function comprobarReserva(Request $request, $hotelID)
     {
         try {
@@ -446,12 +443,12 @@ class ListarReservasControlador extends Controller
             ->orWhere('reservas.num_adultos', 'LIKE', "%$query%")
             ->orWhere('habitaciones.numhabitacion', 'LIKE', "%$query%");
 
-            $reservas = $consulta->orderBy('reservas.reservaID', 'asc')->paginate(5);
+        $reservas = $consulta->orderBy('reservas.reservaID', 'asc')->paginate(5);
 
-            if ($request->ajax()) {
-                return response()->json($reservas);
-            }
-    
-            return view('listarreservas', compact('reservas'));
+        if ($request->ajax()) {
+            return response()->json($reservas);
+        }
+
+        return view('listarreservas', compact('reservas'));
     }
 }

@@ -269,20 +269,23 @@ export default {
                 this.fechaEntrada !== this.originalFechaEntrada ||
                 this.fechaSalida !== this.originalFechaSalida
             ) {
+                console.log("Enviando datos para comprobar reserva:", {
+                    fechaEntrada: entrada.toISOString().split("T")[0],
+                    fechaSalida: salida.toISOString().split("T")[0],
+                });
+
                 var response = await fetch(
-                    `/comprobar-reserva/${this.hotelID}`,
+                    `/comprobar-reserva/${this.hotelID}?fechaEntrada=${
+                        entrada.toISOString().split("T")[0]
+                    }&fechaSalida=${salida.toISOString().split("T")[0]}`,
                     {
-                        method: "POST",
+                        method: "GET",
                         headers: {
                             "Content-Type": "application/json",
                             "X-CSRF-TOKEN": document
                                 .querySelector('meta[name="csrf-token"]')
                                 .getAttribute("content"),
                         },
-                        body: JSON.stringify({
-                            fechaEntrada: entrada.toISOString().split("T")[0],
-                            fechaSalida: salida.toISOString().split("T")[0],
-                        }),
                     }
                 );
 
@@ -294,8 +297,8 @@ export default {
                         return;
                     }
                 } else {
-                    window.location.href =
-                        "/listarreservas?error=Error al comprobar la disponibilidad.";
+                    var errorText = await response.text();
+                    window.location.href = `/listarreservas?error=Error al comprobar la disponibilidad: ${errorText}`;
                     return;
                 }
             }
@@ -343,9 +346,7 @@ export default {
                     }
                 } else {
                     var errorText = await actualizarResponse.text();
-                    window.location.href = `/listarreservas?error=${encodeURIComponent(
-                        errorText
-                    )}`;
+                    window.location.href = `/listarreservas?error=Error al actualizar la reserva: ${errorText}`;
                 }
             } catch (e) {
                 window.location.href =

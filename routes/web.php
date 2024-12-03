@@ -65,7 +65,7 @@ Route::middleware([
         Route::delete('/delreserva/{reservaID}', [ListarReservasControlador::class, 'delReserva'])->name('delReserva');
         Route::get('/mostrarreserva/{reservaID}', [ListarReservasControlador::class, 'mostrarReserva'])->name('mostrarReserva');
         Route::put('/editarreserva/{reservaID}', [ListarReservasControlador::class, 'editarReserva'])->name('editarReserva');
-        Route::get('/comprobar-reserva/{hotelID}', [ListarReservasControlador::class, 'comprobarReserva']);
+        Route::get('/comprobar-reserva/{hotelID}', [ListarReservasControlador::class, 'comprobarReserva'])->name('comprobarReserva');
         Route::get('/verificar-habitacion/{hotelID}', [ListarReservasControlador::class, 'verificarHabitacion']);
         Route::get('/generar-pdf-listar-reservas/{reservaID}', [ListarReservasControlador::class, 'generarPDF'])->name('generar_pdf_listar_reservas');
         Route::get('/generar-pdf-listar-reservas-total', [ListarReservasControlador::class, 'generarPDFTotal'])->name('generar_pdf_listar_reservas_total');
