@@ -10,19 +10,13 @@
             </h2>
 
             <div class="mb-3 d-flex align-items-center">
-                <h2><strong class="me-2">Fecha de Check-in: </strong></h2>
-                <label class="form-label me-2" style="margin-bottom: 0">
-                </label>
-                <span style="color: black;">{{ reserva.fecha_checkin }}</span>
+                <h2 class="me-2"><strong>Fecha de Check-in:</strong></h2>
+                <label class="form-label me-2 mb-0"></label>
+                <span style="color: black">{{ reserva.fecha_checkin }}</span>
             </div>
             <div class="mb-3 d-flex align-items-center">
-                <h2><strong class="me-2">Fecha de Check-Out: </strong></h2>
-                <label
-                    for="fechaCheckout"
-                    class="form-label me-2"
-                    style="margin-bottom: 0"
-                >
-                </label>
+                <h2 class="me-2"><strong>Fecha de Check-Out:</strong></h2>
+                <label for="fechaCheckout" class="form-label me-2 mb-0"></label>
                 <input
                     type="datetime-local"
                     class="form-control rounded-input me-2"
@@ -57,7 +51,7 @@
 
 <script>
 export default {
-    name: "EditarReserva",
+    name: "RegistrarCheckout",
     data() {
         return {
             reserva: null,
@@ -73,10 +67,10 @@ export default {
 
         // Convertir la fecha de checkout al formato "YYYY-MM-DDTHH:MM" para el campo de tipo datetime-local
         var fechaCheckout = new Date(this.reserva.fecha_checkout);
-        
+
         // Asegurarse de que la fecha se maneje correctamente en la zona horaria local
-        var offset = fechaCheckout.getTimezoneOffset() * 60000; 
-        var fechaLocal = new Date(fechaCheckout.getTime() - offset); 
+        var offset = fechaCheckout.getTimezoneOffset() * 60000;
+        var fechaLocal = new Date(fechaCheckout.getTime() - offset);
         var fechaISO = fechaLocal.toISOString();
         this.fechaCheckout = fechaISO.slice(0, 16); // YYYY-MM-DDTHH:MM
     },
@@ -104,7 +98,10 @@ export default {
             if (checkoutSoloFecha !== hoySoloFecha) {
                 this.errorMessage =
                     "La fecha de checkout debe ser igual al día actual.";
-            } else if (checkoutHora > 12 || (checkoutHora === 12 && checkoutMinutos > 30)) {
+            } else if (
+                checkoutHora > 12 ||
+                (checkoutHora === 12 && checkoutMinutos > 30)
+            ) {
                 this.errorMessage =
                     "La hora del check-out debe ser antes de las 12:30.";
             } else {
@@ -112,8 +109,6 @@ export default {
             }
         },
         async registrarCheckout() {
-            var checkout = new Date(this.fechaCheckout);
-
             var actualizaCheckout = {
                 fechaCheckout: this.fechaCheckout,
             };
@@ -133,18 +128,20 @@ export default {
                     }
                 );
 
+                console.log("Estado de la respuesta:", actualizarResponse.status);
+
                 if (actualizarResponse.ok) {
-                    window.location.href =
-                        "/listadocheckout?success=Reserva actualizada correctamente";
+                    console.log("Actualización exitosa.");
+                    // Redirigir después de una actualización exitosa
+                    window.location.href = "/listadocheckout?success=Check-out realizado correctamente";
                 } else {
                     var errorText = await actualizarResponse.text();
-                    window.location.href = `/listadocheckout?error=${encodeURIComponent(
-                        errorText
-                    )}`;
+                    console.error("Error en la actualización:", errorText);
+                    this.errorMessage = `Error: ${errorText}`;
                 }
             } catch (e) {
-                window.location.href =
-                    "/listadocheckout?error=Error al actualizar la reserva.";
+                console.error("Excepción al realizar la solicitud:", e);
+                this.errorMessage = "Error al realizar el check-out.";
             }
         },
     },

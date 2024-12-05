@@ -208,8 +208,6 @@ class ListadoCheckinControlador extends Controller
                     'reserva' => $reserva
                 ]);
             }
-
-            return redirect()->route('listarReservas')->with('status', 'La fecha de check-in se ha actualizado correctamente.');
         } catch (\Exception $e) {
             if ($request->wantsJson() || $request->is('api/*')) {
                 return response()->json(['message' => 'Error al actualizar la fecha de check-in', 'error' => $e->getMessage()], 500);

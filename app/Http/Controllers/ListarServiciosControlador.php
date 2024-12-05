@@ -206,7 +206,7 @@ class ListarServiciosControlador extends Controller
                 ]);
             }
 
-            return redirect()->route('listarServicios')->with('status', 'El servicio se ha editado correctamente.');
+        
         } catch (\Exception $e) {
             if ($request->wantsJson() || $request->is('api/*')) {
                 return response()->json(['message' => 'Error al editar el servicio', 'error' => $e->getMessage()], 500);

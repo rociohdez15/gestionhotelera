@@ -210,7 +210,7 @@ class ListadoCheckoutControlador extends Controller
                     'reserva' => $reserva
                 ]);
             }
-            return redirect()->route('listarReservas')->with('status', 'La fecha de checkout se ha actualizado correctamente.');
+           
         } catch (\Exception $e) {
             if ($request->wantsJson() || $request->is('api/*')) {
                 return response()->json(['message' => 'Error al actualizar la fecha de checkout', 'error' => $e->getMessage()], 500);

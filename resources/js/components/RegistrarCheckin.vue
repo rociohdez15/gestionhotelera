@@ -71,7 +71,7 @@ export default {
         this.reserva = JSON.parse(appElement.getAttribute("data-reserva"));
         this.cliente = JSON.parse(appElement.getAttribute("data-cliente"));
 
-        // Convertir la fecha de checkout al formato "YYYY-MM-DDTHH:MM" para el campo de tipo datetime-local
+        // Convertir la fecha de checkin al formato "YYYY-MM-DDTHH:MM" para el campo de tipo datetime-local
         var fechaCheckin = new Date(this.reserva.fecha_checkin);
 
         // Asegurarse de que la fecha se maneje correctamente en la zona horaria local
@@ -132,18 +132,20 @@ export default {
                     }
                 );
 
+                console.log("Estado de la respuesta:", actualizarResponse.status);
+
                 if (actualizarResponse.ok) {
-                    window.location.href =
-                        "/listadocheckin?success=Reserva actualizada correctamente";
+                    console.log("Actualización exitosa.");
+                    // Redirigir después de una actualización exitosa
+                    window.location.href = "/listadocheckin?success=Reserva actualizada correctamente";
                 } else {
                     var errorText = await actualizarResponse.text();
-                    window.location.href = `/listadocheckin?error=${encodeURIComponent(
-                        errorText
-                    )}`;
+                    console.error("Error en la actualización:", errorText);
+                    this.errorMessage = `Error: ${errorText}`;
                 }
             } catch (e) {
-                window.location.href =
-                    "/listadocheckin?error=Error al actualizar la reserva.";
+                console.error("Excepción al realizar la solicitud:", e);
+                this.errorMessage = "Error al actualizar la reserva.";
             }
         },
     },
