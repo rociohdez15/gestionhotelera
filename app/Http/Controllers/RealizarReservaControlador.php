@@ -17,6 +17,68 @@ use TCPDF;
 
 class RealizarReservaControlador extends Controller
 {
+    private $provincias = [
+        'Álava' => ['Vitoria-Gasteiz', 'Llodio', 'Amurrio'],
+        'Albacete' => ['Albacete', 'Hellín', 'Villarrobledo'],
+        'Alicante' => ['Alicante', 'Elche', 'Torrevieja'],
+        'Almería' => ['Almería', 'Roquetas de Mar', 'El Ejido'],
+        'Asturias' => ['Oviedo', 'Gijón', 'Avilés'],
+        'Ávila' => ['Ávila', 'Arévalo', 'Arenas de San Pedro'],
+        'Badajoz' => ['Badajoz', 'Mérida', 'Don Benito'],
+        'Baleares' => ['Palma', 'Ibiza', 'Manacor'],
+        'Barcelona' => ['Barcelona', 'Hospitalet de Llobregat', 'Badalona'],
+        'Burgos' => ['Burgos', 'Miranda de Ebro', 'Aranda de Duero'],
+        'Cáceres' => ['Cáceres', 'Plasencia', 'Navalmoral de la Mata'],
+        'Cádiz' => ['Cádiz', 'Jerez de la Frontera', 'Algeciras'],
+        'Cantabria' => ['Santander', 'Torrelavega', 'Castro Urdiales'],
+        'Castellón' => ['Castellón de la Plana', 'Villarreal', 'Burriana'],
+        'Ciudad Real' => ['Ciudad Real', 'Puertollano', 'Tomelloso'],
+        'Córdoba' => ['Córdoba', 'Lucena', 'Puente Genil'],
+        'Cuenca' => ['Cuenca', 'Tarancón', 'San Clemente'],
+        'Girona' => ['Girona', 'Figueres', 'Blanes'],
+        'Granada' => ['Granada', 'Motril', 'Almuñécar'],
+        'Guadalajara' => ['Guadalajara', 'Azuqueca de Henares', 'Alovera'],
+        'Guipúzcoa' => ['San Sebastián', 'Irún', 'Eibar'],
+        'Huelva' => ['Huelva', 'Lepe', 'Almonte'],
+        'Huesca' => ['Huesca', 'Monzón', 'Barbastro'],
+        'Jaén' => ['Jaén', 'Linares', 'Andújar'],
+        'La Rioja' => ['Logroño', 'Calahorra', 'Arnedo'],
+        'Las Palmas' => ['Las Palmas de Gran Canaria', 'Telde', 'Santa Lucía de Tirajana'],
+        'León' => ['León', 'Ponferrada', 'San Andrés del Rabanedo'],
+        'Lleida' => ['Lleida', 'Balaguer', 'Tàrrega'],
+        'Lugo' => ['Lugo', 'Monforte de Lemos', 'Viveiro'],
+        'Madrid' => ['Madrid', 'Móstoles', 'Alcalá de Henares'],
+        'Málaga' => ['Málaga', 'Marbella', 'Mijas'],
+        'Murcia' => ['Murcia', 'Cartagena', 'Lorca'],
+        'Navarra' => ['Pamplona', 'Tudela', 'Barañáin'],
+        'Ourense' => ['Ourense', 'Verín', 'O Barco de Valdeorras'],
+        'Palencia' => ['Palencia', 'Guardo', 'Aguilar de Campoo'],
+        'Pontevedra' => ['Vigo', 'Pontevedra', 'Vilagarcía de Arousa'],
+        'Salamanca' => ['Salamanca', 'Béjar', 'Ciudad Rodrigo'],
+        'Santa Cruz de Tenerife' => ['Santa Cruz de Tenerife', 'San Cristóbal de La Laguna', 'Arona'],
+        'Segovia' => ['Segovia', 'Cuéllar', 'San Ildefonso'],
+        'Sevilla' => ['Sevilla', 'Dos Hermanas', 'Alcalá de Guadaíra'],
+        'Soria' => ['Soria', 'Almazán', 'Ólvega'],
+        'Tarragona' => ['Tarragona', 'Reus', 'Vendrell'],
+        'Teruel' => ['Teruel', 'Alcañiz', 'Andorra'],
+        'Toledo' => ['Toledo', 'Talavera de la Reina', 'Illescas'],
+        'Valencia' => ['Valencia', 'Gandía', 'Torrent'],
+        'Valladolid' => ['Valladolid', 'Medina del Campo', 'Laguna de Duero'],
+        'Vizcaya' => ['Bilbao', 'Barakaldo', 'Getxo'],
+        'Zamora' => ['Zamora', 'Benavente', 'Toro'],
+        'Zaragoza' => ['Zaragoza', 'Calatayud', 'Utebo'],
+    ];
+
+
+    public function getMunicipios($provincia)
+    {
+        if (array_key_exists($provincia, $this->provincias)) {
+            return response()->json($this->provincias[$provincia]);
+        } else {
+            return response()->json([]);
+        }
+    }
+
     /* Método que muestra la vista y obtiene los datos necesarios para la realización de la reserva. */
     public function realizarreserva(Request $request)
     {
@@ -228,7 +290,8 @@ class RealizarReservaControlador extends Controller
     public function pagoreserva($reservaIDs)
     {
         $reservaIDsArray = explode(',', $reservaIDs);
-        return view('pagoreserva', compact('reservaIDsArray'));
+        $provincias = array_keys($this->provincias);
+        return view('pagoreserva', compact('reservaIDsArray', 'provincias'));
     }
     public function mostrarexito($reservaIDs)
     {
@@ -470,4 +533,8 @@ class RealizarReservaControlador extends Controller
         // Salida del PDF
         $pdf->Output('factura.pdf', 'I');
     }
+
+
+
 }
+

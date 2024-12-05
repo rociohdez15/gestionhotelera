@@ -119,5 +119,6 @@ Route::middleware([
         Route::get('/actualizar-reservas', [ListarReservasControlador::class, 'actualizarReservas'])->name('actualizarReservas');
         Route::get('/actualizar-hoteles', [ListarHotelesControlador::class, 'actualizarHoteles'])->name('actualizarHoteles');
         Route::get('/actualizar-habitaciones', [ListarHabitacionesControlador::class, 'actualizarHabitaciones'])->name('actualizarHabitacions');
+        Route::get('/get-municipios/{provincia}', [RealizarReservaControlador::class, 'getMunicipios']);
     });
 });

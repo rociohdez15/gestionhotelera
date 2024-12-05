@@ -30,6 +30,11 @@
             display: flex;
             align-items: center;
         }
+
+        .scrollable-select {
+            max-height: 200px !important;
+            overflow-y: auto !important;
+        }
     </style>
 </head>
 
@@ -172,66 +177,30 @@
 
                         <div class="col-12">
                             <div class="form-wrap">
-                                <label for="username">Nombre de usuario</label>
-                                <div class="input-group has-validation">
-                                    <span class="input-group-text">@</span>
-                                    <input type="text" class="form-control" id="username" placeholder="Nombre de usuario" required="">
-                                    <div class="invalid-feedback">
-                                        Tu nombre de usuario es requerido.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="form-wrap">
-                                <label for="email">Email <span class="text-muted">(Opcional)</span></label>
-                                <input type="email" class="form-control" id="email" placeholder="tu@example.com">
-                                <div class="invalid-feedback">
-                                    Ingresa una dirección de correo electrónico válida para actualizaciones de envío.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="form-wrap">
                                 <label for="address">Dirección</label>
-                                <input type="text" class="form-control" id="address" placeholder="1234 Main St" required="">
+                                <input type="text" class="form-control" id="address" placeholder="" required="">
                                 <div class="invalid-feedback">
                                     Por favor introduce tu direccion de envio.
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-12">
+                        <div class="col-md-4">
                             <div class="form-wrap">
-                                <label for="address2">Dirección 2 <span class="text-muted">(Opcional)</span></label>
-                                <input type="text" class="form-control" id="address2" placeholder="Apartamento o suite">
-                            </div>
-                        </div>
-
-                        <div class="col-md-5">
-                            <div class="form-wrap">
-                                <label for="country">País</label>
-                                <select class="form-select" id="country" required="">
-                                    <option value="">Elige...</option>
-                                    <option>España</option>
-                                </select>
+                                <label for="municipio">Municipio</label>
+                                <input type="text" class="form-control" id="municipio" placeholder="" required="">
                                 <div class="invalid-feedback">
-                                    Selecciona un país válido.
+                                    Por favor introduce tu direccion de envio.
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-wrap">
-                                <label for="state">Estado</label>
-                                <select class="form-select" id="state" required="">
-                                    <option value="">Elige...</option>
-                                    <option>Huelva</option>
-                                </select>
+                                <label for="provincia">Provincia</label>
+                                <input type="text" class="form-control" id="provincia" placeholder="" required="">
                                 <div class="invalid-feedback">
-                                    Proporciona un estado válido.
+                                    Por favor introduce tu direccion de envio.
                                 </div>
                             </div>
                         </div>
@@ -243,20 +212,6 @@
                                 <div class="invalid-feedback">
                                     Código postal requerido.
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="same-address">
-                                <label class="form-check-label" for="same-address">La dirección de envío es la misma que mi dirección de facturación</label>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="save-info">
-                                <label class="form-check-label" for="save-info">Guardar esta información para la próxima vez</label>
                             </div>
                         </div>
 
