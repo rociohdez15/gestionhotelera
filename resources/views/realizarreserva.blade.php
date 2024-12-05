@@ -112,8 +112,7 @@
 
         @auth
         @php
-        $rolUsuario = Auth::user()->rolID; // Suponiendo que 'rolID' es el campo que contiene el rol
-        @endphp
+        $rolUsuario = Auth::user()->rolID; 
 
         @if ($rolUsuario === 2) <!-- Si el rol del usuario es recepcionista -->
         <script>
@@ -349,7 +348,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        var map = L.map('mapContainer').setView([40.4168, -3.7038], 13); // Coordenadas de Madrid, España
+        var map = L.map('mapContainer').setView([40.4168, -3.7038], 13); 
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -363,7 +362,7 @@
         document.getElementById('reservaForm').addEventListener('submit', function(event) {
             var submitButton = document.getElementById('guardar-reserva');
             submitButton.disabled = true;
-            submitButton.innerText = 'Enviando...'; // Cambia el texto del botón para indicar que se está enviando
+            submitButton.innerText = 'Enviando...'; 
         });
     });
 </script>

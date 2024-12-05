@@ -1,28 +1,28 @@
 var app = Vue.createApp({
     data() {
         return {
-            etiquetas: [], // Nombres de los hoteles
-            datos: [], // Habitaciones disponibles por hotel para hoy
-            etiquetasIngresos: [], // Meses
-            datosIngresos: [], // Ingresos por mes
-            datosIngresosServicios: [], // Ingresos por servicios por mes
-            etiquetasClientes: [], // Meses para clientes
-            datosClientes: [], // Clientes registrados por mes
-            etiquetasServicios: [], // Categorías de servicios
-            datosServicios: [] // Servicios por categoría
+            etiquetas: [], 
+            datos: [], 
+            etiquetasIngresos: [], 
+            datosIngresos: [], 
+            datosIngresosServicios: [], 
+            etiquetasClientes: [], 
+            datosClientes: [], 
+            etiquetasServicios: [], 
+            datosServicios: [] 
         };
     },
     
     mounted() {
-        this.etiquetas = window.hotelNames; // Nombres de los hoteles desde el backend
-        this.datos = window.availableRooms; // Habitaciones disponibles desde el backend
-        this.etiquetasIngresos = window.ingresosMeses; // Meses desde el backend
-        this.datosIngresos = window.ingresosTotales; // Ingresos desde el backend
-        this.datosIngresosServicios = window.ingresosServiciosTotales; // Ingresos por servicios desde el backend
-        this.etiquetasClientes = window.clientesMeses; // Meses para clientes desde el backend
-        this.datosClientes = window.clientesTotales; // Clientes registrados desde el backend
-        this.etiquetasServicios = window.serviciosCategorias; // Categorías de servicios desde el backend
-        this.datosServicios = window.serviciosTotales; // Servicios por categoría
+        this.etiquetas = window.hotelNames; 
+        this.datos = window.availableRooms; 
+        this.etiquetasIngresos = window.ingresosMeses; 
+        this.datosIngresos = window.ingresosTotales; 
+        this.datosIngresosServicios = window.ingresosServiciosTotales; 
+        this.etiquetasClientes = window.clientesMeses; 
+        this.datosClientes = window.clientesTotales; 
+        this.etiquetasServicios = window.serviciosCategorias; 
+        this.datosServicios = window.serviciosTotales; 
     
         console.log('Nombres de Hoteles:', this.etiquetas);
         console.log('Habitaciones Disponibles:', this.datos);
@@ -34,10 +34,10 @@ var app = Vue.createApp({
         console.log('Categorías de Servicios:', this.etiquetasServicios);
         console.log('Servicios Totales:', this.datosServicios);
     
-        this.renderizarGrafico(); // Llama al método para visualizar la gráfica
-        this.renderizarGraficoIngresos(); // Llama al método para visualizar la gráfica de ingresos
-        this.renderizarGraficoClientes(); // Llama al método para visualizar la gráfica de clientes
-        this.renderizarGraficoServicios(); // Llama al método para visualizar la gráfica de servicios
+        this.renderizarGrafico(); 
+        this.renderizarGraficoIngresos(); 
+        this.renderizarGraficoClientes(); 
+        this.renderizarGraficoServicios(); 
     },
 
     methods: {
@@ -46,7 +46,7 @@ var app = Vue.createApp({
             new Chart(grafica, {
                 type: 'pie', 
                 data: {
-                    labels: this.etiquetas, // Usa los nombres de los hoteles
+                    labels: this.etiquetas, 
                     datasets: [{
                         label: 'Habitaciones disponibles por hotel (hoy)', 
                         data: this.datos, 
@@ -61,7 +61,7 @@ var app = Vue.createApp({
                     maintainAspectRatio: false, 
                     plugins: {
                         legend: {
-                            position: 'top', // Posición de la leyenda en la parte superior
+                            position: 'top', 
                         },
                         tooltip: {
                             callbacks: {
@@ -81,7 +81,7 @@ var app = Vue.createApp({
             new Chart(graficaIngresos, {
                 type: 'bar', 
                 data: {
-                    labels: this.etiquetasIngresos, // Usa los meses
+                    labels: this.etiquetasIngresos, 
                     datasets: [
                         {
                             label: 'Ingresos totales por mes (Reservas)', 
@@ -102,7 +102,7 @@ var app = Vue.createApp({
                     maintainAspectRatio: false, 
                     plugins: {
                         legend: {
-                            position: 'top', // Posición de la leyenda en la parte superior
+                            position: 'top', 
                         },
                         tooltip: {
                             callbacks: {
@@ -122,7 +122,7 @@ var app = Vue.createApp({
             new Chart(graficaClientes, {
                 type: 'bar', 
                 data: {
-                    labels: this.etiquetasClientes, // Usa los meses
+                    labels: this.etiquetasClientes, 
                     datasets: [{
                         label: 'Clientes registrados por mes', 
                         data: this.datosClientes, 
@@ -135,7 +135,7 @@ var app = Vue.createApp({
                     maintainAspectRatio: false, 
                     plugins: {
                         legend: {
-                            position: 'top', // Posición de la leyenda en la parte superior
+                            position: 'top', 
                         },
                         tooltip: {
                             callbacks: {
@@ -155,7 +155,7 @@ var app = Vue.createApp({
             new Chart(graficaServicios, {
                 type: 'pie', 
                 data: {
-                    labels: this.etiquetasServicios, // Usa las categorías de servicios
+                    labels: this.etiquetasServicios, 
                     datasets: [{
                         label: 'Servicios adicionales por categoría', 
                         data: this.datosServicios, 
@@ -170,7 +170,7 @@ var app = Vue.createApp({
                     maintainAspectRatio: false, 
                     plugins: {
                         legend: {
-                            position: 'top', // Posición de la leyenda en la parte superior
+                            position: 'top', 
                         },
                         tooltip: {
                             callbacks: {
@@ -189,5 +189,5 @@ var app = Vue.createApp({
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    app.mount('#app'); // Monta la instancia de Vue en el elemento con el id "app"
+    app.mount('#app'); 
 });

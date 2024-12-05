@@ -25,7 +25,6 @@
             position: relative;
             width: 100%;
             height: 300px;
-            /* Aumentar la altura del contenedor */
             overflow: hidden;
         }
 
@@ -33,23 +32,17 @@
             position: absolute;
             bottom: 0;
             left: -150px;
-            /* Ajustar la posición inicial */
             width: 150px;
-            /* Aumentar el tamaño de la imagen */
             height: 150px;
-            /* Aumentar el tamaño de la imagen */
             background-image: url('{{ asset("images/inicio/maleta.png") }}');
-            /* Reemplaza con la ruta de tu imagen */
             background-size: contain;
             background-repeat: no-repeat;
             animation: travel 10s linear 1;
-            /* Hacer que la animación dure más tiempo y se ejecute solo una vez */
         }
 
         @keyframes travel {
             0% {
                 left: -150px;
-                /* Ajustar la posición inicial */
             }
 
             100% {
@@ -156,7 +149,7 @@
 
         @auth
         @php
-        $rolUsuario = Auth::user()->rolID; // Suponiendo que 'rolID' es el campo que contiene el rol
+        $rolUsuario = Auth::user()->rolID; 
         @endphp
 
         @if ($rolUsuario === 2) <!-- Si el rol del usuario es recepcionista -->

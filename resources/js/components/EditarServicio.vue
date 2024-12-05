@@ -146,7 +146,7 @@ export default {
 
               if (response.ok) {
                   console.log("Actualización exitosa.");
-                  // Redirigir después de una actualización exitosa
+                  
                   window.location.href = "/listarservicios?success=Servicio actualizado correctamente";
               } else {
                   const errorText = await response.text();

@@ -112,7 +112,7 @@
         formData.append('email', this.usuario.email);
         formData.append('rolID', this.usuario.rolID);
   
-        // Iterar sobre el FormData y registrar cada par clave-valor en la consola
+        
         for (let [key, value] of formData.entries()) {
           console.log(`${key}:`, value);
         }

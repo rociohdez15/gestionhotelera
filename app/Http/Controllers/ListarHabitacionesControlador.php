@@ -263,54 +263,51 @@ class ListarHabitacionesControlador extends Controller
 
         return view('anadirhabitacion', ['habitaciones' => $habitaciones]);
     }
-
-
-public function anadirUsuario(Request $request)
-{
-    // Registrar la URL y los datos de la solicitud
-    Log::info('URL de la solicitud: ' . $request->fullUrl());
-    Log::info('Datos de la solicitud: ', $request->all());
-
-    try {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'apellidos' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email',
-            'password' => 'required|string|min:6',
-            'rolID' => 'required|integer|exists:roles,rolID',
-        ]);
-
-        Log::info('Datos validados: ', $validatedData);
-
-        $usuario = new User();
-        $usuario->name = $validatedData['name'];
-        $usuario->apellidos = $validatedData['apellidos'];
-        $usuario->email = $validatedData['email'];
-        $usuario->password = bcrypt($validatedData['password']); // Encriptar la contraseña
-        $usuario->rolID = 2; // Asignar un rol por defecto
-        $usuario->save();
-
-        Log::info('Usuario creado: ', $usuario->toArray());
-
-        $usuario->refresh();
-
-        if ($request->wantsJson() || $request->is('api/*')) {
-            return response()->json([
-                'message' => 'Usuario añadido correctamente.',
-                'usuario' => $usuario
+    
+    public function anadirHabitacion(Request $request)
+    {
+        
+        Log::info('URL de la solicitud: ' . $request->fullUrl());
+        Log::info('Datos de la solicitud: ', $request->all());
+    
+        try {
+            $validatedData = $request->validate([
+                'numhabitacion' => 'required|integer',
+                'tipohabitacion' => 'required|integer',
+                'precio' => 'required|numeric',
+                'hotelID' => 'required|integer|exists:hoteles,hotelID',
             ]);
+    
+            Log::info('Datos validados: ', $validatedData);
+    
+            $habitacion = new Habitacion();
+            $habitacion->numhabitacion = $validatedData['numhabitacion'];
+            $habitacion->tipohabitacion = $validatedData['tipohabitacion'];
+            $habitacion->precio = $validatedData['precio'];
+            $habitacion->hotelID = $validatedData['hotelID'];
+            $habitacion->save();
+    
+            Log::info('Habitación creada: ', $habitacion->toArray());
+    
+            $habitacion->refresh();
+    
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'message' => 'Habitación añadida correctamente.',
+                    'habitacion' => $habitacion
+                ]);
+            }
+    
+            return response()->json([
+                'message' => 'Habitación añadida correctamente.',
+                'habitacion' => $habitacion
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error al añadir la habitación: ' . $e->getMessage());
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['message' => 'Error al añadir la habitación', 'error' => $e->getMessage()], 500);
+            }
+            return back()->withError('Error al añadir la habitación')->withInput();
         }
-
-        return response()->json([
-            'message' => 'Usuario añadido correctamente.',
-            'usuario' => $usuario
-        ]);
-    } catch (\Exception $e) {
-        Log::error('Error al añadir el usuario: ' . $e->getMessage());
-        if ($request->wantsJson() || $request->is('api/*')) {
-            return response()->json(['message' => 'Error al añadir el usuario', 'error' => $e->getMessage()], 500);
-        }
-        return back()->withError('Error al añadir el usuario')->withInput();
     }
-}
 }

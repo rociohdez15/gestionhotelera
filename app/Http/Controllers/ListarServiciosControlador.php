@@ -24,8 +24,8 @@ class ListarServiciosControlador extends Controller
             ->join('habitaciones', 'habitaciones.habitacionID', '=', 'reservas.habitacionID')
             ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID')
             ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID')
-            ->join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID') // Unión con la tabla intermedia
-            ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID') // Unión con la tabla de servicios a través de la intermedia
+            ->join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID') 
+            ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID') 
             ->select(
                 'reservas.*',
                 'clientes.nombre',
@@ -34,8 +34,8 @@ class ListarServiciosControlador extends Controller
                 'servicios.servicioID',
                 'hoteles.nombre as nombre_hotel',
                 'servicios.nombre as nombre_servicio',
-                DB::raw("SUBSTRING_INDEX(servicios.horario, ' ', 1) as dia_servicio"), // Separando el día del campo horario
-                DB::raw("DATE_FORMAT(servicios.horario, '%H:%i') as hora_servicio") // Separando la hora del campo horario
+                DB::raw("SUBSTRING_INDEX(servicios.horario, ' ', 1) as dia_servicio"), 
+                DB::raw("DATE_FORMAT(servicios.horario, '%H:%i') as hora_servicio") 
             );
 
         $totalReservas = $query->count();
@@ -71,8 +71,8 @@ class ListarServiciosControlador extends Controller
             ->join('habitaciones', 'habitaciones.habitacionID', '=', 'reservas.habitacionID')
             ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID')
             ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID')
-            ->join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID') // Unión con la tabla intermedia
-            ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID') // Unión con la tabla de servicios a través de la intermedia
+            ->join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID') 
+            ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID') 
             ->select(
                 'reservas.*',
                 'clientes.nombre',
@@ -81,8 +81,8 @@ class ListarServiciosControlador extends Controller
                 'servicios.servicioID',
                 'hoteles.nombre as nombre_hotel',
                 'servicios.nombre as nombre_servicio',
-                DB::raw("SUBSTRING_INDEX(servicios.horario, ' ', 1) as dia_servicio"), // Separando el día del campo horario
-                DB::raw("DATE_FORMAT(servicios.horario, '%H:%i') as hora_servicio") // Separando la hora del campo horario
+                DB::raw("SUBSTRING_INDEX(servicios.horario, ' ', 1) as dia_servicio"), 
+                DB::raw("DATE_FORMAT(servicios.horario, '%H:%i') as hora_servicio") 
             )
             ->paginate(5);
 
@@ -100,10 +100,10 @@ class ListarServiciosControlador extends Controller
             return back()->withError('El servicio especificado no existe.');
         }
 
-        // Eliminar el servicio de la tabla intermedia reservas_servicios
+        
         DB::table('reservas_servicios')->where('servicioID', $servicioID)->delete();
 
-        // Eliminar el servicio
+        
         $servicio->delete();
 
         if ($request->wantsJson() || $request->is('api/*')) {
@@ -119,7 +119,7 @@ class ListarServiciosControlador extends Controller
 
     public function mostrarServicio(Request $request, $servicioID)
     {
-        // Obtener el servicio específico mediante el servicioID
+        
         $servicio = DB::table('servicios')->where('servicioID', $servicioID)->first();
         if (!$servicio) {
             if ($request->wantsJson() || $request->is('api/*')) {
@@ -128,10 +128,10 @@ class ListarServiciosControlador extends Controller
             return back()->withError('Servicio no encontrado');
         }
 
-        // Separar la fecha y la hora del campo horario del servicio
+        
         list($fecha, $hora) = explode(' ', $servicio->horario);
 
-        // Obtener el hotel y las fechas de la reserva asociada al servicio
+        
         $reserva = DB::table('hoteles')
             ->join('habitaciones', 'hoteles.hotelID', '=', 'habitaciones.hotelID')
             ->join('reservas', 'habitaciones.habitacionID', '=', 'reservas.habitacionID')
@@ -147,7 +147,7 @@ class ListarServiciosControlador extends Controller
             return back()->withError('Reserva no encontrada');
         }
 
-        // Obtener el cliente asociado a la reserva del servicio
+        
         $cliente = DB::table('clientes')
             ->join('reservas', 'clientes.clienteID', '=', 'reservas.clienteID')
             ->join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID')
@@ -173,7 +173,7 @@ class ListarServiciosControlador extends Controller
 
     public function editarServicio(Request $request, $servicioID)
     {
-        // Encuentra el servicio por ID
+        
         $servicio = Servicio::find($servicioID);
         if (!$servicio) {
             Log::error('Servicio no encontrado', ['servicioID' => $servicioID]);
@@ -184,18 +184,18 @@ class ListarServiciosControlador extends Controller
         }
 
         try {
-            // Valida que los campos 'fecha' y 'hora' estén presentes
+            
             $validatedData = $request->validate([
                 'fecha' => 'required|date',
                 'hora' => 'required|date_format:H:i',
             ]);
 
-            // Combina la fecha y la hora para crear un solo campo 'horario'
+            
             $fecha = Carbon::parse($validatedData['fecha']);
             $hora = Carbon::parse($validatedData['hora']);
             $horarioCompleto = $fecha->setTime($hora->hour, $hora->minute);
 
-            // Actualiza el campo 'horario' del servicio
+            
             $servicio->horario = $horarioCompleto;
             $servicio->save();
 
@@ -216,9 +216,9 @@ class ListarServiciosControlador extends Controller
     }
     public function generarPDF($servicioID)
     {
-        // Consulta para generar el pdf de la lista de servicios filtrado por servicioID
-        $reservas = Reserva::join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID') // Relación con la tabla intermedia
-            ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID') // Relación con la tabla servicios
+        
+        $reservas = Reserva::join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID') 
+            ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID') 
             ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID')
             ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID')
             ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID')
@@ -227,33 +227,33 @@ class ListarServiciosControlador extends Controller
                 'hoteles.nombre as nombre_hotel',
                 'habitaciones.numhabitacion',
                 DB::raw("CONCAT(clientes.nombre, ' ', clientes.apellidos) as nombre_completo"),
-                'servicios.servicioID', // ID del servicio
-                'servicios.horario', // Campo horario de servicios
-                'servicios.nombre as nombre_servicio', // Nombre del servicio
-                DB::raw("DATE(servicios.horario) as fecha"), // Extraer la fecha del campo horario
-                DB::raw("TIME(servicios.horario) as hora") // Extraer solo la parte de la hora
+                'servicios.servicioID', 
+                'servicios.horario', 
+                'servicios.nombre as nombre_servicio', 
+                DB::raw("DATE(servicios.horario) as fecha"), 
+                DB::raw("TIME(servicios.horario) as hora") 
             )
-            ->where('servicios.servicioID', $servicioID) // Filtrar por servicioID
+            ->where('servicios.servicioID', $servicioID) 
             ->get();
 
-        // Crear un nuevo objeto TCPDF
+        
         $pdf = new TCPDF();
 
-        // Agregar una página
+        
         $pdf->AddPage();
 
-        // Añadir título antes de los datos
+        
         $pdf->SetFont('helvetica', 'B', 14);
         $pdf->Cell(0, 10, 'Reserva de Servicio', 0, 1, 'C');
 
-        // Crear el contenido en el PDF
+        
         $html = '<div style="font-size: 12px; text-align: center;">';
 
-        // Iterar sobre los datos de las reservas y agregarlos al contenido del PDF
+        
         foreach ($reservas as $reserva) {
-            $horario = $reserva->horario; // Obtiene el campo horario
-            $fecha = date('Y-m-d', strtotime($horario)); // Extrae la fecha
-            $hora = date('H:i', strtotime($horario)); // Extrae la hora
+            $horario = $reserva->horario; 
+            $fecha = date('Y-m-d', strtotime($horario)); 
+            $hora = date('H:i', strtotime($horario)); 
 
             $html .= '<div style="margin-bottom: 20px;">';
             $html .= '<strong>ID Servicio:</strong> ' . $reserva->servicioID . '<br>';
@@ -268,21 +268,21 @@ class ListarServiciosControlador extends Controller
 
         $html .= '</div>';
 
-        // Agregar el contenido al PDF
+        
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Nombre del archivo PDF
+        
         $filename = "reserva_servicio.pdf";
 
-        // Salida del PDF al navegador
+        
         $pdf->Output($filename, 'D');
     }
 
     public function generarPDFTotal()
     {
-        // Consulta para generar el pdf de la lista de servicios filtrado por servicioID
-        $reservas = Reserva::join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID') // Relación con la tabla intermedia
-            ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID') // Relación con la tabla servicios
+        
+        $reservas = Reserva::join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID') 
+            ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID') 
             ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID')
             ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID')
             ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID')
@@ -291,25 +291,25 @@ class ListarServiciosControlador extends Controller
                 'hoteles.nombre as nombre_hotel',
                 'habitaciones.numhabitacion',
                 DB::raw("CONCAT(clientes.nombre, ' ', clientes.apellidos) as nombre_completo"),
-                'servicios.servicioID', // ID del servicio
-                'servicios.horario', // Campo horario de servicios
-                'servicios.nombre as nombre_servicio', // Nombre del servicio
-                DB::raw("DATE(servicios.horario) as fecha"), // Extraer la fecha del campo horario
-                DB::raw("TIME(servicios.horario) as hora") // Extraer solo la parte de la hora
+                'servicios.servicioID', 
+                'servicios.horario', 
+                'servicios.nombre as nombre_servicio', 
+                DB::raw("DATE(servicios.horario) as fecha"), 
+                DB::raw("TIME(servicios.horario) as hora") 
             )
             ->get();
 
-        // Crear un nuevo objeto TCPDF
+        
         $pdf = new TCPDF();
 
-        // Agregar una página
+        
         $pdf->AddPage();
 
-        // Añadir título antes de la tabla
+        
         $pdf->SetFont('helvetica', 'B', 14);
         $pdf->Cell(0, 10, 'Listado Servicios', 0, 1, 'C');
 
-        // Crear la tabla en el PDF 
+        
         $html = '<table border="1" style="font-size: 10px;">';
         $html .= '<tr style="background-color: #f2f2f2;">';
         $html .= '<th>ID Servicio</th>';
@@ -321,32 +321,32 @@ class ListarServiciosControlador extends Controller
         $html .= '<th>Hora</th>';
         $html .= '</tr>';
 
-        // Iterar sobre los datos de las reservas y agregarlos a la tabla del PDF
+        
         foreach ($reservas as $reserva) {
-            $horario = $reserva->horario; // Obtiene el campo horario
-            $fecha = date('Y-m-d', strtotime($horario)); // Extrae la fecha
-            $hora = date('H:i', strtotime($horario)); // Extrae la hora
+            $horario = $reserva->horario; 
+            $fecha = date('Y-m-d', strtotime($horario)); 
+            $hora = date('H:i', strtotime($horario)); 
 
             $html .= '<tr>';
-            $html .= '<td>' . $reserva->servicioID . '</td>'; // ID del servicio
-            $html .= '<td>' . $reserva->nombre_completo . '</td>'; // Nombre del cliente
-            $html .= '<td>' . $reserva->numhabitacion . '</td>'; // Número de habitación
-            $html .= '<td>' . $reserva->nombre_hotel . '</td>'; // Nombre del hotel
-            $html .= '<td>' . $reserva->nombre_servicio . '</td>'; // Nombre del servicio
-            $html .= '<td>' . $fecha . '</td>'; // Fecha extraída del campo horario
-            $html .= '<td>' . $hora . '</td>'; // Hora extraída del campo horario
+            $html .= '<td>' . $reserva->servicioID . '</td>'; 
+            $html .= '<td>' . $reserva->nombre_completo . '</td>'; 
+            $html .= '<td>' . $reserva->numhabitacion . '</td>'; 
+            $html .= '<td>' . $reserva->nombre_hotel . '</td>'; 
+            $html .= '<td>' . $reserva->nombre_servicio . '</td>'; 
+            $html .= '<td>' . $fecha . '</td>'; 
+            $html .= '<td>' . $hora . '</td>'; 
             $html .= '</tr>';
         }
 
         $html .= '</table>';
 
-        // Agregar la tabla al PDF
+        
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Nombre del archivo PDF
+        
         $filename = "lista_servicios.pdf";
 
-        // Salida del PDF al navegador
+        
         $pdf->Output($filename, 'D');
     }
 
@@ -355,7 +355,7 @@ class ListarServiciosControlador extends Controller
     {
         $query = $request->input('query');
 
-        // Consulta para buscar servicios en el listado
+        
         $consulta = Reserva::select(
             'reservas.*',
             'clientes.nombre',
@@ -364,14 +364,14 @@ class ListarServiciosControlador extends Controller
             'hoteles.nombre as nombre_hotel',
             'servicios.servicioID',
             'servicios.nombre as nombre_servicio',
-            DB::raw("SUBSTRING_INDEX(servicios.horario, ' ', 1) as dia_servicio"), // Separando el día del campo horario
+            DB::raw("SUBSTRING_INDEX(servicios.horario, ' ', 1) as dia_servicio"), 
             DB::raw("DATE_FORMAT(servicios.horario, '%H:%i') as hora_servicio")
         )
-            ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID') // Une con la tabla de clientes
-            ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID') // Une con la tabla de habitaciones
-            ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID') // Une con la tabla de hoteles
-            ->join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID') // Une con la tabla intermedia
-            ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID') // Une con la tabla de servicios
+            ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID') 
+            ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID') 
+            ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID') 
+            ->join('reservas_servicios', 'reservas.reservaID', '=', 'reservas_servicios.reservaID') 
+            ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID') 
             ->where(function ($q) use ($query) {
                 $q->where('reservas.reservaID', 'LIKE', "%$query%")
                     ->orWhere('clientes.nombre', 'LIKE', "%$query%")
@@ -393,7 +393,7 @@ class ListarServiciosControlador extends Controller
 
     public function anadirServicio(Request $request)
     {
-        // Obtén todas las reservas desde la base de datos
+        
         $reservas = Reserva::all();
 
         if ($request->wantsJson() || $request->is('api/*')) {
@@ -405,14 +405,13 @@ class ListarServiciosControlador extends Controller
 
     public function guardarServicio(Request $request)
     {
-        // Validar los datos recibidos
         $request->validate([
             'reservaID' => 'required|exists:reservas,reservaID',
             'nombreServicio' => 'required|string',
             'fechaHora' => 'required|date_format:Y-m-d\TH:i',
         ]);
 
-        // Obtener el número total de personas de la reserva
+        
         $reservaID = $request->input('reservaID');
         $reserva = DB::table('reservas')->select('num_adultos', 'num_ninos')->where('reservaID', $reservaID)->first();
 
@@ -423,7 +422,7 @@ class ListarServiciosControlador extends Controller
             return back()->withErrors(['error' => 'Reserva no encontrada'])->withInput();
         }
 
-        // Verificar si el servicio ya existe para el mismo usuario, servicio, día y hora
+        
         $servicioExistente = DB::table('reservas_servicios')
             ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID')
             ->where('reservas_servicios.reservaID', $reservaID)
@@ -438,15 +437,15 @@ class ListarServiciosControlador extends Controller
             return back()->withErrors(['error' => 'El servicio ya existe para este usuario en la fecha y hora especificadas'])->withInput();
         }
 
-        // Calcular el número total de personas
+        
         $numPersonas = $reserva->num_adultos + $reserva->num_ninos;
 
-        // Crear un nuevo servicio
+        
         $servicio = new Servicio();
         $servicio->nombre = $request->input('nombreServicio');
         $servicio->descripcion = $request->input('nombreServicio');
         $servicio->horario = $request->input('fechaHora');
-        // Calcular precio basado en el tipo de servicio y número de personas
+        
         switch ($servicio->nombre) {
             case 'restaurante':
                 $servicio->precio = 20 * $numPersonas;
@@ -458,7 +457,7 @@ class ListarServiciosControlador extends Controller
                 $servicio->precio = 10 * $numPersonas;
                 break;
             default:
-                $servicio->precio = 0; // Precio por defecto si no se reconoce el servicio
+                $servicio->precio = 0; 
                 break;
         }
         $servicio->save();

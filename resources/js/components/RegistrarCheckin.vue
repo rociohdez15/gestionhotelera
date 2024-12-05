@@ -71,10 +71,10 @@ export default {
         this.reserva = JSON.parse(appElement.getAttribute("data-reserva"));
         this.cliente = JSON.parse(appElement.getAttribute("data-cliente"));
 
-        // Convertir la fecha de checkin al formato "YYYY-MM-DDTHH:MM" para el campo de tipo datetime-local
+        
         var fechaCheckin = new Date(this.reserva.fecha_checkin);
 
-        // Asegurarse de que la fecha se maneje correctamente en la zona horaria local
+        
         var offset = fechaCheckin.getTimezoneOffset() * 60000; 
         var fechaLocal = new Date(fechaCheckin.getTime() - offset); 
         var fechaISO = fechaLocal.toISOString();
@@ -95,7 +95,7 @@ export default {
             var hoy = new Date();
             var checkin = new Date(this.fechaCheckin);
 
-            // Extraer solo la fecha y la hora
+            
             var hoySoloFecha = hoy.toISOString().split("T")[0];
             var checkinSoloFecha = checkin.toISOString().split("T")[0];
             var checkinHora = checkin.getHours();
@@ -136,7 +136,6 @@ export default {
 
                 if (actualizarResponse.ok) {
                     console.log("Actualización exitosa.");
-                    // Redirigir después de una actualización exitosa
                     window.location.href = "/listadocheckin?success=Reserva actualizada correctamente";
                 } else {
                     var errorText = await actualizarResponse.text();

@@ -128,7 +128,7 @@
 
         @auth
         @php
-        $rolUsuario = Auth::user()->rolID; // Suponiendo que 'rolID' es el campo que contiene el rol
+        $rolUsuario = Auth::user()->rolID; 
         @endphp
 
         @if ($rolUsuario === 2) <!-- Si el rol del usuario es recepcionista -->

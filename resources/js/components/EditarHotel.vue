@@ -128,7 +128,7 @@ export default {
         formData.append(`imagenes[]`, imagen);
       });
 
-      // Iterar sobre el FormData y registrar cada par clave-valor en la consola
+      
       for (let [key, value] of formData.entries()) {
         console.log(`${key}:`, value);
       }
@@ -138,7 +138,7 @@ export default {
           method: "POST",
           headers: {
             "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-            "X-HTTP-Method-Override": "PUT" // Sobrescribir el método HTTP a PUT
+            "X-HTTP-Method-Override": "PUT" 
           },
           body: formData,
         });

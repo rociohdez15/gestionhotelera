@@ -26,7 +26,7 @@ class ListarUsuariosControlador extends Controller
                 'email',
                 'rolID'
             )
-            ->where('rolID', 2); // Filtrar por rolID igual a 2
+            ->where('rolID', 2); 
 
         $totalUsuarios = $query->count();
 
@@ -90,7 +90,7 @@ class ListarUsuariosControlador extends Controller
                 'name',
                 'apellidos',
                 'email',
-                'rolID' // Mostrar el rolID tal y como es en la base de datos
+                'rolID' 
             )
             ->where('id', $usuarioID)
             ->first();
@@ -170,7 +170,7 @@ class ListarUsuariosControlador extends Controller
                 'email' => 'required|email|max:255',
             ]);
 
-            // Comprobar si el email ha cambiado y si ya existe
+            
             if ($usuario->email !== $validatedData['email']) {
                 $emailExists = User::where('email', $validatedData['email'])->exists();
                 if ($emailExists) {
@@ -184,7 +184,7 @@ class ListarUsuariosControlador extends Controller
             $usuario->name = $validatedData['name'];
             $usuario->apellidos = $validatedData['apellidos'];
             $usuario->email = $validatedData['email'];
-            $usuario->rolID = 2; // Asignar siempre el rol ID 2
+            $usuario->rolID = 2; 
             $usuario->save();
 
             $usuario->refresh();
@@ -214,7 +214,7 @@ class ListarUsuariosControlador extends Controller
                 'email',
                 'rolID'
             )
-            ->where('rolID', 2) // Filtrar por rolID igual a 2
+            ->where('rolID', 2) 
             ->get();
 
         $pdf = new TCPDF();
@@ -261,7 +261,7 @@ class ListarUsuariosControlador extends Controller
                 'email',
                 'rolID'
             )
-            ->where('rolID', 2) // Filtrar por rolID igual a 2
+            ->where('rolID', 2) 
             ->where(function ($q) use ($query) {
                 $q->where('id', 'LIKE', "%$query%")
                     ->orWhere('name', 'LIKE', "%$query%")
@@ -292,12 +292,12 @@ class ListarUsuariosControlador extends Controller
 
     public function anadirUsuario(Request $request)
     {
-        // Registrar la URL y los datos de la solicitud
+        
         Log::info('URL de la solicitud: ' . $request->fullUrl());
         Log::info('Datos de la solicitud: ', $request->all());
 
         try {
-            // Validar los campos excepto el email (lo validamos manualmente)
+            
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
                 'apellidos' => 'required|string|max:255',
@@ -308,7 +308,7 @@ class ListarUsuariosControlador extends Controller
 
             Log::info('Datos validados: ', $validatedData);
 
-            // Comprobar si el correo ya existe
+            
             $emailExistente = User::where('email', $validatedData['email'])->first();
             if ($emailExistente) {
                 Log::warning('Correo duplicado: ' . $validatedData['email']);
@@ -321,18 +321,18 @@ class ListarUsuariosControlador extends Controller
                 return back()->withErrors(['email' => 'El correo electrónico ya está en uso.'])->withInput();
             }
 
-            // Crear el usuario
+            
             $usuario = new User();
             $usuario->name = $validatedData['name'];
             $usuario->apellidos = $validatedData['apellidos'];
             $usuario->email = $validatedData['email'];
-            $usuario->password = bcrypt($validatedData['password']); // Encriptar la contraseña
-            $usuario->rolID = 2; // Asignar el rol ID del formulario
+            $usuario->password = bcrypt($validatedData['password']); 
+            $usuario->rolID = 2; 
             $usuario->save();
 
             Log::info('Usuario creado: ', $usuario->toArray());
 
-            // Responder según el tipo de solicitud
+            
             if ($request->wantsJson() || $request->is('api/*')) {
                 return response()->json([
                     'message' => 'Usuario añadido correctamente.',

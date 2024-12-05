@@ -206,7 +206,6 @@
                         var currentPage = 1;
                         var currentQuery = '';
 
-                        // Construir dinámicamente la URL base
                         var baseUrl = window.location.protocol + '//' + window.location.host;
 
                         function actualizarTabla(page = 1, query = '') {
@@ -286,7 +285,6 @@
                                         tabla.append(row);
                                     });
 
-                                    // Construir enlaces de paginación
                                     var enlacesPaginacion = $('#paginacion');
                                     enlacesPaginacion.empty();
                                     enlacesPaginacion.append(
@@ -298,7 +296,7 @@
                                         );
                                     }
 
-                                    // Añadir evento click a los enlaces de paginación
+                                
                                     $('.page-link').click(function(e) {
                                         e.preventDefault();
                                         var page = $(this).data('page');
@@ -311,17 +309,16 @@
                             });
                         }
 
-                        // Llama a la función para actualizar la tabla inicialmente
+                       
                         actualizarTabla();
 
-                        // Llama a la función para actualizar la tabla cada 5 segundos
+                       
                         setInterval(function() {
                             if ($('.modal.show').length === 0) {
                                 actualizarTabla(currentPage, currentQuery);
                             }
                         }, 5000);
 
-                        // Manejar el evento de envío del formulario de búsqueda
                         $('form').submit(function(e) {
                             e.preventDefault();
                             var query = $('input[name="query"]').val();
@@ -422,12 +419,10 @@
     document.addEventListener('DOMContentLoaded', function() {
         const successMessage = document.getElementById('success-message');
         if (successMessage) {
-            // Eliminar el parámetro de consulta 'success' de la URL
             const url = new URL(window.location);
             url.searchParams.delete('success');
             window.history.replaceState({}, document.title, url);
 
-            // Ocultar el mensaje después de 5 segundos
             setTimeout(() => {
                 successMessage.style.display = 'none';
             }, 2500);
@@ -435,12 +430,10 @@
 
         const errorMessage = document.getElementById('error-message');
         if (errorMessage) {
-            // Eliminar el parámetro de consulta 'error' de la URL
             const url = new URL(window.location);
             url.searchParams.delete('error');
             window.history.replaceState({}, document.title, url);
 
-            // Ocultar el mensaje después de 5 segundos
             setTimeout(() => {
                 errorMessage.style.display = 'none';
             }, 2500);

@@ -66,30 +66,30 @@ class ListarReservasControlador extends Controller
 
     public function delReserva($reservaID, Request $request)
     {
-        // Buscar la reserva
+        
         $reserva = Reserva::find($reservaID);
 
         if (!$reserva) {
             return back()->withError('La reserva especificada no existe.');
         }
 
-        // Eliminar edades de niños asociados a la reserva
+        
         DB::table('edadesninos')->where('reservaID', $reservaID)->delete();
 
-        // Obtener los IDs de los servicios asociados a esta reserva
+        
         $serviciosIDs = DB::table('reservas_servicios')
             ->where('reservaID', $reservaID)
             ->pluck('servicioID');
 
-        // Obtener los servicios eliminados
+        
         $serviciosEliminados = DB::table('servicios')
             ->whereIn('servicioID', $serviciosIDs)
             ->get();
 
-        // Eliminar los registros de la tabla intermedia reservas_servicios para esta reserva
+        
         DB::table('reservas_servicios')->where('reservaID', $reservaID)->delete();
 
-        // Eliminar los servicios que ya no están asociados a ninguna reserva
+        
         DB::table('servicios')
             ->whereIn('servicioID', $serviciosIDs)
             ->whereNotExists(function ($query) {
@@ -99,7 +99,7 @@ class ListarReservasControlador extends Controller
             })
             ->delete();
 
-        // Eliminar la reserva
+        
         $reserva->delete();
 
         if ($request->wantsJson() || $request->is('api/*')) {
@@ -180,7 +180,7 @@ class ListarReservasControlador extends Controller
                 'habitacionID' => 'required|integer',
             ]);
 
-            // Calcular la diferencia de días
+            
             $fechaEntradaOriginal = Carbon::parse($reserva->fechainicio);
             $fechaSalidaOriginal = Carbon::parse($reserva->fechafin);
             $fechaEntradaNueva = Carbon::parse($validatedData['fechaEntrada']);
@@ -189,23 +189,23 @@ class ListarReservasControlador extends Controller
             $diasOriginales = $fechaSalidaOriginal->diffInDays($fechaEntradaOriginal);
             $diasNuevos = $fechaSalidaNueva->diffInDays($fechaEntradaNueva);
 
-            // Calcular la diferencia de adultos y niños
+            
             $diferenciaAdultos = $validatedData['numAdultos'] - $reserva->num_adultos;
             $diferenciaNinos = $validatedData['numNinos'] - $reserva->num_ninos;
 
-            // Calcular el ajuste de precio por cambios
+            
             $ajustePrecio = ($diferenciaAdultos * 20) + ($diferenciaNinos * 10);
 
-            // Calcular el precio basado en días, asegurando que no baje de 60€ por día
+            
             if ($diasNuevos !== $diasOriginales) {
-                // Asegurar que el precio total no sea inferior al original
+                
                 $ajustePrecio += 200;
             }
 
-            // Ajustar el precio total
+            
             $reserva->preciototal += $ajustePrecio;
 
-            // Actualizar los datos de la reserva
+            
             $reserva->fechainicio = $validatedData['fechaEntrada'];
             $reserva->fechafin = $validatedData['fechaSalida'];
             $reserva->fecha_checkin = $validatedData['fechaEntrada'];
@@ -215,10 +215,10 @@ class ListarReservasControlador extends Controller
             $reserva->habitacionID = $validatedData['habitacionID'];
             $reserva->save();
 
-            // Eliminar las edades anteriores
+            
             EdadNino::where('reservaID', $reserva->reservaID)->delete();
 
-            // Guardar las nuevas edades de los niños
+            
             if (!empty($validatedData['edadesNinos'])) {
                 foreach ($validatedData['edadesNinos'] as $edad) {
                     if (is_numeric($edad) && $edad >= 0) {
@@ -230,7 +230,7 @@ class ListarReservasControlador extends Controller
                 }
             }
 
-            // Recargar la reserva para obtener los datos actualizados
+            
             $reserva->refresh();
 
             if ($request->wantsJson() || $request->is('api/*')) {
@@ -283,29 +283,29 @@ class ListarReservasControlador extends Controller
     }
     public function verificarHabitacion($hotelID, Request $request)
     {
-        // Obtener el número de adultos de la solicitud
+        
         $numAdultos = $request->query('numAdultos');
 
-        // Buscar habitaciones basadas en la capacidad para adultos y el hotelID
+        
         $habitacionesDisponibles = Habitacion::where('hotelID', $hotelID)
-            ->where('tipohabitacion', '=', $numAdultos) // Asegurarse de que la capacidad de la habitación es suficiente
+            ->where('tipohabitacion', '=', $numAdultos) 
             ->get();
 
-        // Obtener solo los IDs de las habitaciones disponibles
+        
         $habitacionIDs = $habitacionesDisponibles->pluck('habitacionID');
 
-        // Verificar si hay habitaciones disponibles
+        
         if ($habitacionIDs->isEmpty()) {
             return response()->json(['mensaje' => 'No hay habitaciones disponibles'], 404);
         }
 
-        // Devolver los IDs de las habitaciones en formato JSON
+        
         return response()->json(['habitacionID' => $habitacionIDs->first()]);
     }
 
     public function generarPDF($reservaID)
     {
-        // Consulta para generar un pdf de la reserva específica
+        
         $reserva = Reserva::join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID')
             ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID')
             ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID')
@@ -315,23 +315,23 @@ class ListarReservasControlador extends Controller
                 'habitaciones.numhabitacion',
                 DB::raw("CONCAT(clientes.nombre, ' ', clientes.apellidos) as nombre_completo")
             )
-            ->where('reservas.reservaID', $reservaID) // Filtrar por reservaID
+            ->where('reservas.reservaID', $reservaID) 
             ->first();
 
-        // Crear un nuevo objeto TCPDF
+        
         $pdf = new TCPDF();
 
-        // Agregar una página
+        
         $pdf->AddPage();
 
-        // Añadir título antes de los datos
+        
         $pdf->SetFont('helvetica', 'B', 14);
         $pdf->Cell(0, 10, 'Datos Reserva', 0, 1, 'C');
 
-        // Crear el contenido en el PDF
+        
         $html = '<div style="font-size: 12px; text-align: center;">';
 
-        // Agregar los datos de la reserva al contenido del PDF
+        
         if ($reserva) {
             $html .= '<div style="margin-bottom: 20px;">';
             $html .= '<strong>ID Reserva:</strong> ' . $reserva->reservaID . '<br>';
@@ -350,19 +350,19 @@ class ListarReservasControlador extends Controller
 
         $html .= '</div>';
 
-        // Agregar el contenido al PDF
+        
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Nombre del archivo PDF
+        
         $filename = "reserva_" . $reservaID . ".pdf";
 
-        // Salida del PDF al navegador
+        
         $pdf->Output($filename, 'D');
     }
 
     public function generarPDFTotal()
     {
-        // Consulta para generar un pdf del listado de reservas
+        
         $reservas = Reserva::join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID')
             ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID')
             ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID')
@@ -375,17 +375,17 @@ class ListarReservasControlador extends Controller
             ->get();
 
 
-        // Crear un nuevo objeto TCPDF
+        
         $pdf = new TCPDF();
 
-        // Agregar una página
+        
         $pdf->AddPage();
 
-        // Añadir título antes de la tabla
+        
         $pdf->SetFont('helvetica', 'B', 14);
         $pdf->Cell(0, 10, 'Datos Reservas', 0, 1, 'C');
 
-        // Crear la tabla en el PDF 
+        
         $html = '<table border="1" style="font-size: 10px;">';
         $html .= '<tr style="background-color: #f2f2f2;">';
         $html .= '<th>ID Reserva</th>';
@@ -399,31 +399,31 @@ class ListarReservasControlador extends Controller
         $html .= '<th>Nº de niños</th>';
         $html .= '</tr>';
 
-        // Iterar sobre los datos de las reservas y agregarlos a la tabla del PDF
+        
         foreach ($reservas as $reserva) {
             $html .= '<tr>';
-            $html .= '<td>' . $reserva->reservaID . '</td>'; // ID de la reserva
-            $html .= '<td>' . $reserva->nombre_completo . '</td>'; // Nombre del cliente
-            $html .= '<td>' . $reserva->nombre_hotel . '</td>'; // Nombre del hotel
-            $html .= '<td>' . $reserva->fechainicio . '</td>'; // Fecha de inicio
-            $html .= '<td>' . $reserva->fechafin . '</td>'; // Fecha de fin
-            $html .= '<td>' . $reserva->numhabitacion . '</td>'; // Número de habitación 
-            $html .= '<td>' . $reserva->preciototal . '</td>'; // Precio total
-            $html .= '<td>' . $reserva->num_adultos . '</td>'; // Número de adultos
-            $html .= '<td>' . $reserva->num_ninos . '</td>'; // Número de niños
+            $html .= '<td>' . $reserva->reservaID . '</td>'; 
+            $html .= '<td>' . $reserva->nombre_completo . '</td>'; 
+            $html .= '<td>' . $reserva->nombre_hotel . '</td>'; 
+            $html .= '<td>' . $reserva->fechainicio . '</td>'; 
+            $html .= '<td>' . $reserva->fechafin . '</td>'; 
+            $html .= '<td>' . $reserva->numhabitacion . '</td>'; 
+            $html .= '<td>' . $reserva->preciototal . '</td>'; 
+            $html .= '<td>' . $reserva->num_adultos . '</td>'; 
+            $html .= '<td>' . $reserva->num_ninos . '</td>'; 
             $html .= '</tr>';
         }
 
 
         $html .= '</table>';
 
-        // Agregar la tabla al PDF
+        
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Nombre del archivo PDF
+        
         $filename = "lista_reservas.pdf";
 
-        // Salida del PDF al navegador
+        
         $pdf->Output($filename, 'D');
     }
 
@@ -431,11 +431,11 @@ class ListarReservasControlador extends Controller
     {
         $query = $request->input('query');
 
-        // Consulta para utilizar el buscador en el listado de reservas
-        $consulta = Reserva::select('reservas.*', 'clientes.nombre', 'clientes.apellidos', 'habitaciones.numhabitacion', 'hoteles.nombre as hotel_nombre') // Selecciona todas las columnas de reservas
-            ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID') // Une con la tabla de clientes
-            ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID') // Une con la tabla de habitaciones
-            ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID') // Une con la tabla de hoteles
+        
+        $consulta = Reserva::select('reservas.*', 'clientes.nombre', 'clientes.apellidos', 'habitaciones.numhabitacion', 'hoteles.nombre as hotel_nombre') 
+            ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID') 
+            ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID') 
+            ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID') 
             ->where('reservas.reservaID', 'LIKE', "%$query%")
             ->orWhere('clientes.nombre', 'LIKE', "%$query%")
             ->orWhere('clientes.apellidos', 'LIKE', "%$query%")

@@ -18,21 +18,21 @@ class ListadoCheckinControlador extends Controller
 {
     public function listadoCheckin(Request $request)
     {
-        // Obtener el valor del query 
+        
         $queryParam = $request->input('query', '');
 
-        // Obtener la fecha actual
+        
         $fecha_actual = Carbon::now()->startOfDay();
 
-        // Consulta para mostrar el listado de check-in
+        
         $query = DB::table('reservas')
             ->join('habitaciones', 'habitaciones.habitacionID', '=', 'reservas.habitacionID')
             ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID')
             ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID')
             ->select('reservas.*', 'clientes.nombre', 'clientes.apellidos', 'habitaciones.numhabitacion', 'hoteles.nombre as hotel_nombre')
-            ->where('reservas.fecha_checkin', '>=', $fecha_actual); // Filtrar por fecha
+            ->where('reservas.fecha_checkin', '>=', $fecha_actual); 
 
-        // Aplicar el filtro de búsqueda si se proporciona
+        
         if ($queryParam) {
             $query->where(function ($q) use ($queryParam) {
                 $q->where('reservas.reservaID', 'LIKE', "%$queryParam%")
@@ -43,22 +43,22 @@ class ListadoCheckinControlador extends Controller
             });
         }
 
-        // Contar el total de reservas después de aplicar el filtro
+        
         $totalReservas = $query->count();
 
-        // Configurar la paginación
+        
         $registros_por_pagina = 5;
         $pagina_actual = $request->input('pagina', 1);
         $total_paginas = ceil($totalReservas / $registros_por_pagina);
 
-        // Ajustar la página actual
+        
         if ($pagina_actual < 1) $pagina_actual = 1;
         if ($pagina_actual > $total_paginas) $pagina_actual = $total_paginas;
 
-        // Calcular el inicio de la paginación
+        
         $inicio = ($pagina_actual - 1) * $registros_por_pagina;
 
-        // Obtener las reservas paginadas
+        
         $reservas = $query->skip($inicio)->take($registros_por_pagina)->get();
 
         $parametros = [
@@ -83,15 +83,15 @@ class ListadoCheckinControlador extends Controller
     {
         $query = $request->input('query', '');
 
-        // Obtener la fecha actual
+        
         $fecha_actual = Carbon::now()->startOfDay();
 
-        // Realiza la consulta para cuando se usa el buscador
+        
         $consulta = Reserva::select('reservas.*', 'clientes.nombre', 'clientes.apellidos', 'habitaciones.numhabitacion')
             ->join('clientes', 'reservas.clienteID', '=', 'clientes.clienteID')
             ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID')
             ->join('hoteles', 'habitaciones.hotelID', '=', 'hoteles.hotelID')
-            ->where('reservas.fecha_checkin', '>=', $fecha_actual) // Filtrar por fecha
+            ->where('reservas.fecha_checkin', '>=', $fecha_actual) 
             ->where(function ($queryBuilder) use ($query) {
                 $queryBuilder->where('reservas.reservaID', 'LIKE', "%$query%")
                     ->orWhere('clientes.nombre', 'LIKE', "%$query%")
@@ -102,10 +102,10 @@ class ListadoCheckinControlador extends Controller
                     ->orWhere('reservas.num_ninos', 'LIKE', "%$query%");
             });
 
-        // Contar total de reservas aplicando el filtro
+        
         $totalReservas = $consulta->count();
 
-        // Paginación
+        
         $registros_por_pagina = 5;
         $pagina_actual = $request->input('pagina', 1);
         $total_paginas = ceil($totalReservas / $registros_por_pagina);
@@ -115,7 +115,7 @@ class ListadoCheckinControlador extends Controller
 
         $inicio = ($pagina_actual - 1) * $registros_por_pagina;
 
-        // Obtener las reservas para la página actual aplicando la paginación
+        
         $reservas = $consulta->skip($inicio)->take($registros_por_pagina)->get();
 
         return view('listadocheckin', [
@@ -186,20 +186,20 @@ class ListadoCheckinControlador extends Controller
 
         try {
             $validatedData = $request->validate([
-                'fechaCheckin' => 'required|date|after:fechainicio', // Verifica que sea una fecha válida y después de la fecha de entrada
+                'fechaCheckin' => 'required|date|after:fechainicio', 
             ]);
 
             $fechaCheckinNueva = Carbon::parse($validatedData['fechaCheckin']);
 
-            // Comparar con la fecha de check-in actual, para actualizar solo si es necesario
+            
             if ($reserva->fecha_checkin !== $fechaCheckinNueva->toDateString()) {
-                // Actualizar solo la fecha de check-in
+                
                 $reserva->fecha_checkin = $fechaCheckinNueva;
-                $reserva->fechainicio = $fechaCheckinNueva; // `fechainicio` debe ser igual a `fecha_checkin`
+                $reserva->fechainicio = $fechaCheckinNueva; 
                 $reserva->save();
             }
 
-            // Recargar la reserva para obtener los datos actualizados
+            
             $reserva->refresh();
 
             if ($request->wantsJson() || $request->is('api/*')) {

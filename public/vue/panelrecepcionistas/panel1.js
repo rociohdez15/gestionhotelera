@@ -2,14 +2,14 @@ const app = Vue.createApp({
     data() {
         return {
             labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            datos: [], // Datos de reservas por mes y día
-            mesSeleccionado: -1, // -1 para mostrar datos anualmente por defecto
-            grafica: null // Referencia a la gráfica
+            datos: [], 
+            mesSeleccionado: -1, 
+            grafica: null 
         }
     },
     mounted() {
-        this.datos = window.chartData; // Asigna los datos pasados desde la vista a la variable 'datos'
-        this.renderizarGrafica(); // Llama al método para visualizar la gráfica
+        this.datos = window.chartData; 
+        this.renderizarGrafica(); 
     },
     methods: {
         renderizarGrafica() {
@@ -17,10 +17,10 @@ const app = Vue.createApp({
             this.grafica = new Chart(contextoGrafica, {
                 type: 'bar',
                 data: {
-                    labels: this.mesSeleccionado === -1 ? this.labels : Array.from({ length: 31 }, (_, i) => i + 1), // Días del mes o meses del año
+                    labels: this.mesSeleccionado === -1 ? this.labels : Array.from({ length: 31 }, (_, i) => i + 1), 
                     datasets: [{
                         label: this.mesSeleccionado === -1 ? 'Nº de reservas por mes' : 'Nº de reservas por día',
-                        data: this.mesSeleccionado === -1 ? this.datos.map(mesDatos => mesDatos.reduce((a, b) => a + b, 0)) : this.datos[this.mesSeleccionado], // Datos anuales o del mes seleccionado
+                        data: this.mesSeleccionado === -1 ? this.datos.map(mesDatos => mesDatos.reduce((a, b) => a + b, 0)) : this.datos[this.mesSeleccionado], 
                         backgroundColor: '#0b31ee',
                         borderColor: '#0b31ee',
                         borderWidth: 1

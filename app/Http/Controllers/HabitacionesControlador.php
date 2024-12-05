@@ -16,10 +16,10 @@ use TCPDF;
 
 class HabitacionesControlador extends Controller
 {
-    // Método que mostrará un gráfico sobre la disponibilidad de las habitaciones
+    
     public function dispHabitaciones(Request $request)
     {
-        // Obtener los datos de las habitaciones disponibles en cada hotel
+        
         $data = $this->obtenerHabitacionesDisponibles();
         $ingresos = $this->obtenerIngresosPorMes();
         $clientes = $this->obtenerClientesRegistradosPorMes();
@@ -28,7 +28,7 @@ class HabitacionesControlador extends Controller
         $numeroHoteles = DB::table('hoteles')->count();
         $numeroUsuarios = DB::table('users')->count();
 
-        // Calcular la suma de todos los ingresos anuales (reservas y servicios)
+        
         $totalIngresosReservas = array_sum(array_values($ingresos));
         $totalIngresosServicios = array_sum(array_values($ingresosServicios));
         $totalIngresosAnuales = $totalIngresosReservas + $totalIngresosServicios;
@@ -37,7 +37,7 @@ class HabitacionesControlador extends Controller
         ->whereYear('fechainicio', Carbon::now()->year)
         ->count();
 
-        // Pasar los datos a la vista
+        
         return view('disponibilidadhabitaciones', [
             'data' => $data,
             'ingresos' => $ingresos,
@@ -51,12 +51,12 @@ class HabitacionesControlador extends Controller
         ]);
     }
 
-    // Método para obtener las habitaciones disponibles de cada hotel
+    
     private function obtenerHabitacionesDisponibles()
     {
         $fechaActual = Carbon::now()->format('Y-m-d');
 
-        // Obtener todas las habitaciones por hotel junto con el nombre del hotel
+        
         $habitacionesPorHotel = DB::table('hoteles')
             ->join('habitaciones', 'hoteles.hotelID', '=', 'habitaciones.hotelID')
             ->leftJoin('reservas', function ($join) use ($fechaActual) {
@@ -68,17 +68,17 @@ class HabitacionesControlador extends Controller
             ->groupBy('hoteles.nombre')
             ->get();
 
-        // Procesar la disponibilidad de habitaciones por hotel
+        
         $disponibilidadPorHotel = [];
         foreach ($habitacionesPorHotel as $hotel) {
             $disponibles = $hotel->total_habitaciones - $hotel->habitaciones_reservadas;
-            $disponibilidadPorHotel[$hotel->nombre] = $disponibles; // Usa el nombre del hotel como clave
+            $disponibilidadPorHotel[$hotel->nombre] = $disponibles; 
         }
 
         return $disponibilidadPorHotel;
     }
 
-    // Método para obtener los ingresos totales por meses
+    
     private function obtenerIngresosPorMes()
     {
         $ingresosPorMes = DB::table('reservas')
@@ -93,18 +93,18 @@ class HabitacionesControlador extends Controller
             $ingresos[$ingreso->mes] = $ingreso->ingresos;
         }
 
-        // Pasamos los meses del año al array de ingresos
+        
         $mesesDelAno = [];
         for ($i = 1; $i <= 12; $i++) {
             $mes = Carbon::now()->format('Y') . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
-            $nombreMes = Carbon::createFromFormat('Y-m', $mes)->locale('es')->translatedFormat('F'); // Obtener el nombre del mes en español
+            $nombreMes = Carbon::createFromFormat('Y-m', $mes)->locale('es')->translatedFormat('F'); 
             $mesesDelAno[$nombreMes] = $ingresos[$mes] ?? 0;
         }
 
         return $mesesDelAno;
     }
 
-    // Método para obtener los ingresos por servicios por mes
+    
     private function obtenerIngresosServiciosPorMes()
     {
         $ingresosServiciosPorMes = DB::table('servicios')
@@ -119,11 +119,11 @@ class HabitacionesControlador extends Controller
             $ingresosServicios[$ingreso->mes] = $ingreso->ingresos;
         }
 
-        // Pasamos los meses del año al array de ingresos
+        
         $mesesDelAno = [];
         for ($i = 1; $i <= 12; $i++) {
             $mes = Carbon::now()->format('Y') . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
-            $nombreMes = Carbon::createFromFormat('Y-m', $mes)->locale('es')->translatedFormat('F'); // Obtener el nombre del mes en español
+            $nombreMes = Carbon::createFromFormat('Y-m', $mes)->locale('es')->translatedFormat('F'); 
             $mesesDelAno[$nombreMes] = $ingresosServicios[$mes] ?? 0;
         }
 
@@ -145,11 +145,11 @@ class HabitacionesControlador extends Controller
             $clientes[$cliente->mes] = $cliente->total;
         }
 
-        // Asegurarse de que todos los meses del año actual están presentes en el array
+        
         $mesesDelAno = [];
         for ($i = 1; $i <= 12; $i++) {
             $mes = Carbon::now()->format('Y') . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
-            $nombreMes = Carbon::createFromFormat('Y-m', $mes)->locale('es')->translatedFormat('F'); // Obtener el nombre del mes en español
+            $nombreMes = Carbon::createFromFormat('Y-m', $mes)->locale('es')->translatedFormat('F'); 
             $mesesDelAno[$nombreMes] = $clientes[$mes] ?? 0;
         }
 

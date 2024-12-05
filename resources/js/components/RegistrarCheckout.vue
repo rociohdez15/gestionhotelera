@@ -65,14 +65,14 @@ export default {
         this.reserva = JSON.parse(appElement.getAttribute("data-reserva"));
         this.cliente = JSON.parse(appElement.getAttribute("data-cliente"));
 
-        // Convertir la fecha de checkout al formato "YYYY-MM-DDTHH:MM" para el campo de tipo datetime-local
+        
         var fechaCheckout = new Date(this.reserva.fecha_checkout);
 
-        // Asegurarse de que la fecha se maneje correctamente en la zona horaria local
+        
         var offset = fechaCheckout.getTimezoneOffset() * 60000;
         var fechaLocal = new Date(fechaCheckout.getTime() - offset);
         var fechaISO = fechaLocal.toISOString();
-        this.fechaCheckout = fechaISO.slice(0, 16); // YYYY-MM-DDTHH:MM
+        this.fechaCheckout = fechaISO.slice(0, 16); 
     },
 
     computed: {
@@ -89,7 +89,7 @@ export default {
             var hoy = new Date();
             var checkout = new Date(this.fechaCheckout);
 
-            // Extraer solo la fecha y la hora
+            
             var hoySoloFecha = hoy.toISOString().split("T")[0];
             var checkoutSoloFecha = checkout.toISOString().split("T")[0];
             var checkoutHora = checkout.getHours();
@@ -132,7 +132,7 @@ export default {
 
                 if (actualizarResponse.ok) {
                     console.log("Actualización exitosa.");
-                    // Redirigir después de una actualización exitosa
+                    
                     window.location.href = "/listadocheckout?success=Check-out realizado correctamente";
                 } else {
                     var errorText = await actualizarResponse.text();

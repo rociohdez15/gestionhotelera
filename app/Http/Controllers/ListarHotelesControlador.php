@@ -59,17 +59,17 @@ class ListarHotelesControlador extends Controller
 
     public function delHotel($hotelID, Request $request)
     {
-        // Buscar el hotel
+        
         $hotel = Hotel::find($hotelID);
 
         if (!$hotel) {
             return back()->withError('El hotel especificado no existe.');
         }
 
-        // Eliminar las habitaciones asociadas al hotel
+        
         DB::table('habitaciones')->where('hotelID', $hotelID)->delete();
 
-        // Eliminar el hotel
+        
         $hotel->delete();
 
         if ($request->wantsJson() || $request->is('api/*')) {
@@ -121,10 +121,10 @@ class ListarHotelesControlador extends Controller
                 'ciudad' => 'required|string|max:255',
                 'telefono' => 'required|string|max:20',
                 'descripcion' => 'nullable|string',
-                'imagenes.*' => 'image|mimes:jpeg,png,jpg,gif,svg,bmp,tiff,webp|max:2048', // Validar imágenes
+                'imagenes.*' => 'image|mimes:jpeg,png,jpg,gif,svg,bmp,tiff,webp|max:2048', 
             ]);
 
-            // Actualizar los datos del hotel
+            
             $hotel->nombre = $validatedData['nombre'];
             $hotel->direccion = $validatedData['direccion'];
             $hotel->ciudad = $validatedData['ciudad'];
@@ -132,16 +132,16 @@ class ListarHotelesControlador extends Controller
             $hotel->descripcion = $validatedData['descripcion'] ?? null;
             $hotel->save();
 
-            // Recargar el hotel para obtener los datos actualizados
+            
             $hotel->refresh();
 
-            // Manejar la subida de imágenes
+            
             if ($request->hasFile('imagenes')) {
                 $imagenes = $request->file('imagenes');
                 $ciudad = strtolower($hotel->ciudad);
                 $rutaBase = "images/hoteles/{$ciudad}/hotel{$hotelID}";
 
-                // Obtener el número de la última imagen para continuar la numeración
+                
                 $ultimaImagen = DB::table('imagenes_hoteles')
                     ->where('hotelID', $hotelID)
                     ->orderBy('imagenID', 'desc')
@@ -155,15 +155,15 @@ class ListarHotelesControlador extends Controller
                     $extension = $imagen->getClientOriginalExtension();
                     $rutaImagen = "{$rutaBase}/imagen{$numeroImagen}.{$extension}";
 
-                    // Crear el directorio si no existe
+                    
                     if (!is_dir(public_path($rutaBase))) {
                         mkdir(public_path($rutaBase), 0755, true);
                     }
 
-                    // Guardar la imagen en el almacenamiento
+                    
                     $imagen->move(public_path($rutaBase), "imagen{$numeroImagen}.{$extension}");
 
-                    // Guardar la información de la imagen en la base de datos
+                    
                     $insercionExitosa = DB::table('imagenes_hoteles')->insert([
                         'hotelID' => $hotelID,
                         'imagen' => $rutaImagen,
@@ -181,11 +181,11 @@ class ListarHotelesControlador extends Controller
                 ]);
             }
 
-            // Obtener la lista de hoteles para pasarla a la vista
+            
             $hoteles = Hotel::all();
-            $pagina_actual = 'gestionarhoteles'; // Define la variable $pagina_actual
-            $registros_por_pagina = 10; // Define la variable $registros_por_pagina
-            $total_paginas = ceil($hoteles->count() / $registros_por_pagina); // Define la variable $total_paginas
+            $pagina_actual = 'gestionarhoteles'; 
+            $registros_por_pagina = 10; 
+            $total_paginas = ceil($hoteles->count() / $registros_por_pagina); 
 
             return response()->json(['success' => 'El hotel se ha editado correctamente']);
         } catch (\Exception $e) {
@@ -198,30 +198,30 @@ class ListarHotelesControlador extends Controller
 
     public function generarPDF($hotelID)
     {
-        // Consulta para obtener los datos del hotel específico
+        
         $hotel = Hotel::join('habitaciones', 'hoteles.hotelID', '=', 'habitaciones.hotelID')
             ->select(
                 'hoteles.*',
                 DB::raw('COUNT(habitaciones.habitacionID) as num_habitaciones')
             )
-            ->where('hoteles.hotelID', $hotelID) // Filtrar por hotelID
+            ->where('hoteles.hotelID', $hotelID) 
             ->groupBy('hoteles.hotelID')
             ->first();
 
-        // Crear un nuevo objeto TCPDF
+        
         $pdf = new TCPDF();
 
-        // Agregar una página
+        
         $pdf->AddPage();
 
-        // Añadir título antes de los datos
+        
         $pdf->SetFont('helvetica', 'B', 14);
         $pdf->Cell(0, 10, 'Datos del Hotel', 0, 1, 'C');
 
-        // Crear el contenido en el PDF
+        
         $html = '<div style="font-size: 12px; text-align: center;">';
 
-        // Agregar los datos del hotel al contenido del PDF
+        
         if ($hotel) {
             $html .= '<div style="margin-bottom: 20px;">';
             $html .= '<strong>ID Hotel:</strong> ' . $hotel->hotelID . '<br>';
@@ -237,19 +237,19 @@ class ListarHotelesControlador extends Controller
 
         $html .= '</div>';
 
-        // Agregar el contenido al PDF
+        
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Nombre del archivo PDF
+        
         $filename = "hotel_" . $hotelID . ".pdf";
 
-        // Salida del PDF al navegador
+        
         $pdf->Output($filename, 'D');
     }
 
     public function generarPDFTotal()
     {
-        // Consulta para generar un pdf del listado de hoteles
+        
         $hoteles = Hotel::join('habitaciones', 'hoteles.hotelID', '=', 'habitaciones.hotelID')
             ->select(
                 'hoteles.*',
@@ -258,17 +258,17 @@ class ListarHotelesControlador extends Controller
             ->groupBy('hoteles.hotelID')
             ->get();
 
-        // Crear un nuevo objeto TCPDF
+        
         $pdf = new TCPDF();
 
-        // Agregar una página
+        
         $pdf->AddPage();
 
-        // Añadir título antes de la tabla
+        
         $pdf->SetFont('helvetica', 'B', 14);
         $pdf->Cell(0, 10, 'Listado de Hoteles', 0, 1, 'C');
 
-        // Crear la tabla en el PDF 
+        
         $html = '<table border="1" style="font-size: 10px;">';
         $html .= '<tr style="background-color: #f2f2f2;">';
         $html .= '<th>ID Hotel</th>';
@@ -280,28 +280,28 @@ class ListarHotelesControlador extends Controller
         $html .= '<th>Número de Habitaciones</th>';
         $html .= '</tr>';
 
-        // Iterar sobre los datos de los hoteles y agregarlos a la tabla del PDF
+        
         foreach ($hoteles as $hotel) {
             $html .= '<tr>';
-            $html .= '<td>' . $hotel->hotelID . '</td>'; // ID del hotel
-            $html .= '<td>' . $hotel->nombre . '</td>'; // Nombre del hotel
-            $html .= '<td>' . $hotel->direccion . '</td>'; // Dirección
-            $html .= '<td>' . $hotel->ciudad . '</td>'; // Ciudad
-            $html .= '<td>' . $hotel->telefono . '</td>'; // Teléfono
-            $html .= '<td>' . $hotel->descripcion . '</td>'; // Descripción
-            $html .= '<td>' . $hotel->num_habitaciones . '</td>'; // Número de habitaciones
+            $html .= '<td>' . $hotel->hotelID . '</td>'; 
+            $html .= '<td>' . $hotel->nombre . '</td>'; 
+            $html .= '<td>' . $hotel->direccion . '</td>'; 
+            $html .= '<td>' . $hotel->ciudad . '</td>'; 
+            $html .= '<td>' . $hotel->telefono . '</td>'; 
+            $html .= '<td>' . $hotel->descripcion . '</td>'; 
+            $html .= '<td>' . $hotel->num_habitaciones . '</td>'; 
             $html .= '</tr>';
         }
 
         $html .= '</table>';
 
-        // Agregar la tabla al PDF
+        
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Nombre del archivo PDF
+        
         $filename = "lista_hoteles.pdf";
 
-        // Salida del PDF al navegador
+        
         $pdf->Output($filename, 'D');
     }
 
@@ -309,7 +309,7 @@ class ListarHotelesControlador extends Controller
     {
         $query = $request->input('query');
 
-        // Consulta para utilizar el buscador en el listado de hoteles
+        
         $consulta = Hotel::select('hoteles.*')
             ->leftJoin('habitaciones', 'hoteles.hotelID', '=', 'habitaciones.hotelID')
             ->where(function ($q) use ($query) {
@@ -333,7 +333,7 @@ class ListarHotelesControlador extends Controller
 
     public function mostrarHoteles(Request $request)
     {
-        // Obtén todos los hoteles desde la base de datos
+        
         $hoteles = Hotel::all();
 
         if ($request->wantsJson() || $request->is('api/*')) {
@@ -351,10 +351,10 @@ class ListarHotelesControlador extends Controller
             'ciudad' => 'required|string|max:255',
             'telefono' => 'required|string|max:20',
             'descripcion' => 'nullable|string',
-            'imagenes.*' => 'image|mimes:jpeg,png,jpg,gif,svg,bmp,tiff,webp|max:2048', // Validar imágenes
+            'imagenes.*' => 'image|mimes:jpeg,png,jpg,gif,svg,bmp,tiff,webp|max:2048', 
         ]);
 
-        // Crear el nuevo hotel
+        
         $hotel = new Hotel();
         $hotel->nombre = $validatedData['nombre'];
         $hotel->direccion = $validatedData['direccion'];
@@ -363,10 +363,10 @@ class ListarHotelesControlador extends Controller
         $hotel->descripcion = $validatedData['descripcion'];
         $hotel->save();
 
-        // Recargar el hotel para obtener el ID generado
+        
         $hotel->refresh();
 
-        // Manejar la subida de imágenes
+        
         if ($request->hasFile('imagenes')) {
             $imagenes = $request->file('imagenes');
             $ciudad = strtolower($hotel->ciudad);
@@ -376,10 +376,10 @@ class ListarHotelesControlador extends Controller
                 $nombreImagen = "Hotel {$hotel->nombre} - Imagen " . ($index + 1);
                 $rutaImagen = "{$rutaBase}/imagen" . ($index + 1) . ".{$imagen->getClientOriginalExtension()}";
 
-                // Guardar la imagen en el almacenamiento
+                
                 $imagen->move(public_path($rutaBase), "imagen" . ($index + 1) . ".{$imagen->getClientOriginalExtension()}");
 
-                // Guardar la información de la imagen en la base de datos
+                
                 DB::table('imagenes_hoteles')->insert([
                     'hotelID' => $hotel->hotelID,
                     'nombre_imagen' => $nombreImagen,

@@ -114,7 +114,7 @@
 
         @auth
         @php
-        $rolUsuario = Auth::user()->rolID; // Suponiendo que 'rolID' es el campo que contiene el rol
+        $rolUsuario = Auth::user()->rolID; 
         @endphp
 
         @if ($rolUsuario === 2) <!-- Si el rol del usuario es recepcionista -->
@@ -138,8 +138,6 @@
             <br>
             <br>
             @php
-            // Definir la clase de columna dependiendo de la cantidad de reservas
-            // Dependiendo del numero de columnas contadas se muestra un ancho u otro
             $col_class = $datos->count() === 1 ? 'col-md-12' : 'col-md-4';
             @endphp
 

@@ -135,7 +135,6 @@ export default {
 
               if (response.ok) {
                   console.log("Habitación añadida correctamente.");
-                  // Redirigir después de una adición exitosa
                   window.location.href = "/gestionarhabitaciones?success=La habitación se ha añadido correctamente";
               } else {
                   const errorText = await response.text();

@@ -87,7 +87,7 @@
           apellidos: '',
           email: '',
           password: '',
-          rolID: 2 // Valor por defecto
+          rolID: 2 
         },
         errorMessage: "",
         isFormValid: true,
@@ -143,7 +143,7 @@
             return;
           }
   
-          // Si el correo no existe, proceder a añadir el usuario
+          
           this.añadirUsuario();
         } catch (e) {
           console.error("Error al comprobar el correo:", e);
@@ -190,7 +190,7 @@
           apellidos: '',
           email: '',
           password: '',
-          rolID: 2 // Valor por defecto
+          rolID: 2 
         };
         this.errorMessage = "";
       },

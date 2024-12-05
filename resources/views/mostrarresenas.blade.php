@@ -19,9 +19,9 @@
 </head>
 <style>
     .imagen-portada-alojamiento {
-    width: 100%; /* Ajusta el ancho al 100% del contenedor */
-    height: 200px; /* Establece una altura fija */
-    object-fit: cover; /* Asegura que la imagen se recorte para llenar el contenedor */
+    width: 100%; 
+    height: 200px; 
+    object-fit: cover; 
 }
 </style>
 <body>
@@ -114,8 +114,7 @@
 
         @auth
         @php
-        $rolUsuario = Auth::user()->rolID; // Suponiendo que 'rolID' es el campo que contiene el rol
-        @endphp
+        $rolUsuario = Auth::user()->rolID; 
 
         @if ($rolUsuario === 2) <!-- Si el rol del usuario es recepcionista -->
         <script>

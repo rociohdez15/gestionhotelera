@@ -74,8 +74,8 @@
 export default {
   data() {
     return {
-      reservaID: "", // Valor inicial vacío para mostrar la opción por defecto
-      nombreServicio: "", // Valor inicial vacío para mostrar la opción por defecto
+      reservaID: "", 
+      nombreServicio: "", 
       reservas: [],
       horarioServicio: "",
       errorMessage: "",
@@ -89,7 +89,7 @@ export default {
     if (reservasData) {
       try {
         this.reservas = JSON.parse(reservasData);
-        console.log("Reservas en mounted:", this.reservas); // Verifica que las reservas se están recibiendo correctamente
+        console.log("Reservas en mounted:", this.reservas); 
       } catch (e) {
         console.error("Error al parsear los datos de reservas:", e);
       }

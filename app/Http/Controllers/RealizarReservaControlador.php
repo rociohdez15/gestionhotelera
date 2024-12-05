@@ -79,10 +79,10 @@ class RealizarReservaControlador extends Controller
         }
     }
 
-    /* Método que muestra la vista y obtiene los datos necesarios para la realización de la reserva. */
+    
     public function realizarreserva(Request $request)
     {
-        // Obtén los parámetros de la consulta
+        
         $hotelID = $request->input('hotelID');
         $fechaEntrada = $request->input('fechaEntrada');
         $fechaSalida = $request->input('fechaSalida');
@@ -92,35 +92,35 @@ class RealizarReservaControlador extends Controller
         $precioHabitacion = $request->input('precioHabitacion');
         $ubiacion = $request->input('ubicacion');
 
-        // Convierte el habitacionID a un array si no lo es
+        
         $habitacionID = $request->input('habitacionID');
         if (is_string($habitacionID)) {
             $habitacionID = explode(',', $habitacionID);
         }
 
-        $edadesNinos = []; // Array que almacenará las edades de los niños
+        $edadesNinos = []; 
 
-        // Bucle que recorre el numero de niños
+        
         for ($i = 1; $i <= $ninos; $i++) {
-            // Obtiene la edad del niño 
+            
             $edad = $request->input("edad-nino-$i");
 
-            // Si la edad no es null la guarda en el array inicializado anteriormente
+            
             if ($edad !== null) {
                 $edadesNinos[] = $edad;
             }
         }
 
-        // Obtiene los datos del hotel usando el ID 
+        
         $hotel = Hotel::findOrFail($hotelID);
 
-        // Obtiene las imágenes del hotel que empiecen por esa ruta y esten almacenadas en la columna imagen
+        
         $imagenes = DB::table('imagenes_hoteles')
             ->where('hotelID', $hotelID)
             ->where('imagen', 'like', 'images/hoteles/%')
             ->pluck('imagen');
 
-        // Obtiene las reseñas del hotel
+        
         $resenas = Resena::where('hotelID', $hotelID)->get();
 
         $parametros = [
@@ -139,7 +139,7 @@ class RealizarReservaControlador extends Controller
             "resenas" => $resenas
         ];
 
-        // Verificar si la solicitud es para JSON
+        
         if ($request->wantsJson() || $request->is('api/*')) {
             return response()->json($parametros);
         }
@@ -152,7 +152,7 @@ class RealizarReservaControlador extends Controller
     adicionales de la misma */
     public function guardarreserva(Request $request)
     {
-        // Obtiene los parámetros
+        
         $fechaEntrada = $request->input('fechaEntrada');
         $fechaSalida = $request->input('fechaSalida');
         $clienteID = $request->input('clienteID');
@@ -163,31 +163,31 @@ class RealizarReservaControlador extends Controller
         $estado = 'Pendiente';
         $edadesNinos = $request->input('edadesNinos', []);
 
-        // Obtiene las fechas introducidas de los servicios adicionales (Opcional)
+        
         $fechaRestaurante = $request->input('fecha-restaurante');
         $fechaSpa = $request->input('fecha-spa');
         $fechaTours = $request->input('fecha-tours');
 
-        // Verifica si habitacionID es un array
+        
         if (!is_array($habitacionID)) {
             $habitacionID = explode(',', $habitacionID);
         }
 
-        // Calcula el número de noches calculando la diferencia de dias entre dos fechas 
+        
         $fechaEntradaCarbon = Carbon::parse($fechaEntrada);
         $fechaSalidaCarbon = Carbon::parse($fechaSalida);
         $numNoches = $fechaEntradaCarbon->diffInDays($fechaSalidaCarbon);
 
-        // Calcula el precio total
+        
         $precioTotal = $precioHabitacion * $numNoches;
 
         $reservas = [];
         $serviciosReservados = [];
 
-        // Hacemos la inserción en la tabla reservas
+        
         foreach ($habitacionID as $id) {
 
-            // Comprueba si ya existe una reserva para esta combinación
+            
             $reservaExistente = Reserva::where('fechainicio', $fechaEntrada)
                 ->where('fechafin', $fechaSalida)
                 ->where('clienteID', $clienteID)
@@ -198,7 +198,7 @@ class RealizarReservaControlador extends Controller
                 return redirect()->back()->withErrors([
                     'status' => 'Error: Ya existe una reserva para este cliente en esta habitación y fecha.',
                     'reservaExistente' => $reservaExistente
-                ]); // Código de estado 400 para indicar error del cliente
+                ]); 
             } else {
 
                 $reserva = Reserva::create([
@@ -216,10 +216,10 @@ class RealizarReservaControlador extends Controller
 
                 $reservas[] = $reserva;
 
-                // Si hay niños, se guarda las edades en la tabla edadesninos
+                
                 if (!empty($ninos) && !empty($edadesNinos)) {
                     foreach ($edadesNinos as $edad) {
-                        // Solo guarda si la edad es válida (Mayor o igual a 0 y menor o igual a 17)
+                        
                         if (is_numeric($edad) && $edad > 0) {
                             EdadNino::create([
                                 'edad' => $edad,
@@ -229,11 +229,11 @@ class RealizarReservaControlador extends Controller
                     }
                 }
 
-                // Inserta servicios adicionales si las fechas son introducidas
+                
                 $numPersonas = $adultos + $ninos;
                 $servicios = [];
 
-                //Si se ha introducido fecha de restaurante, se inserta el servicio de restaurante
+                
                 if (!empty($fechaRestaurante)) {
                     $servicios[] = [
                         'nombre' => 'restaurante',
@@ -243,7 +243,7 @@ class RealizarReservaControlador extends Controller
                     ];
                 }
 
-                //Si se ha introducido fecha de spa, se inserta el servicio de spa
+                
                 if (!empty($fechaSpa)) {
                     $servicios[] = [
                         'nombre' => 'spa',
@@ -253,7 +253,7 @@ class RealizarReservaControlador extends Controller
                     ];
                 }
 
-                //Si se ha introducido fecha de tours, se inserta el servicio de tours
+                
                 if (!empty($fechaTours)) {
                     $servicios[] = [
                         'nombre' => 'tour',
@@ -263,12 +263,12 @@ class RealizarReservaControlador extends Controller
                     ];
                 }
 
-                // Inserta los servicios y las relaciones en la tabla intermedia
+                
                 foreach ($servicios as $servicioData) {
                     $servicio = Servicio::create($servicioData);
                     $serviciosReservados[] = $servicio;
 
-                    // Relaciona el servicio con la reserva en la tabla intermedia
+                    
                     DB::table('reservas_servicios')->insert([
                         'reservaID' => $reserva->reservaID,
                         'servicioID' => $servicio->servicioID,
@@ -305,22 +305,22 @@ class RealizarReservaControlador extends Controller
             abort(400, 'ReservaIDs son requeridos.');
         }
 
-        // Convertir la cadena de IDs en un array
+        
         $reservaIDsArray = explode(',', $reservaIDs);
 
-        // Obtener las reservas
+        
         $reservas = Reserva::whereIn('reservaID', $reservaIDsArray)->get();
         if ($reservas->isEmpty()) {
             abort(404, 'Reservas no encontradas.');
         }
 
-        // Obtener el cliente (asumiendo que todas las reservas son del mismo cliente)
+        
         $cliente = Cliente::find($reservas->first()->clienteID);
         if (!$cliente) {
             abort(404, 'Cliente no encontrado.');
         }
 
-        // Obtener las habitaciones reservadas
+        
         $habitacionesReservadas = DB::table('reservas')
             ->join('habitaciones', 'reservas.habitacionID', '=', 'habitaciones.habitacionID')
             ->whereIn('reservas.reservaID', $reservaIDsArray)
@@ -331,7 +331,7 @@ class RealizarReservaControlador extends Controller
             abort(404, 'No se encontraron habitaciones reservadas para estas reservas.');
         }
 
-        // Cálculo del precio total considerando todas las habitaciones y las noches
+        
         $precioTotalHabitaciones = 0;
         foreach ($habitacionesReservadas as $habitacion) {
             $fechaInicio = new \DateTime($habitacion->fechainicio);
@@ -341,55 +341,55 @@ class RealizarReservaControlador extends Controller
             $precioTotalHabitaciones += $habitacion->precio * $noches;
         }
 
-        // Obtener los servicios reservados
+        
         $serviciosReservados = DB::table('reservas_servicios')
             ->join('servicios', 'reservas_servicios.servicioID', '=', 'servicios.servicioID')
             ->whereIn('reservas_servicios.reservaID', $reservaIDsArray)
             ->select('servicios.nombre', 'servicios.precio')
             ->get();
 
-        // Cálculo del precio total de los servicios
+        
         $precioTotalServicios = 0;
         foreach ($serviciosReservados as $servicio) {
             $precioTotalServicios += $servicio->precio;
         }
 
-        // Cálculo del total general (habitaciones + servicios)
+        
         $subtotal = $precioTotalHabitaciones + $precioTotalServicios;
 
-        // Calcular IVA (21%)
+        
         $iva = $subtotal * 0.21;
 
-        // Total final con IVA
+        
         $totalConIVA = $subtotal + $iva;
 
-        // Obtener los datos del hotel
+        
         $hotel = DB::table('hoteles')->first();
 
-        // Crear una nueva instancia de TCPDF
+        
         $pdf = new TCPDF();
 
-        // Configurar el documento PDF
+        
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor('AlojaDirecto');
         $pdf->SetTitle('Factura');
         $pdf->SetSubject('Detalles de las Reservas');
         $pdf->SetKeywords('TCPDF, PDF, factura, cliente, reserva');
 
-        // Configurar márgenes y cabeceras
+        
         $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
         $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
         $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
         $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-        // Añadir una página
+        
         $pdf->AddPage();
 
-        // Encabezado
+        
         $pdf->SetFont('helvetica', 'B', 14);
 
-        // Construcción del contenido HTML del PDF
+        
         $html = '
     <style>
         table {
@@ -400,11 +400,11 @@ class RealizarReservaControlador extends Controller
         th, td {
             border: 1px solid #ddd;
             padding: 8px;
-            text-align: center; /* Centrar texto */
+            text-align: center; 
         }
         th {
-            background-color: #007BFF; /* Fondo azul */
-            color: white; /* Texto en blanco */
+            background-color: #007BFF; 
+            color: white; 
             font-weight: bold;
         }
         h1, h4 {
@@ -527,10 +527,10 @@ class RealizarReservaControlador extends Controller
         </tr>
     </table>';
 
-        // Añadir contenido al PDF
+        
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Salida del PDF
+        
         $pdf->Output('factura.pdf', 'I');
     }
 
