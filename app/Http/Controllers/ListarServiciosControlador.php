@@ -400,7 +400,7 @@ class ListarServiciosControlador extends Controller
             return response()->json(['reservas' => $reservas]);
         }
 
-        return view('anadirServicio', ['reservas' => $reservas]);
+        return view('anadirservicio', ['reservas' => $reservas]);
     }
 
     public function guardarServicio(Request $request)

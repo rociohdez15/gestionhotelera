@@ -185,7 +185,7 @@
                 <table class="table table-bordered table-striped text-center" id="tabla-servicios">
                     <thead class="table-dark">
                         <tr>
-                            <th>ID</th>
+                            <th>ID Servicio</th>
                             <th>Cliente</th>
                             <th>Nº Habitación</th>
                             <th>Hotel</th>
