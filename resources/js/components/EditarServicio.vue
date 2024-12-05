@@ -146,7 +146,6 @@ export default {
 
               if (response.ok) {
                   console.log("Actualización exitosa.");
-                  alert("Servicio actualizado correctamente.");
                   // Redirigir después de una actualización exitosa
                   window.location.href = "/listarservicios?success=Servicio actualizado correctamente";
               } else {
