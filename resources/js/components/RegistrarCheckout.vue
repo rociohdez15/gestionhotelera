@@ -135,16 +135,16 @@ export default {
 
                 if (actualizarResponse.ok) {
                     window.location.href =
-                        "/listarreservas?success=Reserva actualizada correctamente";
+                        "/listadocheckout?success=Reserva actualizada correctamente";
                 } else {
                     var errorText = await actualizarResponse.text();
-                    window.location.href = `/listarreservas?error=${encodeURIComponent(
+                    window.location.href = `/listadocheckout?error=${encodeURIComponent(
                         errorText
                     )}`;
                 }
             } catch (e) {
                 window.location.href =
-                    "/listarreservas?error=Error al actualizar la reserva.";
+                    "/listadocheckout?error=Error al actualizar la reserva.";
             }
         },
     },
