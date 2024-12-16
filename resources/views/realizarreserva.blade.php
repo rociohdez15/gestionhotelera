@@ -113,6 +113,7 @@
         @auth
         @php
         $rolUsuario = Auth::user()->rolID; 
+        @endphp
 
         @if ($rolUsuario === 2) <!-- Si el rol del usuario es recepcionista -->
         <script>
